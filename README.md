@@ -1,6 +1,6 @@
 # Medieval Commerce
 
-This is js13kGames project!
+This is js13kGames project! See https://medium.com/js13kgames/js13kgames-2023-has-started-b4a25886d082 for rules.
 
 ## Getting Started
 
