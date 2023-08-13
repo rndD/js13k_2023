@@ -1,5 +1,11 @@
 {
   "standard.autoFixOnSave": true,
   "standard.enable": true,
-  "standard.options": {}
+  "standard.options": {},
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "standard.vscode-standard"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "standard.vscode-standard"
+  },
 }
