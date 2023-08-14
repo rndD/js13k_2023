@@ -22,8 +22,8 @@ export default function MorningScreen (): React.JSX.Element | null {
   if (phase !== 1 && phase !== 2) return null
 
   const resources: Array<[Resource, string, number]> = [
-    ['flour', 'Добыча соли:', flourSouls],
-    ['salt', 'Производство муки:', saltSouls],
+    ['flour', 'Производство муки:', flourSouls],
+    ['salt', 'Добыча соли:', saltSouls],
     ['trade', 'Продажи:', tradeSouls]
   ]
 
@@ -50,7 +50,11 @@ export default function MorningScreen (): React.JSX.Element | null {
         <Modal>
           Государь объявил неделю масленицы!
           <div className='mt3 tc'>
-            <Button onClick={nextPhase} title='Понятно' />
+            <Button
+              onClick={() => {
+                nextPhase()
+              }} title='Понятно'
+            />
           </div>
         </Modal>}
     </section>
