@@ -2,6 +2,7 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import * as React from 'react'
 
+// @ts-expect-error
 import { attachLogger } from 'effector-logger'
 
 export default function App ({ Component, pageProps }: AppProps): React.JSX.Element {

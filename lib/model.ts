@@ -48,7 +48,7 @@ export const $resource = createStore({
   flourSack: 0,
   saltSack: 0,
   maxStorageSack: 1
-})
+}, { name: '$resource' })
   .on(nextPhase, state => {
     return ({ ...state, phase: state.phase === 4 ? 1 : state.phase + 1 })
   })
@@ -102,7 +102,7 @@ export const $schedule = createStore({
   flourSouls: 0,
   saltSouls: 0,
   tradeSouls: 0
-})
+}, { name: '$schedule' })
   .on(sendSoul, (state, resourceType: Resource) => {
     switch (resourceType) {
       case 'flour': return ({ ...state, flourSouls: state.flourSouls + 1 })
