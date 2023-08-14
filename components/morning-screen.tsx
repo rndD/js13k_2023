@@ -43,7 +43,7 @@ export default function MorningScreen (): React.JSX.Element | null {
         ))}
       </ul>
 
-      <button>За работу</button>
+      <button onClick={nextPhase}>За работу</button>
 
       {phase === 1 &&
         <Modal>
