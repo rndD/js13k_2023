@@ -6,6 +6,7 @@ import {
   $resource
 } from '@/lib/model'
 import { delay } from '@/lib/delay'
+import Button from '@/components/button'
 import Modal from '@/components/modal'
 import Time from '@/components/time'
 
@@ -45,7 +46,7 @@ export default function EveningScreen (): React.JSX.Element | null {
         <Modal>
           Поработал — молодец!
           <div className='mt3 tc'>
-            <button onClick={nextPhase}>Понятно</button>
+            <Button onClick={nextPhase} title='Понятно' />
           </div>
         </Modal>}
     </section>

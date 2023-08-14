@@ -11,6 +11,7 @@ import {
   $schedule,
   $souls
 } from '@/lib/model'
+import Button from '@/components/button'
 import Modal from '@/components/modal'
 import Time from '@/components/time'
 
@@ -43,13 +44,13 @@ export default function MorningScreen (): React.JSX.Element | null {
         ))}
       </ul>
 
-      <button onClick={nextPhase}>За работу</button>
+      <Button onClick={nextPhase} title='За работу' />
 
       {phase === 1 &&
         <Modal>
           Государь объявил неделю масленицы!
           <div className='mt3 tc'>
-            <button onClick={nextPhase}>Понятно</button>
+            <Button onClick={nextPhase} title='Понятно' />
           </div>
         </Modal>}
     </section>
