@@ -63,7 +63,7 @@ export default function EveningScreen (): React.JSX.Element | null {
   if (phase !== 3 && phase !== 4) return null
 
   return (
-    <section className='mw8 ph4 pv3 center relative'>
+    <section className='mw8 mh4 ph4 pv3 center relative'>
       <Time className='fr' />
       {phase === 3 &&
         <div className='i'>красивая анимация{'.'.repeat(progress)}</div>}
