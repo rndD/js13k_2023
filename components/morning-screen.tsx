@@ -1,22 +1,25 @@
-import type { Resource } from '@/lib/model'
-
-import { useStore } from 'effector-react'
-import * as React from 'react'
-
 import {
+ Resource, soulPrice, storagePrice,
   nextPhase,
   removeSoul,
   sendSoul,
   $resource,
   $schedule,
-  $souls
+  $souls,
+  buySoul,
+  upgradeStorage
+
 } from '@/lib/model'
+
+import { useStore } from 'effector-react'
+import * as React from 'react'
+
 import Button from '@/components/button'
 import Modal from '@/components/modal'
 import Time from '@/components/time'
 
 export default function MorningScreen (): React.JSX.Element | null {
-  const { phase, silver } = useStore($resource)
+  const { phase, silver, saltSack, flourSack } = useStore($resource)
   const { souls } = useStore($souls)
   const { flourSouls, saltSouls, tradeSouls } = useStore($schedule)
   if (phase !== 1 && phase !== 2) return null
@@ -32,6 +35,7 @@ export default function MorningScreen (): React.JSX.Element | null {
       <Time className='fr' />
 
       <div>серебро: {silver}, души: {souls}</div>
+      <div>Мука: {flourSack}, Соль: {saltSack}</div>
 
       <div className='mt4'>Наряды:</div>
       <ul>
@@ -43,6 +47,11 @@ export default function MorningScreen (): React.JSX.Element | null {
           </li>
         ))}
       </ul>
+
+      <div className='mt4 mb4'>
+        <button className='mr2' onClick={buySoul}>Купить душу ({soulPrice})</button>
+        <button className='mr2' onClick={upgradeStorage}>Увеличить склад ({storagePrice})</button>
+      </div>
 
       <Button onClick={nextPhase} title='За работу' />
 

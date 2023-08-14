@@ -17,18 +17,27 @@ import { createEvent, createStore } from 'effector'
 //   - цены, покупка
 // - модификаторы
 
-const saltPrice = 1
-const flourPrice = 2
+// Prices
+export const saltPrice = 1
+export const flourPrice = 2
+export const storagePrice = 5
+export const soulPrice = 10
 
 export type Resource = 'flour' | 'salt' | 'trade'
 
 export const nextPhase = createEvent<any>()
+
 export const sendSoul = createEvent<Resource>()
 export const removeSoul = createEvent<Resource>()
+
+export const buySoul = createEvent<number>()
+
 export const createFlourSack = createEvent<number>()
 export const createSaltSack = createEvent<number>()
 export const sellFlourSack = createEvent<number>()
 export const sellSaltSack = createEvent<number>()
+
+export const upgradeStorage = createEvent<number>()
 
 export const $resource = createStore({
   day: 1,
@@ -38,15 +47,56 @@ export const $resource = createStore({
   // sacks
   flourSack: 0,
   saltSack: 0,
-  maxStorageSack: 0
+  maxStorageSack: 1
 })
   .on(nextPhase, state => {
     return ({ ...state, phase: state.phase === 4 ? 1 : state.phase + 1 })
   })
-  .on(createFlourSack, (state, count) => ({ ...state, flourSack: state.flourSack + count }))
-  .on(createSaltSack, (state, count) => ({ ...state, saltSack: state.saltSack + count }))
-  .on(sellFlourSack, (state, count) => ({ ...state, flourSack: state.flourSack - count, silver: state.silver + count * flourPrice }))
-  .on(sellSaltSack, (state, count) => ({ ...state, saltSack: state.saltSack - count, silver: state.silver + count * saltPrice }))
+  .on(createFlourSack, (state, count) => {
+    const c = state.flourSack + count + state.saltSack
+    if (state.maxStorageSack < c) {
+      return state
+    }
+    return { ...state, flourSack: state.flourSack + count }
+  })
+  .on(createSaltSack, (state, count) => {
+    const c = state.flourSack + count + state.saltSack
+    if (state.maxStorageSack < c) {
+      return state
+    }
+    return { ...state, saltSack: state.saltSack + count }
+  })
+  .on(sellFlourSack, (state, count) => {
+    if (state.flourSack < count) {
+      count = state.flourSack
+    }
+
+    return ({ ...state, flourSack: state.flourSack - count, silver: state.silver + count * flourPrice })
+  })
+  .on(sellSaltSack, (state, count) => {
+    if (state.saltSack < count) {
+      count = state.saltSack
+    }
+    return { ...state, saltSack: state.saltSack - count, silver: state.silver + count * saltPrice }
+  })
+  .on(upgradeStorage, (state) => {
+    const price = storagePrice
+    if (state.silver < price) {
+      return state
+    }
+    return ({ ...state, maxStorageSack: state.maxStorageSack + 1, silver: state.silver - price })
+  })
+  .on(buySoul, (state) => {
+    const price = soulPrice
+    if (state.silver < price) {
+      return state
+    }
+    return ({
+      ...state,
+      souls: state.souls + 1,
+      silver: state.silver - price
+    })
+  })
 
 export const $schedule = createStore({
   flourSouls: 0,
