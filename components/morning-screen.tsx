@@ -5,12 +5,14 @@ import * as React from 'react'
 
 import {
   sendSoul, removeSoul,
-  $resource, $schedule
+  $resource, $schedule,
+  $souls
 } from '@/lib/model'
 import Time from '@/components/time'
 
 export default function MorningScreen (): React.JSX.Element | null {
-  const { phase } = useStore($resource)
+  const { phase, silver } = useStore($resource)
+  const { souls } = useStore($souls)
   const { flourSouls, saltSouls, tradeSouls } = useStore($schedule)
   if (phase !== 1 && phase !== 2) return null
 
@@ -24,7 +26,7 @@ export default function MorningScreen (): React.JSX.Element | null {
     <section className='mw8 ph4 pv3 center'>
       <Time className='fr' />
 
-      <div>серебро: 5, души: 0</div>
+      <div>серебро: {silver}, души: {souls}</div>
 
       <div className='mt4'>Наряды:</div>
       <ul>
