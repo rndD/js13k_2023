@@ -19,6 +19,7 @@ import { createEvent, createStore } from 'effector'
 
 export type Resource = 'flour' | 'salt' | 'trade'
 
+export const nextPhase = createEvent<any>()
 export const sendSoul = createEvent<Resource>()
 export const removeSoul = createEvent<Resource>()
 
@@ -32,6 +33,7 @@ export const $resource = createStore({
   saltSack: 0,
   maxStorageSack: 0
 })
+  .on(nextPhase, state => ({ ...state, phase: state.phase === 4 ? 1 : state.phase + 1 }))
 
 export const $schedule = createStore({
   flourSouls: 0,

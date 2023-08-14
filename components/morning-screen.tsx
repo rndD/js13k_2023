@@ -4,10 +4,14 @@ import { useStore } from 'effector-react'
 import * as React from 'react'
 
 import {
-  sendSoul, removeSoul,
-  $resource, $schedule,
+  nextPhase,
+  removeSoul,
+  sendSoul,
+  $resource,
+  $schedule,
   $souls
 } from '@/lib/model'
+import Modal from '@/components/modal'
 import Time from '@/components/time'
 
 export default function MorningScreen (): React.JSX.Element | null {
@@ -23,7 +27,7 @@ export default function MorningScreen (): React.JSX.Element | null {
   ]
 
   return (
-    <section className='mw8 ph4 pv3 center'>
+    <section className='mw8 ph4 pv3 center relative'>
       <Time className='fr' />
 
       <div>серебро: {silver}, души: {souls}</div>
@@ -40,6 +44,14 @@ export default function MorningScreen (): React.JSX.Element | null {
       </ul>
 
       <button>За работу</button>
+
+      {phase === 1 &&
+        <Modal>
+          Государь объявил неделю масленицы!
+          <div className='mt3 tc'>
+            <button onClick={nextPhase}>Понятно</button>
+          </div>
+        </Modal>}
     </section>
   )
 }
