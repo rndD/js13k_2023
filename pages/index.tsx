@@ -1,5 +1,13 @@
-export default function Home () {
+import * as React from 'react'
+
+import MorningScreen from '@/components/morning-screen'
+import EveningScreen from '@/components/evening-screen'
+
+export default function Home (): React.JSX.Element {
   return (
-    <section className='test georgia f4'>Hello, world!</section>
+    <>
+      <MorningScreen />
+      <EveningScreen />
+    </>
   )
 }
