@@ -75,7 +75,11 @@ export default function EveningScreen (): React.JSX.Element | null {
         <Modal>
           Поработал — молодец!
           <div className='mt3 tc'>
-            <Button onClick={nextPhase} title='Понятно' />
+            <Button
+              autoFocus
+              onClick={nextPhase}
+              title='Понятно'
+            />
           </div>
         </Modal>}
     </section>

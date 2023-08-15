@@ -1,5 +1,5 @@
 import {
- Resource, soulPrice, storagePrice,
+  Resource, soulPrice, storagePrice,
   nextPhase,
   removeSoul,
   sendSoul,
@@ -60,9 +60,9 @@ export default function MorningScreen (): React.JSX.Element | null {
           Государь объявил неделю масленицы!
           <div className='mt3 tc'>
             <Button
-              onClick={() => {
-                nextPhase()
-              }} title='Понятно'
+              autoFocus
+              onClick={nextPhase}
+              title='Понятно'
             />
           </div>
         </Modal>}
