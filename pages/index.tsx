@@ -1,7 +1,11 @@
 import { useStore } from 'effector-react'
 import * as React from 'react'
 
-import { $main, $souls, $modifiers } from '@/lib/model'
+import {
+  $main, $souls, $outcome,
+  resetModifiers, setModifier,
+  createCollectModifier, createTradeModifier
+} from '@/lib/model'
 import Radio from '@/components/radio'
 
 const activities = [
@@ -14,9 +18,26 @@ export default function Home (): React.JSX.Element {
 
   const { day, silver } = useStore($main)
   const souls = useStore($souls)
+  const outcome = useStore($outcome)
 
   React.useEffect(() => {
-    //
+    resetModifiers()
+    switch (activity) {
+      case 'collect':
+        souls.forEach(soul => {
+          if (['player', 'employee'].includes(soul.type)) {
+            setModifier(createCollectModifier(soul))
+          }
+        })
+        break
+      case 'trade':
+        souls.forEach(soul => {
+          if (['player', 'employee'].includes(soul.type)) {
+            setModifier(createTradeModifier(soul))
+          }
+        })
+        break
+    }
   }, [activity])
 
   return (
@@ -45,6 +66,14 @@ export default function Home (): React.JSX.Element {
             options={activities}
             value={activity}
           />
+        </div>
+        <div className='mt4'>
+          Результат:
+          <ul>
+            {outcome.map(str => (
+              <li key={str}>{str}</li>
+            ))}
+          </ul>
         </div>
         <div className='mt3'>
           <button>Поехали</button>
