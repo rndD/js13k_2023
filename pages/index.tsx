@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import {
   soulPrice,
-  $main, $souls, $outcome,
+  $main, $sacks, $souls, $outcome,
   buySoul, commit, resetModifiers, setModifier,
   createCollectModifier, createTradeModifier
 } from '@/lib/model'
@@ -18,6 +18,7 @@ export default function Home (): React.JSX.Element {
   const [activity, setActivity] = React.useState(activities[0].value)
 
   const { day, silver } = useStore($main)
+  const sacks = useStore($sacks)
   const souls = useStore($souls)
   const outcome = useStore($outcome)
 
@@ -52,11 +53,16 @@ export default function Home (): React.JSX.Element {
       <div className='fl w-third pr2'>
         Души
         <ul>
-          {souls.map(soul => (
-            <li key={soul.id}>
-              {soul.type === 'player' ? 'Барин' : 'Холоп'}
-            </li>
-          ))}
+          {souls.map(soul => {
+            const sack = sacks.find(s => s.id === soul.sackID)
+
+            return (
+              <li key={soul.id}>
+                {soul.type === 'player' ? 'Барин' : 'Холоп'}
+                {sack != null ? `: ${sack.value}кг соли` : ''}
+              </li>
+            )
+          })}
         </ul>
       </div>
 
