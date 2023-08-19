@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import {
   $main, $souls, $outcome,
-  resetModifiers, setModifier,
+  commit, resetModifiers, setModifier,
   createCollectModifier, createTradeModifier
 } from '@/lib/model'
 import Radio from '@/components/radio'
@@ -76,7 +76,7 @@ export default function Home (): React.JSX.Element {
           </ul>
         </div>
         <div className='mt3'>
-          <button>Поехали</button>
+          <button onClick={commit}>Поехали</button>
         </div>
         <div className='mt3'>
           <button>Улучшения</button>
