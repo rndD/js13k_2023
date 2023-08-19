@@ -57,7 +57,7 @@ export default function Home (): React.JSX.Element {
             const sack = sacks.find(s => s.id === soul.sackID)
 
             return (
-              <li key={soul.id}>
+              <li key={`${soul.id}${sack?.value ?? ''}`}>
                 {soul.type === 'player' ? 'Барин' : 'Холоп'}
                 {sack != null ? `: ${sack.value}кг соли` : ''}
               </li>
@@ -102,7 +102,7 @@ export default function Home (): React.JSX.Element {
               onClick={() => {
                 if (silver >= soulPrice) {
                   buySoul('employee')
-                  _updateModifiers()
+                  setTimeout(_updateModifiers, 0)
                 }
               }}
             >
