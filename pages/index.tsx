@@ -2,8 +2,9 @@ import { useStore } from 'effector-react'
 import * as React from 'react'
 
 import {
+  soulPrice,
   $main, $souls, $outcome,
-  commit, resetModifiers, setModifier,
+  buySoul, commit, resetModifiers, setModifier,
   createCollectModifier, createTradeModifier
 } from '@/lib/model'
 import Radio from '@/components/radio'
@@ -20,7 +21,7 @@ export default function Home (): React.JSX.Element {
   const souls = useStore($souls)
   const outcome = useStore($outcome)
 
-  React.useEffect(() => {
+  function _updateModifiers (): undefined {
     resetModifiers()
     switch (activity) {
       case 'collect':
@@ -38,11 +39,15 @@ export default function Home (): React.JSX.Element {
         })
         break
     }
+  }
+
+  React.useEffect(() => {
+    _updateModifiers()
   }, [activity])
 
   return (
     <section className='mw7 pv3 center'>
-      <div className='mb4'> День {day}, серебро {silver} </div>
+      <div className='mb4'>День {day}, серебро {silver}</div>
 
       <div className='fl w-third pr2'>
         Души
@@ -70,17 +75,35 @@ export default function Home (): React.JSX.Element {
         <div className='mt4'>
           Результат:
           <ul>
-            {outcome.map(str => (
-              <li key={str}>{str}</li>
+            {outcome.map((str, index) => (
+              <li key={`${index}${str}`}>{str}</li>
             ))}
           </ul>
         </div>
         <div className='mt3'>
           <button onClick={commit}>Поехали</button>
         </div>
-        <div className='mt3'>
-          <button>Улучшения</button>
-        </div>
+      </div>
+
+      <div className='cf' />
+
+      <div className='mv4'>
+        Улучшения
+        <ul>
+          <li>
+            Души: {souls.length - 1}{' '}
+            <button
+              onClick={() => {
+                if (silver >= soulPrice) {
+                  buySoul('employee')
+                  _updateModifiers()
+                }
+              }}
+            >
+              +1 за {soulPrice}
+            </button>
+          </li>
+        </ul>
       </div>
     </section>
   )

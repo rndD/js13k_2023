@@ -5,11 +5,15 @@ import { invariant } from './invariant'
 // Наименование:
 // - события начинаются с глагола
 
-export const commit = createEvent<any>('commit')
-export const reset = createEvent('reset')
-export const resetModifiers = createEvent('resetModifiers')
+export const soulPrice = 10
+
+export const buySoul = createEvent<SoulType>('buySoul')
+
+export const commit = createEvent<unknown>('commit')
+export const reset = createEvent<unknown>('reset')
+export const resetModifiers = createEvent<unknown>('resetModifiers')
 export const setModifier = createEvent<Modifier>('setModifier')
-export const updateStores = createEvent('updateStores')
+export const updateStores = createEvent<unknown>('updateStores')
 
 type SoulType = 'player' | 'employee' | 'storage'
 type ResourceType = 'flour' | 'salt' | 'silver'
@@ -40,6 +44,8 @@ interface Modifier {
 export const $main = createStore({ day: 1, silver: 0 }, { name: '$main' })
   .on(reset, _ => ({ day: 1, silver: 0 }))
   .on(updateStores, (_, event: any) => event.nextMain != null ? event.nextMain : _)
+  // без валидации
+  .on(buySoul, (_main, type) => ({ ..._main, silver: _main.silver - (type === 'employee' ? soulPrice : 0) }))
 
 export const $sacks = createStore<Sack[]>([], { name: '$sacks' })
   .on(updateStores, (_, event: any) => event.nextSacks != null ? event.nextSacks : _)
@@ -47,6 +53,8 @@ export const $sacks = createStore<Sack[]>([], { name: '$sacks' })
 export const $souls = createStore<Soul[]>([], { name: '$souls' })
   .on(reset, _ => [{ id: generateID(), type: 'player', sackID: null }])
   .on(updateStores, (_, event: any) => event.nextSouls != null ? event.nextSouls : _)
+  // без валидации
+  .on(buySoul, (_souls, type) => _souls.concat({ id: generateID(), type, sackID: null }))
 
 export const $modifiers = createStore<Modifier[]>([], { name: '$modifiers' })
   .on(reset, _ => [])
