@@ -21,15 +21,18 @@ interface Soul {
 interface Sack {
   id: string
   resource: ResourceType
-  amount: number
+  value: number
 }
 
-// увеличить ресурс
-// увеличить ресурс + потратить денеги
+/**
+ * CF - собрать муку
+ * CS - собрать соль
+ * SF - продать муку
+ * SS - продать соль
+ */
 interface Modifier {
-  visible: boolean
+  change: 'CF' | 'SF' | 'CS' | 'SS'
   soulID?: string
-  changes: Array<{ action: 'modify' | 'set', resource: ResourceType, value: number }>
 }
 
 export const $main = createStore({
@@ -51,56 +54,32 @@ export const $modifiers = createStore<Modifier[]>([], { name: '$modifiers' })
 export const $outcome = combine(
   $main, $sacks, $souls, $modifiers,
   (_main, _sacks, _souls, _modifiers) => _modifiers
-    .flatMap(m => {
+    .map(m => {
       const soul = _souls.find(soul => soul.id === m.soulID)
       const sack = _sacks.find(sack => sack.id === soul?.sackID)
-      return m.changes.map(change => {
-        switch (change.resource) {
-          case 'silver':
-            invariant(change.action === 'modify')
-            return `Серебро ${change.value > 0 ? '+' : '-'}${change.value}`
-          default:
-            if (sack != null) {
-              if (sack.resource !== change.resource) {
-                return 'Без изменений'
-              } else {
-                const value = change.value
-                return `Соль ${value > 0 ? '+' : '-'}${value}`
-              }
-            }
-
-            if (change.action === 'set') {
-              const value = change.value - (sack?.amount ?? 0)
-              return `Соль ${value > 0 ? '+' : '-'}${value}`
-            }
-
-            invariant(false, `unexpected change: ${change.action}/${change.resource}`)
+      switch (m.change) {
+        case 'CS': {
+          const value = sack != null ? 25 - sack.value : 25
+          return `Соль +${value}`
         }
-      })
+        case 'SS': {
+          const value = Math.min(sack?.value ?? 0, 10)
+          const silver = Math.floor(value / 2)
+          return `Соль -${value}, серебро +${silver}`
+        }
+      }
+      invariant(false, `missing case for outcome: ${m.change}`)
     })
     .filter(Boolean)
 )
 
 // Модификаторы
 export function createCollectModifier (soul: Soul): Modifier {
-  return {
-    visible: true,
-    soulID: soul.id,
-    changes: [
-      { action: 'set', resource: 'salt', value: 25 }
-    ]
-  }
+  return { change: 'CS', soulID: soul.id }
 }
 
 export function createTradeModifier (soul: Soul): Modifier {
-  return {
-    visible: true,
-    soulID: soul.id,
-    changes: [
-      { action: 'modify', resource: 'salt', value: 10 },
-      { action: 'modify', resource: 'silver', value: 5 }
-    ]
-  }
+  return { change: 'SS', soulID: soul.id }
 }
 
 // Инициализация
