@@ -57,8 +57,9 @@ const PlaningComponent = connect(({ men, upgrades, planing }: MainState) => {
   // List men
   const ms = [men.level1, men.level2, men.level3].reduce(
     (a: string[], m: number, l: number) => {
-      console.log(m, l);
-      const h = getMenIcon(l + 1);
+      l = l + 1;
+      m = Math.max(m - (planing.salt[l] || 0), 0);
+      const h = getMenIcon(l);
       return [...a, ...Array(m).fill(h)];
     },
     []
@@ -70,16 +71,35 @@ const PlaningComponent = connect(({ men, upgrades, planing }: MainState) => {
       const h = getMenIcon(l);
       return [...a, ...Array(n).fill(h)];
     }, []);
+
+    const addBtns = [1, 2, 3].map((l) => {
+      return ButtonComponent({
+        children: "Add " + getMenIcon(l),
+        onClick: `dispatch('PLANING_ADD_MAN', {level: ${l}, type: '${k}'})`,
+      });
+    });
+
     const h = `
       <div>${k}:</div>
       <div class="flex">
-      ${ButtonComponent({
-        children: "+" + getMenIcon(1),
-        onClick: `dispatch('PLANING_ADD_MAN', {level: 1, type: '${k}'})`,
-      })}
+      ${addBtns.join("")}
       <div>${e.join("")}</div>
       </div>
  `;
+    return [...a, h];
+  }, []);
+
+  // Upgrades
+  const upR = upgrades.reduce((a: string[], u) => {
+    const h = `
+      <div>${u.type}:</div>
+      <div class="flex">
+      ${ButtonComponent({
+        children: `Upgrade ${u.type} to ${u.level + 1}`,
+        onClick: `dispatch('UPGRADE', {type: '${u.type}'})`,
+      })}
+      </div>
+  `;
     return [...a, h];
   }, []);
 
@@ -93,6 +113,7 @@ const PlaningComponent = connect(({ men, upgrades, planing }: MainState) => {
     </div>
 
     <div class="flex">${plR.join(" ")}</div>
+    <div class="flex-column">${upR.join(" ")}</div>
   </div>`;
 });
 
