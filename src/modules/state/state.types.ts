@@ -1,3 +1,4 @@
+export type Resource = "salt" | "wood" | "stone" | "wheat" | "weapon";
 export interface MainState {
   scene: "menu" | "morning" | "planing" | "day" | "day-result" | "gameover";
   day: number;
@@ -14,15 +15,21 @@ export interface MainState {
 
   upgrades: Upgrade[];
 
+  planing: PlaningState;
+
   storage: StorageState;
   activeCards: Card[];
 }
 
+type PlaningState = Record<Resource, Record<number, number>>;
+
 interface Upgrade {
-  name: string;
-  effects: Record<string, number>; // type // not sure if needed
-  cost: number;
-  costResource: Record<string, number>; // type;
+  type: string;
+  level: number;
+  effects?: Record<string, number>; // type // not sure if needed
+  cost?: number;
+  costResource?: Record<Resource, number>;
+  requiredLvl?: number;
 }
 
 interface MenState {
@@ -32,8 +39,7 @@ interface MenState {
 }
 
 interface StorageState {
-  capacity: number;
-  resources: Record<string, number>; // type
+  resources: Record<Resource, number>;
 }
 
 interface Card {

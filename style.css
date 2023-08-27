@@ -12,6 +12,11 @@ html, body {
     justify-content: center;
     /* align-items: center; */
     height: 100%;
+    width: 100%;
 
     font-family: monospace;
+}
+
+#root {
+    width: 1200px;
 }

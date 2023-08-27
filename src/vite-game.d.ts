@@ -5,7 +5,7 @@ declare module "*.png";
 
 declare global {
   interface Window {
-    _dispatch: ReturnType<CreateStore>["dispatch"];
+    dispatch: ReturnType<CreateStore>["dispatch"];
     c2d: HTMLCanvasElement;
   }
 }

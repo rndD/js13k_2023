@@ -1,5 +1,5 @@
 import { initState } from "./init";
-import { MainState } from "./state.types";
+import { MainState, Resource } from "./state.types";
 
 export default function reducer(
   state: MainState = initState,
@@ -7,16 +7,38 @@ export default function reducer(
   args: any[]
 ) {
   switch (action) {
-    case "END_MORNING": {
+    case "NEXT_SCENE": {
       const [value] = args;
+      let scene;
+      if (state.scene === "morning") {
+        scene = "planing";
+      }
+
       return Object.assign({}, state, {
-        scene: "planing",
+        scene,
       });
     }
-    case "ADD_MAN": {
-      //   const { tasks, archive } = state;
-      //   const [index] = args;
-      //   const task = tasks[index];
+    case "ADD_MONEY": {
+      console.log("ADD_MONEY");
+      const [value] = args;
+      return Object.assign({}, state, {
+        money: state.money + value,
+      });
+    }
+    case "PLANING_ADD_MAN": {
+      const { level, type } = args[0] as unknown as {
+        level: number;
+        type: Resource;
+      };
+
+      if (!state.planing[type]) {
+        state.planing[type] = {};
+      }
+      if (!state.planing[type][level]) {
+        state.planing[type][level] = 0;
+      }
+      state.planing[type][level] += 1;
+
       return Object.assign({}, state, {});
     }
     default:
