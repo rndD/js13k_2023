@@ -1,5 +1,3 @@
-import { drawEngine } from "./core/draw-engine";
+import { drawEngine } from "./lib/draw-engine";
 
-import { controls } from "@/core/controls";
-
-console.log("start");
+import { controls } from "@/lib/controls";
