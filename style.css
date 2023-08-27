@@ -7,9 +7,11 @@
 /* Get rid of any margins, set background black, use flexbox to center */
 html, body {
     margin: 0;
-    background-color: black;
+    /* background-color: black; */
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     height: 100%;
+
+    font-family: monospace;
 }
