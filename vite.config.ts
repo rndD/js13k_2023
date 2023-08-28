@@ -20,7 +20,10 @@ export default defineConfig(({ command, mode }) => {
     },
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, './src'),
+        '@/components': path.resolve(__dirname, './components'),
+        '@/lib': path.resolve(__dirname, './lib'),
+        '@/model': path.resolve(__dirname, './model'),
+        '@/scenes': path.resolve(__dirname, './scenes'),
       }
     },
     plugins: undefined
