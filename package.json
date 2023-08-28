@@ -26,7 +26,7 @@
     "ignore": [
       "find-best-roadroller.js",
       "next-env.d.ts",
-      "src/**/*.ts",
+      "old_src/**/*.ts",
       "tsconfig.json",
       "vite.config.ts"
     ]

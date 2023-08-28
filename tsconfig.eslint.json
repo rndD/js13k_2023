@@ -1,4 +1,5 @@
 {
+  "extends": ["standard-with-typescript", "standard-jsx"],
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": "off"
   }
