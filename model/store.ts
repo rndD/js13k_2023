@@ -3,8 +3,6 @@ import type { ActivityType } from '@/lib/types'
 import { createStore } from '@/lib/innerself'
 import { reducer } from './reducer'
 
-export type { State } from './reducer'
-
 type Dispatch =
   | ((action: 'ADD_ACTIVITY', id: string, activity: ActivityType) => void)
 

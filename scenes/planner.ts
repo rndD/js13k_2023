@@ -1,5 +1,4 @@
-import type { ManType } from '@/lib/types'
-import type { State } from '@/model/store'
+import type { ManType, State } from '@/lib/types'
 import { connect } from '@/model/store'
 import { html } from '@/lib/innerself'
 import { values } from '@/lib/util'

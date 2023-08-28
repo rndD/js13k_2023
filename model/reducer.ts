@@ -1,31 +1,45 @@
-import type { ID, ActivityType, ManType, PlannerActivityType, SackType } from '@/lib/types'
+import type { ID, ActivityType, State, Action } from '@/lib/types'
 import { generateID } from '@/lib/generate'
-
-type Action = string
-
-export interface State {
-  day: number
-  silver: number
-
-  activities: PlannerActivityType[]
-  men: Map<ID, ManType>
-  sacks: Map<ID, SackType>
-}
 
 const playerID = generateID()
 const initialState: State = {
+  scene: 'planner',
   day: 1,
   silver: 0,
 
   activities: [],
   men: new Map([[playerID, { id: playerID, level: 2 }]]),
-  sacks: new Map()
+  sacks: new Map(),
+
+  tribute: {
+    nextIn: 3,
+    silver: 10
+  },
+  xp: 0,
+  lvl: 1,
+
+  upgrades: [
+    { type: 'market', level: 1 },
+    { type: 'saltmine', level: 1 },
+    { type: 'storage', level: 0 }
+  ],
+
+  storage: {
+    resources: {
+      salt: 0,
+      wood: 0,
+      stone: 0,
+      wheat: 0,
+      weapon: 0
+    }
+  },
+  activeCards: []
 }
 
 export function reducer (
   state: State = initialState,
   action: Action,
-  params: string[]
+  params: any[]
 ): State {
   switch (action) {
     case 'ADD_ACTIVITY': {
@@ -41,6 +55,11 @@ export function reducer (
           .concat({ manID: id, type: activity })
       }
 
+      return state
+    }
+    case 'ADD_SILVER': {
+      const [value] = params as [number]
+      state.silver += value
       return state
     }
 
