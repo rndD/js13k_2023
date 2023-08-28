@@ -1,47 +1,47 @@
-import { initState } from "./init";
-import { MainState, Resource } from "./state.types";
+import { initState } from './init'
+import { MainState, Resource } from './state.types'
 
-export default function reducer(
+export default function reducer (
   state: MainState = initState,
   action: string,
   args: any[]
 ) {
   switch (action) {
-    case "NEXT_SCENE": {
-      const [value] = args;
-      let scene;
-      if (state.scene === "morning") {
-        scene = "planing";
+    case 'NEXT_SCENE': {
+      const [value] = args
+      let scene
+      if (state.scene === 'morning') {
+        scene = 'planing'
       }
 
       return Object.assign({}, state, {
-        scene,
-      });
+        scene
+      })
     }
-    case "ADD_MONEY": {
-      console.log("ADD_MONEY");
-      const [value] = args;
+    case 'ADD_MONEY': {
+      console.log('ADD_MONEY')
+      const [value] = args
       return Object.assign({}, state, {
-        money: state.money + value,
-      });
+        money: state.money + value
+      })
     }
-    case "PLANING_ADD_MAN": {
+    case 'PLANING_ADD_MAN': {
       const { level, type } = args[0] as unknown as {
-        level: number;
-        type: Resource;
-      };
+        level: number
+        type: Resource
+      }
 
       if (!state.planing[type]) {
-        state.planing[type] = {};
+        state.planing[type] = {}
       }
       if (!state.planing[type][level]) {
-        state.planing[type][level] = 0;
+        state.planing[type][level] = 0
       }
-      state.planing[type][level] += 1;
+      state.planing[type][level] += 1
 
-      return Object.assign({}, state, {});
+      return Object.assign({}, state, {})
     }
     default:
-      return state;
+      return state
   }
 }

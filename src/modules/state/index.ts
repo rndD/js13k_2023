@@ -1,8 +1,8 @@
-import { createStore } from "@/lib/innerself";
-import reducer from "./reducer";
+import { createStore } from '@/lib/innerself'
+import reducer from './reducer'
 
-// @ts-ignore
-const { attach, connect, dispatch } = createStore(reducer);
+// @ts-expect-error
+const { attach, connect, dispatch } = createStore(reducer)
 
-window.dispatch = dispatch;
-export { attach, connect };
+window.dispatch = dispatch
+export { attach, connect }
