@@ -5,6 +5,7 @@ export default function Column (
   title?: string | null,
   smallColumn?: boolean
 ): string {
+  /* eslint-disable */
   return html`
     <div class='fl w-third ph1 ${smallColumn === true ? 'pt2 pb0' : 'pv2'}'>
       ${content != null
