@@ -6,7 +6,7 @@
     "editor.defaultFormatter": "standard.vscode-standard"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "standard.vscode-standard"
   },
   "cSpell.words": [
     "barin"
