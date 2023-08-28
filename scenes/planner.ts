@@ -23,28 +23,42 @@ function Planner (props: State): string {
 
   return Layout(
     html`
-      ${Column(
-        html`
-          <div>${Button('storage space')}</div>
-          <div>${Button('buy land')}</div>
-          <div>${Button('buy axe')}</div>
-        `,
-        'Build and upgrade'
-      )}
-      ${Column(
-        html`
-          ${Slots(availableMen)}
-          ${Title('Trade')}
-          ${Slots(traders, 'trade')}
-          ${Title('Salt mines')}
-          ${Slots(miners, 'salt')}
-        `,
-        'Plan work for a day'
-      )}
-      ${Column(
-        html``,
-        'Storage'
-      )}
+      <div class='cf'>
+        ${Column()}
+        ${Column(
+          html`
+            Day ${props.day}
+            Silver ${props.silver}
+          `,
+          null,
+          true
+        )}
+        ${Column()}
+      </div>
+      <div class='cf'>
+        ${Column(
+          html`
+            <div>${Button('storage space')}</div>
+            <div>${Button('buy land')}</div>
+            <div>${Button('buy axe')}</div>
+          `,
+          'Build and upgrade'
+        )}
+        ${Column(
+          html`
+            ${Slots(availableMen)}
+            ${Title('Trade')}
+            ${Slots(traders, 'trade')}
+            ${Title('Salt mines')}
+            ${Slots(miners, 'salt')}
+          `,
+          'Plan work for a day'
+        )}
+        ${Column(
+          html``,
+          'Storage'
+        )}
+      </div>
     `
   )
 }

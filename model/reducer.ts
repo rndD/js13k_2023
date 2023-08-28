@@ -4,6 +4,9 @@ import { generateID } from '@/lib/generate'
 type Action = string
 
 export interface State {
+  day: number
+  silver: number
+
   activities: PlannerActivityType[]
   men: Map<ID, ManType>
   sacks: Map<ID, SackType>
@@ -11,6 +14,9 @@ export interface State {
 
 const playerID = generateID()
 const initialState: State = {
+  day: 1,
+  silver: 0,
+
   activities: [],
   men: new Map([[playerID, { id: playerID }]]),
   sacks: new Map()

@@ -1,15 +1,18 @@
 import { html } from '@/lib/innerself'
 
 export default function Column (
-  content: string,
-  title: string
+  content?: string | null,
+  title?: string | null,
+  smallColumn?: boolean
 ): string {
   return html`
-    <div class='fl w-third ph1 pv2'>
-      <div class='h5 pa2 bg-light-yellow'>
-        <div class='mb3 tc'>${title}</div>
-        ${content}
-      </div>
+    <div class='fl w-third ph1 ${smallColumn === true ? 'pt2 pb0' : 'pv2'}'>
+      ${content != null
+        ? `<div class='${smallColumn === true ? 'h3' : 'h5'} pa2 bg-light-yellow'>
+            ${title != null ? `<div class='mb3 tc'>${title}</div>` : ''}
+            ${content}
+          </div>`
+        : ''}
     </div>
   `
 }
