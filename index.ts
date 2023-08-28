@@ -1,3 +1,4 @@
+import type { ActivityType } from './lib/types'
 import {attach} from './model/store'
 import Planner from './scenes/planner'
 
@@ -17,7 +18,7 @@ attach(Planner, document.querySelector('#root'))
     e.stopPropagation()
 
     const id = e.dataTransfer.getData('id')
-    const activity = elem.dataset.activity
+    const activity: ActivityType = elem.dataset.activity
     window.dispatch('ADD_ACTIVITY', id, activity)
   },
 

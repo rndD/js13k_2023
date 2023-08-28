@@ -30,7 +30,7 @@ export const html: HTML = ([first, ...strings], ...values) => {
 }
 
 export type CreateStore = <State, Action>(
-  reducer: (state: State, action: Action, params: unknown) => State
+  reducer: (state: State, action: Action, params: string[]) => State
 ) => {
   /**
    * dispatch an app action

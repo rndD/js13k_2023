@@ -1,4 +1,4 @@
-import type { ID, ManType, PlannerActivityType, SackType } from '@/lib/types'
+import type { ID, ActivityType, ManType, PlannerActivityType, SackType } from '@/lib/types'
 import { generateID } from '@/lib/generate'
 
 type Action = string
@@ -19,18 +19,20 @@ const initialState: State = {
 export function reducer (
   state: State = initialState,
   action: Action,
-  params: unknown
+  params: string[]
 ): State {
   switch (action) {
     case 'ADD_ACTIVITY': {
-      const [id, activity] = params
+      const [id, activity] = params as [ID, ActivityType]
 
       if (activity === '') {
         // remove
         state.activities = state.activities.filter(a => a.manID !== id)
       } else {
         // add
-        state.activities = state.activities.concat({ manID: id, type: activity })
+        state.activities = state.activities
+          .filter(a => a.manID !== id)
+          .concat({ manID: id, type: activity })
       }
 
       return state

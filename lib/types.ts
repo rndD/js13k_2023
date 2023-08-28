@@ -1,8 +1,10 @@
 export type ID = string
 
 export type ActivityType =
+  | ''
   | 'salt'
   | 'trade'
+
 export type ResourceType =
   | 'salt'
   | 'stone'

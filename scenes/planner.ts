@@ -17,6 +17,8 @@ function Planner (props: State): string {
     .filter(man => !props.activities.some(a => a.manID === man.id))
   const traders: ManType[] = props.activities.filter(a => a.type === 'trade')
     .map(a => props.men.get(a.manID))
+  const miners: ManType[] = props.activities.filter(a => a.type === 'salt')
+    .map(a => props.men.get(a.manID))
 
   return Layout(
     html`
@@ -34,16 +36,13 @@ function Planner (props: State): string {
           ${Title('Trade')}
           ${Slots(traders, 'trade')}
           ${Title('Salt mines')}
+          ${Slots(miners, 'salt')}
         `,
         'Plan work for a day'
       )}
       ${Column(
-        html`
-          <div>${Button('storage space')}</div>
-          <div>${Button('buy land')}</div>
-          <div>${Button('buy axe')}</div>
-        `,
-        'Build and upgrade'
+        html``,
+        'Storage'
       )}
     `
   )
