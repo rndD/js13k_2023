@@ -56,5 +56,5 @@ attach(Planner, nullthrows(document.querySelector('#root')))
     }
   }
 ].forEach(fn => {
-  document.body.addEventListener(fn.name, fn)
+  document.body.addEventListener(fn.name, fn as any)
 })

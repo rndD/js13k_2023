@@ -3,6 +3,7 @@ import type { State } from '@/model/store'
 import { connect } from '@/model/store'
 import { html } from '@/lib/innerself'
 import { values } from '@/lib/util'
+import nullthrows from '@/lib/nullthrows'
 
 import Button from '@/components/button'
 import Column from '@/components/column'
@@ -16,9 +17,9 @@ function Planner (props: State): string {
   const availableMen = values(props.men)
     .filter(man => !props.activities.some(a => a.manID === man.id))
   const traders: ManType[] = props.activities.filter(a => a.type === 'trade')
-    .map(a => props.men.get(a.manID))
+    .map(a => nullthrows(props.men.get(a.manID)))
   const miners: ManType[] = props.activities.filter(a => a.type === 'salt')
-    .map(a => props.men.get(a.manID))
+    .map(a => nullthrows(props.men.get(a.manID)))
 
   return Layout(
     html`
