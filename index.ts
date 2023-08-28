@@ -1,48 +1,58 @@
 import type { ActivityType } from './lib/types'
-import {attach} from './model/store'
+import { attach } from './model/store'
 import Planner from './scenes/planner'
 
 attach(Planner, document.querySelector('#root'))
 
 ;[
-  function dragstart(e) {
-    const elem = e.target
-    if (!elem?.classList.contains('grab')) return
+  function dragstart (e: DragEvent) {
+    const t = e.target as Element
 
-    elem.style.opacity = 0.5
-    e.dataTransfer.setData('id', elem.id)
-  },
-  function drop(e) {
-    const elem = e.target
-    if (!elem?.classList.contains('slots')) return
-    e.stopPropagation()
-
-    const id = e.dataTransfer.getData('id')
-    const activity: ActivityType = elem.dataset.activity
-    window.dispatch('ADD_ACTIVITY', id, activity)
+    if (t.classList.contains('grab')) {
+      t.style.opacity = 0.5
+      e.dataTransfer?.setData('id', t.id)
+    }
   },
 
-  function dragend(e) {
-    const elem = e.target
-    if (!elem?.classList.contains('grab')) return
+  function drop (e: DragEvent) {
+    const t = e.target as Element
 
-    elem.style.opacity = 1
+    if (t.classList.contains('slots')) {
+      e.stopPropagation()
+
+      const id = e.dataTransfer?.getData('id') as string
+      const activity: ActivityType = t.dataset.activity
+
+      window.dispatch('ADD_ACTIVITY', id, activity)
+    }
   },
-  function dragover(e) {
-    const elem = e.target
-    if (!elem?.classList.contains('slots')) return
-    e.preventDefault() // required
 
-    elem.classList.add('bg-yellow')
+  function dragend (e: DragEvent) {
+    const t = e.target as Element
 
-    return false
+    if (t.classList.contains('grab')) {
+      t.style.opacity = 1
+    }
   },
-  function dragleave(e) {
-    const elem = e.target
-    if (!elem?.classList.contains('slots')) return
 
-    elem.classList.remove('bg-yellow')
+  function dragover (e: DragEvent) {
+    const t = e.target as Element
+
+    if (t.classList.contains('slots')) {
+      e.preventDefault() // required
+      t.classList.add('bg-yellow')
+
+      return false
+    }
   },
+
+  function dragleave (e: DragEvent) {
+    const t = e.target as Element
+
+    if (t.classList.contains('slots')) {
+      t.classList.remove('bg-yellow')
+    }
+  }
 ].forEach(fn => {
   document.body.addEventListener(fn.name, fn)
 })
