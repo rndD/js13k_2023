@@ -1,14 +1,16 @@
-import type { ID, Man, Sack } from '@/lib/types'
+import type { ID, ManType, SackType } from '@/lib/types'
+import { generateID } from '@/lib/generate'
 
 type Action = string
 
 export interface State {
-  men: Map<ID, Man>
-  sacks: Map<ID, Sack>
+  men: Map<ID, ManType>
+  sacks: Map<ID, SackType>
 }
 
+const playerID = generateID()
 const initialState: State = {
-  men: new Map(),
+  men: new Map([[playerID, { id: playerID }]]),
   sacks: new Map()
 }
 

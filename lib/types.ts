@@ -1,23 +1,18 @@
 export type ID = string
 
-export type Resource =
+export type ResourceType =
   | 'salt'
   | 'stone'
   | 'weapon'
   | 'wheat'
   | 'wood'
 
-export interface Man {
+export interface ManType {
   id: ID
 }
 
-export interface Sack {
+export interface SackType {
   id: ID
-  resource: Resource
+  resource: ResourceType
   value: number
-}
-
-export interface Activity {
-  activity: ''
-  manID: ID
 }

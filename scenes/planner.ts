@@ -7,34 +7,34 @@ import Column from '@/components/column'
 import Layout from '@/components/layout'
 
 function Planner (props: State): string {
-  return Layout({
-    content: html`
-      ${Column({
-        content: html`
-          <div>${Button({ title: 'storage space' })}</div>
-          <div>${Button({ title: 'buy land' })}</div>
-          <div>${Button({ title: 'buy axe' })}</div>
+  return Layout(
+    html`
+      ${Column(
+        html`
+          <div>${Button('storage space')}</div>
+          <div>${Button('buy land')}</div>
+          <div>${Button('buy axe')}</div>
         `,
-        title: 'Build and upgrade'
-      })}
-      ${Column({
-        content: html`
-          <div>${Button({ title: 'storage space' })}</div>
-          <div>${Button({ title: 'buy land' })}</div>
-          <div>${Button({ title: 'buy axe' })}</div>
+        'Build and upgrade'
+      )}
+      ${Column(
+        html`
+          <div>${Button('storage space')}</div>
+          <div>${Button('buy land')}</div>
+          <div>${Button('buy axe')}</div>
         `,
-        title: 'Build and upgrade'
-      })}
-      ${Column({
-        content: html`
-          <div>${Button({ title: 'storage space' })}</div>
-          <div>${Button({ title: 'buy land' })}</div>
-          <div>${Button({ title: 'buy axe' })}</div>
+        'Build and upgrade'
+      )}
+      ${Column(
+        html`
+          <div>${Button('storage space')}</div>
+          <div>${Button('buy land')}</div>
+          <div>${Button('buy axe')}</div>
         `,
-        title: 'Build and upgrade'
-      })}
+        'Build and upgrade'
+      )}
     `
-  })
+  )
 }
 
 export default connect(Planner)

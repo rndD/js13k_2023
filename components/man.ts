@@ -1,13 +1,8 @@
+import type { ManType } from '@/lib/types'
 import { html } from '@/lib/innerself'
 
-interface Props {
-  title: string
-}
-
-export default function Button (props: Props): string {
+export default function Man (man: ManType): string {
   return html`
-    <button class='mb2 mr1 link dim bw0 light-yellow bg-light-red pointer'>
-      ${props.title}
-    </button>
+    <span>👨🏻‍💼</span>
   `
 }
