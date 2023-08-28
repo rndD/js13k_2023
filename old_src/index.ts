@@ -1,6 +1,3 @@
-import { drawEngine } from './lib/draw-engine'
-
-import { controls } from '@/lib/controls'
 import { html } from './lib/innerself'
 import { MainState } from './modules/state/state.types'
 import { attach, connect } from './modules/state/index'

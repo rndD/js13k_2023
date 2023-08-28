@@ -38,9 +38,9 @@ function Planner (props: State): string {
       <div class='cf'>
         ${Column(
           html`
-            <div>${Button('storage space')}</div>
-            <div>${Button('buy land')}</div>
-            <div>${Button('buy axe')}</div>
+            <div>${Button({ children: 'storage space' })}</div>
+            <div>${Button({ children: 'buy land' })}</div>
+            <div>${Button({ children: 'buy axe' })}</div>
           `,
           'Build and upgrade'
         )}
