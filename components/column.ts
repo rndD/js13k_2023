@@ -6,7 +6,7 @@ export default function Column (
 ): string {
   return html`
     <div class='fl w-third ph1 pv2'>
-      <div class='pa2 bg-light-yellow'>
+      <div class='h5 pa2 bg-light-yellow'>
         <div class='mb3 tc'>${title}</div>
         ${content}
       </div>

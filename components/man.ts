@@ -3,6 +3,6 @@ import { html } from '@/lib/innerself'
 
 export default function Man (man: ManType): string {
   return html`
-    <span>👨🏻‍💼</span>
+    <span class='mr1 grab' draggable='true' id='${man.id}'>👨🏻‍💼</span>
   `
 }
