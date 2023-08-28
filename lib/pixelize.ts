@@ -1,8 +1,9 @@
-export const getPixelizedEmoji = (emoji: string, size = 32) => {
+export const getPixelizedEmoji = (emoji: string, size = 32): string => {
   const originalSize = 128
 
   const c = document.createElement('canvas')
-  const ctx = c.getContext('2d')!
+  const ctx = c.getContext('2d')
+  if (ctx == null) throw new Error('No context')
   c.width = originalSize
   c.height = originalSize
   ctx.imageSmoothingEnabled = false
@@ -18,7 +19,8 @@ export const getPixelizedEmoji = (emoji: string, size = 32) => {
   const c2 = document.createElement('canvas')
   c2.width = originalSize / 2
   c2.height = originalSize / 2
-  const ctx2 = c2.getContext('2d')!
+  const ctx2 = c2.getContext('2d')
+  if (ctx2 == null) throw new Error('No context')
   ctx2.imageSmoothingEnabled = false
   ctx2.drawImage(
     ctx.canvas,

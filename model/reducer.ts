@@ -18,7 +18,7 @@ const initialState: State = {
   silver: 0,
 
   activities: [],
-  men: new Map([[playerID, { id: playerID }]]),
+  men: new Map([[playerID, { id: playerID, level: 2 }]]),
   sacks: new Map()
 }
 

@@ -1,4 +1,4 @@
-import { html } from '../innerself'
+import { html } from '@/lib/innerself'
 
 interface Props {
   children: string
@@ -6,7 +6,9 @@ interface Props {
   disabled?: boolean
 }
 
-export const ButtonComponent = (props: Props) => {
+// не уверен что нужен но пока сохраню
+/* eslint-disable */
+export const ButtonComponent2 = (props: Props) => {
   const disabled = props.disabled ? 'disabled' : ''
   const onClick = props.onClick
     ? `onclick="${props.onClick.replaceAll('"', "'")}"`

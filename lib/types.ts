@@ -14,6 +14,7 @@ export type ResourceType =
 
 export interface ManType {
   id: ID
+  level: 1 | 2 | 3
 }
 
 export interface SackType {
