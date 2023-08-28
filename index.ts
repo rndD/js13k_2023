@@ -24,7 +24,7 @@ attach(Planner, nullthrows(document.querySelector('#root')))
       /* eslint-disable */
       const id = e.dataTransfer?.getData('id')!
       const activity = nullthrows(t.dataset.activity as ActivityType)
-
+      /* eslint-enable */
       window.dispatch('ADD_ACTIVITY', id, activity)
     }
   },

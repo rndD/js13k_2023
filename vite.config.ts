@@ -10,8 +10,6 @@ const { execFileSync } = require('child_process');
 import ect from 'ect-bin';
 
 const htmlMinify = require('html-minifier');
-const tmp = require('tmp');
-const ClosureCompiler = require('google-closure-compiler').compiler;
 
 export default defineConfig(({ command, mode }) => {
   const config = {
@@ -55,44 +53,6 @@ export default defineConfig(({ command, mode }) => {
 
   return config;
 });
-
-// function closurePlugin(): Plugin {
-//   return {
-//     name: 'closure-compiler',
-//     // @ts-ignore
-//     renderChunk: applyClosure,
-//     enforce: 'post',
-//   }
-// }
-
-async function applyClosure(js: string, chunk: any) {
-  const tmpobj = tmp.fileSync();
-  // replace all consts with lets to save about 50-70 bytes
-  // ts-ignore
-  js = js.replaceAll('const ', 'let ');
-
-  await fs.writeFile(tmpobj.name, js);
-  const closureCompiler = new ClosureCompiler({
-    js: tmpobj.name,
-    externs: 'externs.js',
-    compilation_level: 'ADVANCED',
-    language_in: 'ECMASCRIPT_2020',
-    language_out: 'ECMASCRIPT_2020',
-  });
-  return new Promise((resolve, reject) => {
-    closureCompiler.run((_exitCode: string, stdOut: string, stdErr: string) => {
-      if (stdOut !== '') {
-        resolve({ code: stdOut });
-      } else if (stdErr !== '') { // only reject if stdout isn't generated
-        reject(stdErr);
-        return;
-      }
-
-      console.warn(stdErr); // If we make it here, there were warnings but no errors
-    });
-  })
-}
-
 
 function roadrollerPlugin(): Plugin {
   return {

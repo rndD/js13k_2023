@@ -6,9 +6,9 @@ export default function Column (
   smallColumn?: boolean
 ): string {
   return html`
-    <div class='fl w-third ph1 ${smallColumn ? 'pt2 pb0' : 'pv2'}'>
+    <div class='fl w-third ph1 ${smallColumn === true ? 'pt2 pb0' : 'pv2'}'>
       ${content != null
-        ? `<div class='${smallColumn ? 'h3' : 'h5'} pa2 bg-light-yellow'>
+        ? `<div class='${smallColumn === true ? 'h3' : 'h5'} pa2 bg-light-yellow'>
             ${title != null ? `<div class='mb3 tc'>${title}</div>` : ''}
             ${content}
           </div>`
