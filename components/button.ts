@@ -6,7 +6,6 @@ interface Props {
   disabled?: boolean
 }
 
-/* eslint-disable */
 export default function Button (props: Props): string {
   const disabled = props.disabled ? 'disabled' : ''
   const onClick = props.onClick

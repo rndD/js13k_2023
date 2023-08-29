@@ -7,6 +7,7 @@ type Dispatch =
   | ((action: 'ADD_ACTIVITY', id: string, activity: ActivityType) => void)
 
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
     dispatch: Dispatch
   }

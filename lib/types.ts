@@ -32,6 +32,29 @@ export type Action = string
 
 export type Scene = 'menu' | 'cards' | 'planner' | 'day' | 'gameover' | 'result'
 
+// in progress
+interface Upgrade {
+  type: string
+  level: number
+  effects?: Record<string, number> // type // not sure if needed
+  cost?: number
+  costResource?: Record<ResourceType, number>
+  requiredLvl?: number
+}
+
+// in progress
+interface Card {
+  name: string
+  effects: Record<string, number> // type
+  duration: number
+  level: number
+}
+
+// in progress
+interface StorageState {
+  resources: Record<ResourceType, number>
+}
+
 export interface State {
   day: number
   silver: number
@@ -59,27 +82,4 @@ export interface State {
 
   // in progress
   activeCards: Card[]
-}
-
-// in progress
-interface Upgrade {
-  type: string
-  level: number
-  effects?: Record<string, number> // type // not sure if needed
-  cost?: number
-  costResource?: Record<ResourceType, number>
-  requiredLvl?: number
-}
-
-// in progress
-interface StorageState {
-  resources: Record<ResourceType, number>
-}
-
-// in progress
-interface Card {
-  name: string
-  effects: Record<string, number> // type
-  duration: number
-  level: number
 }

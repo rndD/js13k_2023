@@ -1,6 +1,5 @@
 // W to @stasm for https://github.com/stasm/innerself
 
-/* eslint-disable @typescript-eslint/no-invalid-void-type */
 type HTML = (
   components: TemplateStringsArray,
   ...values: Array< | boolean
@@ -10,7 +9,6 @@ type HTML = (
   | number
   | Array<void | null | boolean | string | number>>
 ) => string
-/* eslint-enable @typescript-eslint/no-invalid-void-type */
 
 export const html: HTML = ([first, ...strings], ...values) => {
   // Weave the literal strings and the interpolations.
@@ -24,7 +22,7 @@ export const html: HTML = ([first, ...strings], ...values) => {
       )
 
       // Filter out interpolations which are bools, null or undefined.
-      .filter((x) => (x && x !== true) || x === 0) // eslint-disable-line @typescript-eslint/strict-boolean-expressions
+      .filter((x) => (x && x !== true) || x === 0)
       .join('')
   )
 }
