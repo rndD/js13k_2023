@@ -6,6 +6,7 @@ export type Moveable = {
 export interface Entity {
   id: number;
   pos: DOMPoint;
+  hovered?: boolean;
   moveable?: Moveable;
   dragged?: boolean;
   draggebale?: boolean;

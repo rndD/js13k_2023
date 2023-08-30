@@ -12,7 +12,11 @@ import {
   wInTiles,
 } from "@/const";
 import { Entity, getId } from "@/lib/entity";
-import { handleCollision, isPointerIn, testAABBCollision } from "@/lib/physics";
+import {
+  correctAABBCollision,
+  isPointerIn,
+  testAABBCollision,
+} from "@/lib/physics";
 
 const WALL: [number, number] = [4, 3];
 const WALL_R: [number, number] = [11, 4];
@@ -209,23 +213,23 @@ class GameState implements State {
       }
     }
 
+    const collisionMap = new Map<string, boolean>();
     // Entity
     for (const entity of this.entities) {
       if (entity.draggebale && entity.moveable) {
-        if (
-          controls.isMouseDown &&
-          !entity.dragged &&
-          this.dragging === -1 &&
-          isPointerIn(controls.mousePosition, {
-            x: entity.pos.x,
-            y: entity.pos.y,
-            w: tileSize * pixelScale,
-            h: tileSize * pixelScale,
-          })
-        ) {
-          entity.dragged = true;
-          this.dragging = entity.id;
+        entity.hovered = isPointerIn(controls.mousePosition, {
+          x: entity.pos.x,
+          y: entity.pos.y,
+          w: tileSize * pixelScale,
+          h: tileSize * pixelScale,
+        });
+        if (entity.hovered && !entity.dragged && this.dragging === -1) {
+          if (controls.isMouseDown) {
+            entity.dragged = true;
+            this.dragging = entity.id;
+          }
         }
+
         if (!controls.isMouseDown && entity.dragged) {
           entity.dragged = false;
           this.dragging = -1;
@@ -244,15 +248,25 @@ class GameState implements State {
           continue;
         }
 
+        const isAlreadyColided = collisionMap.has(
+          `${Math.min(entity.id, other.id)}-${Math.max(entity.id, other.id)}`
+        );
         if (entity.moveable) {
           const t = testAABBCollision(
             entity.pos,
-            { w: tileSize * pixelScale, h: tileSizeUpscaled },
+            { w: tileSizeUpscaled, h: tileSizeUpscaled },
             other.pos,
-            { w: tileSize * pixelScale, h: tileSizeUpscaled }
+            { w: tileSizeUpscaled, h: tileSizeUpscaled }
           );
           if (t.collide) {
-            handleCollision(entity, other);
+            collisionMap.set(
+              `${Math.min(entity.id, other.id)}-${Math.max(
+                entity.id,
+                other.id
+              )}`,
+              true
+            );
+            correctAABBCollision(entity, other, t);
           }
         }
       }
@@ -292,6 +306,17 @@ class GameState implements State {
         tileSizeUpscaled,
         tileSizeUpscaled
       );
+
+      if (entity.hovered && !entity.dragged) {
+        // draw transparent white overlay
+        drawEngine.context.fillStyle = "rgba(255,255,255,0.1)";
+        drawEngine.context.fillRect(
+          Math.round(entity.pos.x),
+          Math.round(entity.pos.y),
+          tileSizeUpscaled,
+          tileSizeUpscaled
+        );
+      }
     }
 
     // this.cratePosition = controls.mousePosition;

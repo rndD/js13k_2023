@@ -1,3 +1,4 @@
+import { tileSizeUpscaled } from "@/const";
 import { Entity } from "./entity";
 
 type CollisionTest = {
@@ -106,38 +107,37 @@ export function correctAABBCollision(
   else if (entity1.moveable.dy < 0) {
     entity1.pos.y += deltaMinY;
   }
-}
 
-export function handleCollision(a: Entity, b: Entity) {
-  if (!a.physics || !b.physics) return;
-
-  const totalMass = (a.physics.mass || 1) + (b.physics.mass || 1);
-
-  const aDxInitial = a.moveable?.dx || 0;
-  const aDyInitial = a.moveable?.dy || 0;
-  const bDxInitial = b.moveable?.dx || 0;
-  const bDyInitial = b.moveable?.dy || 0;
-
-  if (a.moveable) {
-    a.moveable.dx =
-      (aDxInitial * (a.physics.mass || 1) +
-        2 * (b.physics.mass || 1) * bDxInitial) /
-      totalMass;
-    a.moveable.dy =
-      (aDyInitial * (a.physics.mass || 1) +
-        2 * (b.physics.mass || 1) * bDyInitial) /
-      totalMass;
+  // Reverse the entity1's velocity component that is heading towards the entity2
+  if (entity1.moveable!.dx > 0 && entity1.pos.x < entity2.pos.x) {
+    entity1.moveable!.dx *= -1;
+    if (entity2.moveable) {
+      entity2.moveable.dx = -entity1.moveable!.dx * 0.5; // mass?
+    }
   }
-
-  if (b.moveable) {
-    b.moveable!.dx =
-      (bDxInitial * (b.physics.mass || 1) +
-        2 * (a.physics.mass || 1) * aDxInitial) /
-      totalMass;
-    b.moveable!.dy =
-      (bDyInitial * (b.physics.mass || 1) +
-        2 * (a.physics.mass || 1) * aDyInitial) /
-      totalMass;
+  if (
+    entity1.moveable!.dx < 0 &&
+    entity1.pos.x + entity1.sprite[0] > entity2.pos.x + tileSizeUpscaled
+  ) {
+    entity1.moveable!.dx *= -1;
+    if (entity2.moveable) {
+      entity2.moveable.dx = -entity1.moveable!.dx * 0.5; // mass?
+    }
+  }
+  if (entity1.moveable!.dy > 0 && entity1.pos.y < entity2.pos.y) {
+    entity1.moveable!.dy *= -1;
+    if (entity2.moveable) {
+      entity2.moveable.dy = -entity1.moveable!.dy * 0.5; // mass ?
+    }
+  }
+  if (
+    entity1.moveable!.dy < 0 &&
+    entity1.pos.y + entity1.sprite[1] > entity2.pos.y + tileSizeUpscaled
+  ) {
+    entity1.moveable!.dy *= -1;
+    if (entity2.moveable) {
+      entity2.moveable.dy = -entity1.moveable!.dy * 0.5; //mass ?
+    }
   }
 }
 

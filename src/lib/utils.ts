@@ -52,6 +52,41 @@ export const getTile = memoize(
   }
 );
 
+// work with small objects
+export const getOutlinedTile = memoize(
+  (source: HTMLCanvasElement, scale = 2) => {
+    const sCtx = source.getContext("2d");
+
+    const canvas = document.createElement("canvas");
+    canvas.width = source.width * 2;
+    canvas.height = source.height * 2;
+
+    const ctx = canvas.getContext("2d");
+    ctx!.imageSmoothingEnabled = false;
+
+    var dArr = [-1, -1, 0, -1, 1, -1, -1, 0, 1, 0, -1, 1, 0, 1, 1, 1], // offset array
+      s = scale, // thickness scale
+      i = 0, // iterator
+      x = 5, // final position
+      y = 1;
+
+    // draw images at offsets from the array scaled by s
+    for (; i < dArr.length; i += 2)
+      ctx!.drawImage(source, x + dArr[i] * s, y + dArr[i + 1] * s);
+
+    // fill with color
+    ctx!.globalCompositeOperation = "source-in";
+    // trasparent white
+    ctx!.fillStyle = "rgba(255,255,255,0.8)";
+    ctx!.fillRect(0, 0, canvas.width, canvas.height);
+
+    // draw original image in normal mode
+    ctx!.globalCompositeOperation = "source-over";
+    ctx!.drawImage(source, x, y);
+    return canvas;
+  }
+);
+
 export const getGridPointInPixels = (gridPoint: DOMPoint) => {
   return new DOMPoint(
     gridPoint.x * tileSizeUpscaled,
