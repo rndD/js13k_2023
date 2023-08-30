@@ -3,22 +3,27 @@ import { drawEngine } from "@/core/draw-engine";
 import { controls } from "@/core/controls";
 import { gameStateMachine } from "@/game-state-machine";
 import { menuState } from "@/game-states/menu.state";
-import { AABB, lerp, memoize } from "@/lib/utils";
+import { getGridPointInPixels, getTile } from "@/lib/utils";
+import {
+  hInTiles,
+  pixelScale,
+  tileSize,
+  tileSizeUnscaled,
+  wInTiles,
+} from "@/const";
+import { Entity, getId } from "@/lib/entity";
+import {
+  correctAABBCollision,
+  isPointerIn,
+  testAABBCollision,
+} from "@/lib/physics";
 
-const canvasW = 1920;
-const canvasH = 1080;
-
-const pixelScale = 5;
-const tileSize = 16;
-
-const wInTiles = canvasW / tileSize / pixelScale;
-const hInTiles = canvasH / tileSize / pixelScale;
-
-const WALL = [4, 3];
-const WALL_R = [11, 4];
-const WALL_L = [9, 4];
-const FLOOR = [0, 0];
-const CRATE = [3, 5];
+const WALL: [number, number] = [4, 3];
+const WALL_R: [number, number] = [11, 4];
+const WALL_L: [number, number] = [9, 4];
+const DOOR: [number, number] = [10, 4];
+const FLOOR: [number, number] = [0, 0];
+const CRATE: [number, number] = [3, 5];
 
 const EMPTY = 0;
 
@@ -97,58 +102,62 @@ const ROOM = [
   [WALL_L, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL_R],
 ];
 
-const getTile = memoize((tilemap: HTMLImageElement, x: number, y: number) => {
-  const horizontalTiles = 12;
-  const verticalTiles = 11;
-
-  if (x < 0 || x >= horizontalTiles || y < 0 || y >= verticalTiles) {
-    console.warn("Tile out of bounds", x, y);
-    return null;
-  }
-
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("Could not get context from canvas");
-  }
-  canvas.width = tileSize;
-  canvas.height = tileSize;
-
-  context.clearRect(0, 0, tileSize, tileSize);
-  context.drawImage(
-    tilemap,
-    x * tileSize,
-    y * tileSize,
-    tileSize,
-    tileSize,
-    0,
-    0,
-    tileSize,
-    tileSize
-  );
-  return context.canvas;
-});
-
-const getGridPointInPixels = (gridPoint: DOMPoint) => {
-  return new DOMPoint(
-    gridPoint.x * tileSize * pixelScale,
-    gridPoint.y * tileSize * pixelScale
-  );
+const createRoom = () => {
+  const e: Entity[] = [];
+  ROOM.forEach((row, y) => {
+    row.forEach((tile, x) => {
+      if (!Array.isArray(tile)) {
+        return;
+      }
+      const point = getGridPointInPixels(new DOMPoint(x, y));
+      e.push({
+        id: getId(),
+        pos: point,
+        physics: {},
+        sprite: tile,
+        type: "wall",
+      });
+    });
+  });
+  console.log(e);
+  return e;
 };
 
 class GameState implements State {
   tilemap = new Image();
   tiles: HTMLCanvasElement[] = [];
-  cratePosition = new DOMPoint(100, 100);
 
-  isCrateDragging = false;
+  entities: Entity[] = [];
 
   // ballSize = 100;
   // ballPosition = new DOMPoint(100, 100);
   // ballVelocity = new DOMPoint(10, 10);
+  dragging: number = -1;
 
   constructor() {
     this.tilemap.src = "tilemap_packed.png";
+
+    this.entities.push({
+      id: getId(),
+      pos: new DOMPoint(150, 150),
+      moveable: { dx: 0, dy: 0 },
+      draggebale: true,
+      physics: { mass: 1, friction: 0.98 },
+      sprite: CRATE,
+      type: "crate",
+    });
+
+    this.entities.push({
+      id: getId(),
+      pos: new DOMPoint(300, 300),
+      moveable: { dx: 0, dy: 0 },
+      draggebale: true,
+      physics: { mass: 1, friction: 0.98 },
+      sprite: CRATE,
+      type: "crate",
+    });
+
+    this.entities.push(...createRoom());
   }
 
   // Make sure ball starts at the same spot when game is entered
@@ -158,6 +167,8 @@ class GameState implements State {
 
   onUpdate() {
     // draw
+
+    // overdraw
     drawEngine.context.fillStyle = "gray";
     drawEngine.context.fillRect(
       0,
@@ -184,79 +195,94 @@ class GameState implements State {
       }
     }
 
-    // draw crate
-    if (controls.isMouseDown) {
-      if (
-        AABB(
-          controls.mousePosition,
-          this.cratePosition,
-          tileSize * pixelScale
-        ) ||
-        this.isCrateDragging
-      ) {
-        this.isCrateDragging = true;
-        // limit it to room
+    // Entity
+    for (const entity of this.entities) {
+      if (entity.draggebale && entity.moveable) {
         if (
-          this.cratePosition.x > tileSize * pixelScale &&
-          this.cratePosition.x < canvasW / 2 - tileSize * pixelScale
+          controls.isMouseDown &&
+          !entity.dragged &&
+          this.dragging === -1 &&
+          isPointerIn(controls.mousePosition, {
+            x: entity.pos.x,
+            y: entity.pos.y,
+            w: tileSize * pixelScale,
+            h: tileSize * pixelScale,
+          })
         ) {
-          this.cratePosition.x = lerp(
-            this.cratePosition.x,
-            controls.mousePosition.x,
-            0.2
-          );
+          entity.dragged = true;
+          this.dragging = entity.id;
         }
-        if (
-          this.cratePosition.y > tileSize * pixelScale &&
-          this.cratePosition.y < canvasH / 2 - tileSize * pixelScale
-        ) {
-          this.cratePosition.y = lerp(
-            this.cratePosition.y,
-            controls.mousePosition.y,
-            0.2
-          );
+        if (!controls.isMouseDown && entity.dragged) {
+          entity.dragged = false;
+          this.dragging = -1;
         }
-        // this.cratePosition = controls.mousePosition;
+
+        if (entity.dragged) {
+          // move create in direction of mouse but slowly
+          entity.moveable.dx = (controls.mousePosition.x - entity.pos.x) / 50;
+          entity.moveable.dy = (controls.mousePosition.y - entity.pos.y) / 50;
+        }
       }
-    } else {
-      this.isCrateDragging = false;
+
+      // check for collisions
+      for (const other of this.entities) {
+        if (other.id === entity.id || !entity.physics || !other.physics) {
+          continue;
+        }
+
+        if (entity.moveable) {
+          const t = testAABBCollision(
+            entity.pos,
+            { w: tileSize * pixelScale, h: tileSizeUnscaled },
+            other.pos,
+            { w: tileSize * pixelScale, h: tileSizeUnscaled }
+          );
+          if (t.collide) {
+            correctAABBCollision(entity, other, t);
+          }
+        }
+      }
+
+      if (entity.moveable) {
+        entity.pos.x += entity.moveable?.dx;
+        entity.pos.y += entity.moveable?.dy;
+        // friction
+        entity.moveable.dx *= entity.physics?.friction || 0.95;
+        if (entity.moveable.dx < 0.001 && entity.moveable.dx > -0.001) {
+          entity.moveable.dx = 0;
+        }
+        entity.moveable.dy *= entity.physics?.friction || 0.95;
+        if (entity.moveable.dy < 0.001 && entity.moveable.dy > -0.001) {
+          entity.moveable.dy = 0;
+        }
+      }
+
+      if (entity.dragged) {
+        drawEngine.context.fillStyle = "rgba(0,0,0,0.2)";
+        drawEngine.context.fillRect(
+          entity.pos.x + 1,
+          entity.pos.y + 15,
+          tileSizeUnscaled,
+          tileSizeUnscaled
+        );
+      }
+
+      drawEngine.context.drawImage(
+        getTile(this.tilemap, entity.sprite[0], entity.sprite[1])!,
+        0,
+        0,
+        tileSize,
+        tileSize,
+        entity.pos.x,
+        entity.pos.y,
+        tileSizeUnscaled,
+        tileSizeUnscaled
+      );
     }
 
     // this.cratePosition = controls.mousePosition;
 
-    drawEngine.context.drawImage(
-      getTile(this.tilemap, CRATE[0], CRATE[1])!,
-      0,
-      0,
-      tileSize,
-      tileSize,
-      this.cratePosition.x,
-      this.cratePosition.y,
-      tileSize * pixelScale,
-      tileSize * pixelScale
-    );
-
     // draw room
-    ROOM.forEach((row, y) => {
-      row.forEach((tile, x) => {
-        if (!Array.isArray(tile)) {
-          return;
-        }
-
-        const point = getGridPointInPixels(new DOMPoint(x, y));
-        drawEngine.context.drawImage(
-          getTile(this.tilemap, tile[0], tile[1])!,
-          0,
-          0,
-          tileSize,
-          tileSize,
-          point.x,
-          point.y,
-          tileSize * pixelScale,
-          tileSize * pixelScale
-        );
-      });
-    });
 
     if (controls.isEscape) {
       gameStateMachine.setState(menuState);
