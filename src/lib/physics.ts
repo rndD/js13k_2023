@@ -108,6 +108,39 @@ export function correctAABBCollision(
   }
 }
 
+export function handleCollision(a: Entity, b: Entity) {
+  if (!a.physics || !b.physics) return;
+
+  const totalMass = (a.physics.mass || 1) + (b.physics.mass || 1);
+
+  const aDxInitial = a.moveable?.dx || 0;
+  const aDyInitial = a.moveable?.dy || 0;
+  const bDxInitial = b.moveable?.dx || 0;
+  const bDyInitial = b.moveable?.dy || 0;
+
+  if (a.moveable) {
+    a.moveable.dx =
+      (aDxInitial * (a.physics.mass || 1) +
+        2 * (b.physics.mass || 1) * bDxInitial) /
+      totalMass;
+    a.moveable.dy =
+      (aDyInitial * (a.physics.mass || 1) +
+        2 * (b.physics.mass || 1) * bDyInitial) /
+      totalMass;
+  }
+
+  if (b.moveable) {
+    b.moveable!.dx =
+      (bDxInitial * (b.physics.mass || 1) +
+        2 * (a.physics.mass || 1) * aDxInitial) /
+      totalMass;
+    b.moveable!.dy =
+      (bDyInitial * (b.physics.mass || 1) +
+        2 * (a.physics.mass || 1) * aDyInitial) /
+      totalMass;
+  }
+}
+
 export function isPointerIn(
   pointer: DOMPoint,
   { x, y, w, h }: { x: number; y: number; w: number; h: number }

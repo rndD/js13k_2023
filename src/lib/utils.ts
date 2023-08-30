@@ -1,4 +1,4 @@
-import { pixelScale, tileSize } from "@/const";
+import { tileSize, tileSizeUpscaled } from "@/const";
 
 export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
   const cache = new Map<string, ReturnType<T>>();
@@ -32,6 +32,7 @@ export const getTile = memoize(
     if (!context) {
       throw new Error("Could not get context from canvas");
     }
+    context.imageSmoothingEnabled = false;
     canvas.width = tileSize;
     canvas.height = tileSize;
 
@@ -53,7 +54,7 @@ export const getTile = memoize(
 
 export const getGridPointInPixels = (gridPoint: DOMPoint) => {
   return new DOMPoint(
-    gridPoint.x * tileSize * pixelScale,
-    gridPoint.y * tileSize * pixelScale
+    gridPoint.x * tileSizeUpscaled,
+    gridPoint.y * tileSizeUpscaled
   );
 };

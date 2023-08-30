@@ -8,20 +8,17 @@ import {
   hInTiles,
   pixelScale,
   tileSize,
-  tileSizeUnscaled,
+  tileSizeUpscaled,
   wInTiles,
 } from "@/const";
 import { Entity, getId } from "@/lib/entity";
-import {
-  correctAABBCollision,
-  isPointerIn,
-  testAABBCollision,
-} from "@/lib/physics";
+import { handleCollision, isPointerIn, testAABBCollision } from "@/lib/physics";
 
 const WALL: [number, number] = [4, 3];
 const WALL_R: [number, number] = [11, 4];
 const WALL_L: [number, number] = [9, 4];
-const DOOR: [number, number] = [10, 4];
+const DOOR_R: [number, number] = [10, 2];
+const DOOR_L: [number, number] = [11, 2];
 const FLOOR: [number, number] = [0, 0];
 const CRATE: [number, number] = [3, 5];
 
@@ -99,27 +96,44 @@ const ROOM = [
     EMPTY,
     WALL_R,
   ],
-  [WALL_L, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL_R],
+  [
+    WALL_L,
+    WALL,
+    WALL,
+    WALL,
+    WALL,
+    DOOR_R,
+    DOOR_L,
+    WALL,
+    WALL,
+    WALL,
+    WALL,
+    WALL_R,
+  ],
 ];
 
 const createRoom = () => {
   const e: Entity[] = [];
+  const startX = 2;
+  const startY = 2;
   ROOM.forEach((row, y) => {
     row.forEach((tile, x) => {
       if (!Array.isArray(tile)) {
         return;
       }
-      const point = getGridPointInPixels(new DOMPoint(x, y));
+      const isDoor =
+        (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
+        (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
+      const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY));
       e.push({
         id: getId(),
         pos: point,
-        physics: {},
+        physics: isDoor ? undefined : { mass: 1000, friction: 0.9 },
         sprite: tile,
-        type: "wall",
+        type: !isDoor ? "wall" : "door",
       });
     });
   });
-  console.log(e);
   return e;
 };
 
@@ -233,12 +247,12 @@ class GameState implements State {
         if (entity.moveable) {
           const t = testAABBCollision(
             entity.pos,
-            { w: tileSize * pixelScale, h: tileSizeUnscaled },
+            { w: tileSize * pixelScale, h: tileSizeUpscaled },
             other.pos,
-            { w: tileSize * pixelScale, h: tileSizeUnscaled }
+            { w: tileSize * pixelScale, h: tileSizeUpscaled }
           );
           if (t.collide) {
-            correctAABBCollision(entity, other, t);
+            handleCollision(entity, other);
           }
         }
       }
@@ -260,10 +274,10 @@ class GameState implements State {
       if (entity.dragged) {
         drawEngine.context.fillStyle = "rgba(0,0,0,0.2)";
         drawEngine.context.fillRect(
-          entity.pos.x + 1,
-          entity.pos.y + 15,
-          tileSizeUnscaled,
-          tileSizeUnscaled
+          Math.round(entity.pos.x + 1),
+          Math.round(entity.pos.y + 5),
+          tileSizeUpscaled,
+          tileSizeUpscaled
         );
       }
 
@@ -273,10 +287,10 @@ class GameState implements State {
         0,
         tileSize,
         tileSize,
-        entity.pos.x,
-        entity.pos.y,
-        tileSizeUnscaled,
-        tileSizeUnscaled
+        Math.round(entity.pos.x),
+        Math.round(entity.pos.y),
+        tileSizeUpscaled,
+        tileSizeUpscaled
       );
     }
 
