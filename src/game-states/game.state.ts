@@ -1,16 +1,15 @@
 import { State } from "@/core/state";
-import { drawEngine } from "@/core/draw-engine";
+import {
+  drawEngine,
+  pixelScale,
+  tileSize,
+  tileSizeUpscaled,
+} from "@/core/draw-engine";
 import { controls } from "@/core/controls";
 import { gameStateMachine } from "@/game-state-machine";
 import { menuState } from "@/game-states/menu.state";
 import { getGridPointInPixels, getTile } from "@/lib/utils";
-import {
-  hInTiles,
-  pixelScale,
-  tileSize,
-  tileSizeUpscaled,
-  wInTiles,
-} from "@/const";
+
 import { Entity, getId } from "@/lib/entity";
 import {
   correctAABBCollision,
@@ -188,16 +187,11 @@ class GameState implements State {
 
     // overdraw
     drawEngine.context.fillStyle = "gray";
-    drawEngine.context.fillRect(
-      0,
-      0,
-      drawEngine.canvasWidth,
-      drawEngine.canvasHeight
-    );
+    drawEngine.context.fillRect(0, 0, drawEngine.w, drawEngine.h);
 
     // draw floor
-    for (let x = 0; x < wInTiles; x++) {
-      for (let y = 0; y < hInTiles; y++) {
+    for (let x = 0; x < drawEngine.wInTiles; x++) {
+      for (let y = 0; y < drawEngine.hInTiles; y++) {
         const point = getGridPointInPixels(new DOMPoint(x, y));
         drawEngine.context.drawImage(
           getTile(this.tilemap, FLOOR[0], FLOOR[1])!,

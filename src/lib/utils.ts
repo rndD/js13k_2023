@@ -1,4 +1,4 @@
-import { tileSize, tileSizeUpscaled } from "@/const";
+import { tileSize, tileSizeUpscaled } from "@/core/draw-engine";
 
 export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
   const cache = new Map<string, ReturnType<T>>();
@@ -53,6 +53,7 @@ export const getTile = memoize(
 );
 
 // work with small objects
+// not used
 export const getOutlinedTile = memoize(
   (source: HTMLCanvasElement, scale = 2) => {
     const sCtx = source.getContext("2d");

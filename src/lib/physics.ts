@@ -1,4 +1,4 @@
-import { tileSizeUpscaled } from "@/const";
+import { tileSizeUpscaled } from "@/core/draw-engine";
 import { Entity } from "./entity";
 
 type CollisionTest = {
