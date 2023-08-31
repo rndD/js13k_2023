@@ -10,7 +10,7 @@ import { gameStateMachine } from "@/game-state-machine";
 import { menuState } from "@/game-states/menu.state";
 import { getGridPointInPixels } from "@/lib/utils";
 
-import { Entity, getId } from "@/lib/entity";
+import { Entity, createFreight, createObstacle } from "@/lib/entity";
 import {
   correctAABBCollision,
   isPointerIn,
@@ -31,13 +31,7 @@ const createRoom = () => {
         (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
         (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
       const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY));
-      e.push({
-        id: getId(),
-        pos: point,
-        physics: isDoor ? undefined : { mass: 1000, friction: 0.9 },
-        sprite: tile,
-        type: !isDoor ? "wall" : "door",
-      });
+      e.push(createObstacle(point, tile, isDoor ? "door" : "wall"));
     });
   });
   return e;
@@ -54,25 +48,10 @@ class GameState implements State {
   dragging: number = -1;
 
   constructor() {
-    this.entities.push({
-      id: getId(),
-      pos: new DOMPoint(150, 150),
-      moveable: { dx: 0, dy: 0 },
-      draggebale: true,
-      physics: { mass: 1, friction: 0.98 },
-      sprite: CRATE,
-      type: "crate",
-    });
-
-    this.entities.push({
-      id: getId(),
-      pos: new DOMPoint(300, 300),
-      moveable: { dx: 0, dy: 0 },
-      draggebale: true,
-      physics: { mass: 1, friction: 0.98 },
-      sprite: CRATE,
-      type: "crate",
-    });
+    this.entities.push(
+      createFreight(new DOMPoint(100, 100), CRATE, "crate", 1),
+      createFreight(new DOMPoint(200, 100), CRATE, "crate", 1)
+    );
 
     this.entities.push(...createRoom());
   }
