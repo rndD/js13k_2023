@@ -8,7 +8,7 @@ import {
 import { controls } from "@/core/controls";
 import { gameStateMachine } from "@/game-state-machine";
 import { menuState } from "@/game-states/menu.state";
-import { getGridPointInPixels, getTile } from "@/lib/utils";
+import { getGridPointInPixels } from "@/lib/utils";
 
 import { Entity, getId } from "@/lib/entity";
 import {
@@ -16,104 +16,7 @@ import {
   isPointerIn,
   testAABBCollision,
 } from "@/lib/physics";
-
-const WALL: [number, number] = [4, 3];
-const WALL_R: [number, number] = [11, 4];
-const WALL_L: [number, number] = [9, 4];
-const DOOR_R: [number, number] = [10, 2];
-const DOOR_L: [number, number] = [11, 2];
-const FLOOR: [number, number] = [0, 0];
-const CRATE: [number, number] = [3, 5];
-
-const EMPTY = 0;
-
-const ROOM = [
-  [WALL_L, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL_R],
-  [
-    WALL_L,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_R,
-  ],
-  [
-    WALL_L,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_R,
-  ],
-  [
-    WALL_L,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_R,
-  ],
-  [
-    WALL_L,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_R,
-  ],
-  [
-    WALL_L,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_R,
-  ],
-  [
-    WALL_L,
-    WALL,
-    WALL,
-    WALL,
-    WALL,
-    DOOR_R,
-    DOOR_L,
-    WALL,
-    WALL,
-    WALL,
-    WALL,
-    WALL_R,
-  ],
-];
+import { CRATE, DOOR_L, DOOR_R, ROOM } from "@/core/tiles";
 
 const createRoom = () => {
   const e: Entity[] = [];
@@ -141,7 +44,6 @@ const createRoom = () => {
 };
 
 class GameState implements State {
-  tilemap = new Image();
   tiles: HTMLCanvasElement[] = [];
 
   entities: Entity[] = [];
@@ -152,8 +54,6 @@ class GameState implements State {
   dragging: number = -1;
 
   constructor() {
-    this.tilemap.src = "tilemap_packed.png";
-
     this.entities.push({
       id: getId(),
       pos: new DOMPoint(150, 150),
@@ -184,28 +84,6 @@ class GameState implements State {
 
   onUpdate() {
     // draw
-
-    // overdraw
-    drawEngine.context.fillStyle = "gray";
-    drawEngine.context.fillRect(0, 0, drawEngine.w, drawEngine.h);
-
-    // draw floor
-    for (let x = 0; x < drawEngine.wInTiles; x++) {
-      for (let y = 0; y < drawEngine.hInTiles; y++) {
-        const point = getGridPointInPixels(new DOMPoint(x, y));
-        drawEngine.context.drawImage(
-          getTile(this.tilemap, FLOOR[0], FLOOR[1])!,
-          0,
-          0,
-          tileSize,
-          tileSize,
-          point.x,
-          point.y,
-          tileSize * pixelScale,
-          tileSize * pixelScale
-        );
-      }
-    }
 
     const collisionMap = new Map<string, boolean>();
     // Entity
@@ -278,44 +156,10 @@ class GameState implements State {
           entity.moveable.dy = 0;
         }
       }
-
-      if (entity.dragged) {
-        drawEngine.context.fillStyle = "rgba(0,0,0,0.2)";
-        drawEngine.context.fillRect(
-          Math.round(entity.pos.x + 1),
-          Math.round(entity.pos.y + 5),
-          tileSizeUpscaled,
-          tileSizeUpscaled
-        );
-      }
-
-      drawEngine.context.drawImage(
-        getTile(this.tilemap, entity.sprite[0], entity.sprite[1])!,
-        0,
-        0,
-        tileSize,
-        tileSize,
-        Math.round(entity.pos.x),
-        Math.round(entity.pos.y),
-        tileSizeUpscaled,
-        tileSizeUpscaled
-      );
-
-      if (entity.hovered && !entity.dragged) {
-        // draw transparent white overlay
-        drawEngine.context.fillStyle = "rgba(255,255,255,0.1)";
-        drawEngine.context.fillRect(
-          Math.round(entity.pos.x),
-          Math.round(entity.pos.y),
-          tileSizeUpscaled,
-          tileSizeUpscaled
-        );
-      }
     }
 
-    // this.cratePosition = controls.mousePosition;
-
-    // draw room
+    // draw
+    drawEngine.renderGame(this.entities);
 
     if (controls.isEscape) {
       gameStateMachine.setState(menuState);
