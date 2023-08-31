@@ -28,7 +28,11 @@ class MenuState implements State {
   }
 
   updateControls() {
-    gameStateMachine.setState(gameState);
+    // Autoskip for testing
+    if (drawEngine.ready) {
+      gameStateMachine.setState(gameState);
+    }
+
     if (
       (controls.isUp && !controls.previousState.isUp) ||
       (controls.isDown && !controls.previousState.isDown)

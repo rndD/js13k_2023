@@ -1,5 +1,5 @@
 import { tileSizeUpscaled } from "@/core/draw-engine";
-import { Entity } from "./entity";
+import { Entity } from "../core/entity";
 
 type CollisionTest = {
   entity1MaxX: number;

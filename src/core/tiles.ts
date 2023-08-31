@@ -5,6 +5,8 @@ export const DOOR_R: [number, number] = [10, 2];
 export const DOOR_L: [number, number] = [11, 2];
 export const FLOOR: [number, number] = [0, 0];
 export const CRATE: [number, number] = [3, 5];
+export const SPAWN_POINT: [number, number] = [1, 5];
+export const SELL_POINT: [number, number] = [0, 5];
 
 export const EMPTY = 0;
 

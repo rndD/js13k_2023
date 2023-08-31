@@ -1,6 +1,6 @@
 import { getGridPointInPixels, getTile } from "@/lib/utils";
 import { FLOOR } from "./tiles";
-import { Entity } from "@/lib/entity";
+import { Entity } from "@/core/entity";
 
 export const pixelScale = 2;
 export const tileSize = 16;
@@ -9,6 +9,7 @@ export const tileSizeUpscaled = tileSize * pixelScale;
 class DrawEngine {
   context: CanvasRenderingContext2D;
   tilemap = new Image();
+  ready = false;
 
   constructor() {
     this.context = c2d.getContext("2d");
@@ -16,6 +17,9 @@ class DrawEngine {
     this.context.imageSmoothingEnabled = false;
 
     this.tilemap.src = "tilemap_packed.png";
+    this.tilemap.onload = () => {
+      this.ready = true;
+    };
   }
 
   get wInTiles() {
@@ -43,10 +47,10 @@ class DrawEngine {
   ) {
     const context = this.context;
 
-    context.font = `${fontSize}px Impact, sans-serif-black`;
+    context.font = `${fontSize}px monospace, sans-serif-black`;
     context.textAlign = textAlign;
     context.strokeStyle = "black";
-    context.lineWidth = 4;
+    context.lineWidth = 1;
     context.strokeText(text, x, y);
     context.fillStyle = color;
     context.fillText(text, x, y);
@@ -93,7 +97,7 @@ class DrawEngine {
         0,
         tileSize,
         tileSize,
-        Math.round(entity.pos.x),
+        Math.round(entity.pos.x), // draw on pixel grid
         Math.round(entity.pos.y),
         tileSizeUpscaled,
         tileSizeUpscaled
