@@ -51,62 +51,66 @@ export function correctAABBCollision(
   // AABB collision response (homegrown wall sliding, not physically correct
   // because just pushing along one axis by the distance overlapped)
 
+  // this is correction
+
   // entity1 moving down/right
-  if (entity1.moveable.dx > 0 && entity1.moveable.dy > 0) {
-    if (deltaMaxX < deltaMaxY) {
-      // collided right side first
-      entity1.pos.x -= deltaMaxX;
-    } else {
-      // collided top side first
-      entity1.pos.y -= deltaMaxY;
-    }
-  }
-  // entity1 moving up/right
-  else if (entity1.moveable.dx > 0 && entity1.moveable.dy < 0) {
-    if (deltaMaxX < deltaMinY) {
-      // collided right side first
-      entity1.pos.x -= deltaMaxX;
-    } else {
-      // collided bottom side first
-      entity1.pos.y += deltaMinY;
-    }
-  }
-  // entity1 moving right
-  else if (entity1.moveable.dx > 0) {
-    entity1.pos.x -= deltaMaxX;
-  }
-  // entity1 moving down/left
-  else if (entity1.moveable.dx < 0 && entity1.moveable.dy > 0) {
-    if (deltaMinX < deltaMaxY) {
-      // collided left side first
-      entity1.pos.x += deltaMinX;
-    } else {
-      // collided top side first
-      entity1.pos.y -= deltaMaxY;
-    }
-  }
-  // entity1 moving up/left
-  else if (entity1.moveable.dx < 0 && entity1.moveable.dy < 0) {
-    if (deltaMinX < deltaMinY) {
-      // collided left side first
-      entity1.pos.x += deltaMinX;
-    } else {
-      // collided bottom side first
-      entity1.pos.y += deltaMinY;
-    }
-  }
-  // entity1 moving left
-  else if (entity1.moveable.dx < 0) {
-    entity1.pos.x += deltaMinX;
-  }
-  // entity1 moving down
-  else if (entity1.moveable.dy > 0) {
-    entity1.pos.y -= deltaMaxY;
-  }
-  // entity1 moving up
-  else if (entity1.moveable.dy < 0) {
-    entity1.pos.y += deltaMinY;
-  }
+  // if (entity1.moveable.dx > 0 && entity1.moveable.dy > 0) {
+  //   if (deltaMaxX < deltaMaxY) {
+  //     // collided right side first
+  //     entity1.pos.x -= deltaMaxX;
+  //   } else {
+  //     // collided top side first
+  //     entity1.pos.y -= deltaMaxY;
+  //   }
+  // }
+  // // entity1 moving up/right
+  // else if (entity1.moveable.dx > 0 && entity1.moveable.dy < 0) {
+  //   if (deltaMaxX < deltaMinY) {
+  //     // collided right side first
+  //     entity1.pos.x -= deltaMaxX;
+  //   } else {
+  //     // collided bottom side first
+  //     entity1.pos.y += deltaMinY;
+  //   }
+  // }
+  // // entity1 moving right
+  // else if (entity1.moveable.dx > 0) {
+  //   entity1.pos.x -= deltaMaxX;
+  // }
+  // // entity1 moving down/left
+  // else if (entity1.moveable.dx < 0 && entity1.moveable.dy > 0) {
+  //   if (deltaMinX < deltaMaxY) {
+  //     // collided left side first
+  //     entity1.pos.x += deltaMinX;
+  //   } else {
+  //     // collided top side first
+  //     entity1.pos.y -= deltaMaxY;
+  //   }
+  // }
+  // // entity1 moving up/left
+  // else if (entity1.moveable.dx < 0 && entity1.moveable.dy < 0) {
+  //   if (deltaMinX < deltaMinY) {
+  //     // collided left side first
+  //     entity1.pos.x += deltaMinX;
+  //   } else {
+  //     // collided bottom side first
+  //     entity1.pos.y += deltaMinY;
+  //   }
+  // }
+  // // entity1 moving left
+  // else if (entity1.moveable.dx < 0) {
+  //   entity1.pos.x += deltaMinX;
+  // }
+  // // entity1 moving down
+  // else if (entity1.moveable.dy > 0) {
+  //   entity1.pos.y -= deltaMaxY;
+  // }
+  // // entity1 moving up
+  // else if (entity1.moveable.dy < 0) {
+  //   entity1.pos.y += deltaMinY;
+  // }
+
+  // this is bounce
 
   // Reverse the entity1's velocity component that is heading towards the entity2
   if (entity1.moveable!.dx > 0 && entity1.pos.x < entity2.pos.x) {
