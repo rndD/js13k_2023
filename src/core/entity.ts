@@ -6,7 +6,14 @@ export type Moveable = {
   dy: number;
 };
 
-type EntityType = "wall" | "door" | "crate" | "sellPoint" | "spawnPoint";
+type EntityType =
+  | "wall"
+  | "door"
+  | "crate"
+  | "sellPoint"
+  | "spawnPoint"
+  | "stairs"
+  | "ice";
 
 // FIXME should be split into multiple granular interfaces and unioned
 export interface Entity {
@@ -34,6 +41,12 @@ export interface Entity {
   physics?: {
     mass?: number;
     friction?: number;
+  };
+  physicsModifiers?: {
+    frictionMulti?: number;
+    massMulti?: number;
+    dx?: number;
+    dy?: number;
   };
 
   layer: Layers;
@@ -78,7 +91,7 @@ export const createFreight = (
     draggebale: true,
     moveable: { dx: 0, dy: 0 },
     gameData: { price },
-    physics: { mass: physics?.mass ?? 1, friction: physics?.friction ?? 0.98 },
+    physics: { mass: physics?.mass ?? 1, friction: physics?.friction ?? 0.93 },
     layer: Layers.Objects,
   };
 };
@@ -120,6 +133,23 @@ export const createSellPoint = (pos: DOMPoint): Entity => {
     sprite: [0, 5],
     type: "sellPoint",
     layer: Layers.Points,
+    gameData: {},
+  };
+};
+
+export const createModifiedFloor = (
+  pos: DOMPoint,
+  sprite: [number, number],
+  type: "stairs" | "ice",
+  modifiers: Entity["physicsModifiers"]
+): Entity => {
+  return {
+    id: getId(),
+    pos,
+    sprite,
+    type: type,
+    layer: Layers.Floor,
+    physicsModifiers: modifiers,
     gameData: {},
   };
 };

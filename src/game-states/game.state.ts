@@ -13,6 +13,7 @@ import { getGridPointInPixels } from "@/lib/utils";
 import {
   Entity,
   createFreight,
+  createModifiedFloor,
   createObstacle,
   createSellPoint,
   createSpawnPoint,
@@ -23,7 +24,7 @@ import {
   isPointerIn,
   testAABBCollision,
 } from "@/lib/physics";
-import { CRATE, DOOR_L, DOOR_R, ROOM } from "@/core/tiles";
+import { BARREL, BOX, DOOR_L, DOOR_R, ROOM, STAIRS } from "@/core/tiles";
 
 const createRoom = () => {
   const e: Entity[] = [];
@@ -37,9 +38,14 @@ const createRoom = () => {
       const isDoor =
         (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
         (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
+
+      const isStairs = tile[0] === STAIRS[0] && tile[1] === STAIRS[0];
       const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY));
+
       if (isDoor) {
         e.push(createTranspansiveObj(point, tile, "door"));
+      } else if (isStairs) {
+        e.push(createModifiedFloor(point, tile, "stairs", { dy: 0.1 }));
       } else {
         e.push(createObstacle(point, tile, "wall"));
       }
@@ -72,13 +78,8 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter() {
     this.addEntity(
-      createFreight(
-        getGridPointInPixels(new DOMPoint(5, 4)),
-        CRATE,
-        "crate",
-        1
-      ),
-      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), CRATE, "crate", 1)
+      createFreight(getGridPointInPixels(new DOMPoint(5, 4)), BOX, "crate", 1),
+      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, "crate", 1)
     );
 
     this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));
@@ -141,9 +142,10 @@ class GameState implements State {
             this.addEntity(
               createFreight(
                 new DOMPoint(entity.pos.x, entity.pos.y),
-                CRATE,
+                BARREL,
                 "crate",
-                1
+                1,
+                { mass: 100, friction: 0.96 }
               )
             );
           }
@@ -179,7 +181,15 @@ class GameState implements State {
 
       // check for collisions
       for (const other of this.entities) {
-        if (other.id === entity.id || !entity.physics || !other.physics) {
+        if (other.id === entity.id || !entity.physics) {
+          continue;
+        }
+
+        // modified floor
+        const isModifiedFloor = !!other.physicsModifiers;
+
+        // no collision
+        if (!other.physics && !isModifiedFloor) {
           continue;
         }
 
@@ -190,7 +200,15 @@ class GameState implements State {
             other.pos,
             { w: tileSizeUpscaled, h: tileSizeUpscaled }
           );
-          if (t.collide) {
+
+          if (isModifiedFloor) {
+            if (t.collide) {
+              entity.moveable.dx += other.physicsModifiers?.dx ?? 0;
+              entity.moveable.dy += other.physicsModifiers?.dy ?? 0;
+            }
+          }
+
+          if (t.collide && other.physics) {
             correctAABBCollision(entity, other, t);
           }
         }
