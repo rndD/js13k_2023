@@ -1,35 +1,39 @@
-export const WALL: [number, number] = [4, 3];
-export const WALL_R: [number, number] = [11, 4];
-export const WALL_L: [number, number] = [9, 4];
-export const DOOR_R: [number, number] = [10, 2];
-export const DOOR_L: [number, number] = [11, 2];
-export const FLOOR: [number, number] = [0, 0];
-export const BOX: [number, number] = [3, 5];
-export const BARREL: [number, number] = [10, 6];
-export const SPAWN_POINT: [number, number] = [1, 5];
-export const SELL_POINT: [number, number] = [0, 5];
-export const STAIRS: [number, number] = [3, 3];
+// tile coordinates from file: public/tiles.png
+export const WALL_WOOD: [number, number] = [2, 3];
+export const ROOF_W_V: [number, number] = [3, 3];
+export const ROOF_W: [number, number] = [3, 2];
+
+export const FLOOR: [number, number] = [4, 0];
+
+export const WATER: [number, number] = [1, 0];
+export const WATER_WITH_SAND: [number, number] = [0, 0];
+export const BOX: [number, number] = [6, 3];
+export const SACK_W: [number, number] = [7, 2];
+export const SACK_R: [number, number] = [6, 2];
+
+// export const SPAWN_POINT: [number, number] = [1, 5];
+// export const SELL_POINT: [number, number] = [0, 5];
+// export const STAIRS: [number, number] = [3, 3];
 
 export const EMPTY = 0;
 
 export const ROOM = [
-  [WALL_L, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL_R],
   [
-    WALL_L,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_R,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
   ],
   [
-    WALL_L,
+    WALL_WOOD,
     EMPTY,
     EMPTY,
     EMPTY,
@@ -40,10 +44,10 @@ export const ROOM = [
     EMPTY,
     EMPTY,
     EMPTY,
-    WALL_R,
+    WALL_WOOD,
   ],
   [
-    WALL_L,
+    WALL_WOOD,
     EMPTY,
     EMPTY,
     EMPTY,
@@ -54,10 +58,10 @@ export const ROOM = [
     EMPTY,
     EMPTY,
     EMPTY,
-    WALL_R,
+    WALL_WOOD,
   ],
   [
-    WALL_L,
+    WALL_WOOD,
     EMPTY,
     EMPTY,
     EMPTY,
@@ -68,10 +72,10 @@ export const ROOM = [
     EMPTY,
     EMPTY,
     EMPTY,
-    WALL_R,
+    WALL_WOOD,
   ],
   [
-    WALL_L,
+    WALL_WOOD,
     EMPTY,
     EMPTY,
     EMPTY,
@@ -82,20 +86,34 @@ export const ROOM = [
     EMPTY,
     EMPTY,
     EMPTY,
-    WALL_R,
+    WALL_WOOD,
   ],
   [
-    WALL_L,
-    WALL,
-    STAIRS,
-    STAIRS,
-    WALL,
-    DOOR_R,
-    DOOR_L,
-    WALL,
-    WALL,
-    WALL,
-    WALL,
-    WALL_R,
+    WALL_WOOD,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    EMPTY,
+    WALL_WOOD,
+  ],
+  [
+    WALL_WOOD,
+    WALL_WOOD,
+    EMPTY,
+    EMPTY,
+    WALL_WOOD,
+    EMPTY,
+    EMPTY,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
+    WALL_WOOD,
   ],
 ];

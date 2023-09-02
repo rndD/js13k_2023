@@ -15,7 +15,7 @@ class DrawEngine {
     // needed for pixel art
     this.context.imageSmoothingEnabled = false;
 
-    this.tilemap.src = "tilemap_packed.png";
+    this.tilemap.src = "tiles.png";
     this.tilemap.onload = () => {
       this.ready = true;
     };
@@ -56,7 +56,8 @@ class DrawEngine {
   }
 
   drawFloor() {
-    this.context.fillStyle = "gray";
+    // FIXME BG COLOR
+    this.context.fillStyle = "#ff3f2631";
     this.context.fillRect(0, 0, this.w, this.h);
 
     // draw floor

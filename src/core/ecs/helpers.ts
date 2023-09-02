@@ -1,24 +1,16 @@
-import { Layers } from "../layers";
 import { Component } from "@/lib/ecs";
 import {
   Collidable,
   Draggable,
+  EntityType,
   GameObject,
+  Layers,
   Mov,
   Physical,
   Pos,
   Renderable,
 } from "./component";
 import { tileSizeUpscaled } from "../draw-engine";
-
-export type EntityType =
-  | "wall"
-  | "door"
-  | "crate"
-  | "sellPoint"
-  | "spawnPoint"
-  | "stairs"
-  | "ice";
 
 // helper functions to create entities
 export const createObstacle = (

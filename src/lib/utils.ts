@@ -13,6 +13,7 @@ export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
   };
 };
 
+// not used yet
 export const lerp = (start: number, end: number, amt: number) => {
   return (1 - amt) * start + amt * end;
 };

@@ -1,4 +1,3 @@
-import { State } from "@/core/state";
 import { controls } from "@/core/controls";
 import { gameStateMachine } from "@/game-state-machine";
 import { menuState } from "@/game-states/menu.state";
@@ -8,9 +7,9 @@ import {
   createFreight,
   createObstacle,
   createTranspansiveObj,
-} from "@/core/ecs/entity";
+} from "@/core/ecs/helpers";
 
-import { BOX, DOOR_L, DOOR_R, ROOM, STAIRS } from "@/core/tiles";
+import { BOX, ROOM } from "@/core/tiles";
 import { Component, ECS } from "@/lib/ecs";
 import {
   CollideSystem,
@@ -19,6 +18,7 @@ import {
   PhysicsSystem,
   RenderSystem,
 } from "@/core/ecs/system";
+import { State } from "@/core/state-machine";
 
 // test only
 const createRoom = () => {
@@ -30,11 +30,13 @@ const createRoom = () => {
       if (!Array.isArray(tile)) {
         return;
       }
-      const isDoor =
-        (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
-        (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
+      // const isDoor =
+      //   (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
+      //   (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
+      const isDoor = false;
 
-      const isStairs = tile[0] === STAIRS[0] && tile[1] === STAIRS[0];
+      // const isStairs = tile[0] === STAIRS[0] && tile[1] === STAIRS[0];
+      const isStairs = false;
       const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY));
       const components: Component[] = [];
 

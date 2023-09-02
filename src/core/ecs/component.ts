@@ -1,7 +1,24 @@
 // eslint-disable-next-line max-classes-per-file
 import { Component } from "@/lib/ecs";
-import { EntityType } from "./entity";
-import { Layers } from "../layers";
+
+export type EntityType =
+  | "wall"
+  | "door"
+  | "crate"
+  | "sellPoint"
+  | "spawnPoint"
+  | "stairs"
+  | "ice";
+
+export enum Layers {
+  Background,
+  Floor,
+  Points,
+  Objects,
+  Effects,
+  AlwaysOnTop,
+  UI,
+}
 
 export class GameObject extends Component {
   constructor(public type: EntityType) {

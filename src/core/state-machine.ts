@@ -1,4 +1,8 @@
-import { State } from './state';
+export interface State {
+  onUpdate: (timeElapsed: number) => void;
+  onEnter?: Function;
+  onLeave?: Function;
+}
 
 export class StateMachine {
   private currentState: State;
