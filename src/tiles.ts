@@ -1,5 +1,5 @@
 // tile coordinates from file: public/tiles.png
-// sprite size 8x4
+// sprite size 8x4, numbers represent tile position (left to right)
 export const Tiles: {[tile: string]: number} = {
   F_TABLE_0: 28,
   F_TABLE_1: 20,
@@ -11,6 +11,7 @@ export const Tiles: {[tile: string]: number} = {
   S_ENTRANCE_1: 10,
   S_ENTRANCE_2: 2,
   S_TOWER_0: 16,
+  S_TOWER_1: 8,
   S_WALL: 17,
 
   T_BIRCH: 11,
@@ -180,9 +181,9 @@ export const TOP = [
     Tiles.S_ENTRANCE_2
   ],
   [
-    null, null, null, null, null, null,
-    null, null, null, null, null, null,
-    Tiles.S_ENTRANCE_1
+    Tiles.S_TOWER_1, null, null, null, Tiles.S_TOWER_1, null,
+    null, null, Tiles.S_TOWER_1, null, null, null,
+    Tiles.S_ENTRANCE_1, null, null, null, Tiles.S_TOWER_1
   ],
   null,
   null,
