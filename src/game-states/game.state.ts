@@ -4,6 +4,7 @@ import { menuState } from '@/game-states/menu.state'
 import { getGridPointInPixels } from '@/lib/utils'
 
 import {
+  createFloor,
   createFreight,
   createObstacle,
   createTranspansiveObj
@@ -36,7 +37,7 @@ const createMap = () => {
         let tile
 
         if (Array.isArray(tileOrTileArray)) {
-          angle = tileOrTileArray[1]
+          angle = tileOrTileArray[1] as number
           tile = tileOrTileArray[0] as number
         } else {
           tile = tileOrTileArray as number
@@ -44,11 +45,6 @@ const createMap = () => {
 
         const coords: [number, number] = [tile % 8, Math.floor(tile / 8)]
 
-        // const isDoor =
-        //   (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
-        //   (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
-
-        // const isStairs = tile[0] === STAIRS[0] && tile[1] === STAIRS[0];
         const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY))
         const components: Component[] = []
 
@@ -56,8 +52,12 @@ const createMap = () => {
           case Tiles.W_SHORE:
             components.push(...createObstacle(point, coords, 'water', angle))
             break
+          case Tiles.R_VERTICAL:
+          case Tiles.R_CROSS:
+            components.push(...createFloor(point, coords, 'floor', angle))
+            break
           default:
-            components.push(...createObstacle(point, coords, 'wall'))
+            components.push(...createObstacle(point, coords, 'wall', angle))
             break
         }
 

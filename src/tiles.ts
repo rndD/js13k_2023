@@ -105,9 +105,9 @@ export const MAP = [
     Tiles.R_VERTICAL
   ],
   [
-    Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL,
-    Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL,
-    Tiles.R_CROSS, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL
+    [[Tiles.R_VERTICAL, 90], 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90],
+    [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90],
+    [Tiles.R_CROSS, 270], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90]
   ]
 ]
 

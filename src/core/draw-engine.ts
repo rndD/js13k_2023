@@ -57,7 +57,7 @@ class DrawEngine {
     context.fillText(text, x, y)
   }
 
-  drawFloor () {
+  drawBg () {
     // FIXME BG COLOR
     this.context.fillStyle = '#ff3f2631'
     this.context.fillRect(0, 0, this.w, this.h)

@@ -31,12 +31,13 @@ export const createObstacle = (
 export const createFloor = (
   pos: DOMPoint,
   sprite: [number, number],
-  type: EntityType
+  type: EntityType,
+  angle?: number
 ): Component[] => {
   return [
     new GameObject(type),
     new Pos(pos.x, pos.y),
-    new Renderable(sprite, Layers.Floor)
+    new Renderable(sprite, Layers.Floor, angle)
   ]
 }
 

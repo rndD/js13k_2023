@@ -22,7 +22,7 @@ export const getTile = memoize(
   (tilemap: HTMLImageElement, x: number, y: number, angle = 0) => {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
-    // FIXME Remove when size limit hit
+    // FIXME Remove when size limit hits
     if (!context) {
       throw new Error('Could not get context from canvas')
     }

@@ -38,6 +38,12 @@ export abstract class System {
   public abstract componentsRequired: Set<Function>;
 
   /**
+   * addEntity() and removeEntity() are called when an Entity is added/removed if implemented
+   */
+  public addEntity?(entity: Entity, componentContainer: ComponentContainer): void;
+  public removeEntity?(entity: Entity): void;
+
+  /**
    * update() is called on the System every frame.
    */
   public abstract update(entities: Set<Entity>): void;
@@ -234,11 +240,15 @@ export class ECS {
 
     const need = system.componentsRequired
     if (have?.hasAll(need)) {
-      // should be in system
       this.systems.get(system)!.add(entity) // no-op if in
+      if (system.addEntity) {
+        system.addEntity(entity, have)
+      }
     } else {
-      // should not be in system
       this.systems.get(system)!.delete(entity) // no-op if out
+      if (system.removeEntity) {
+        system.removeEntity(entity)
+      }
     }
   }
 }
