@@ -1,4 +1,4 @@
-import { Component } from "@/lib/ecs";
+import { Component } from '@/lib/ecs'
 import {
   Collidable,
   Draggable,
@@ -9,9 +9,9 @@ import {
   Physical,
   Pos,
   Renderable,
-  Soundable,
-} from "./component";
-import { tileSizeUpscaled } from "../draw-engine";
+  Soundable
+} from './component'
+import { tileSizeUpscaled } from '../draw-engine'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -23,9 +23,9 @@ export const createObstacle = (
     new GameObject(type),
     new Pos(pos.x, pos.y),
     new Renderable(sprite, Layers.Objects),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
-  ];
-};
+    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled })
+  ]
+}
 
 export const createFreight = (
   pos: DOMPoint,
@@ -46,21 +46,21 @@ export const createFreight = (
     new Draggable(),
     new Mov(),
     new Physical({ mass: physics?.mass, friction: physics?.friction }),
-    new Soundable({}),
-  ];
-};
+    new Soundable({})
+  ]
+}
 
 export const createTranspansiveObj = (
   pos: DOMPoint,
   sprite: [number, number],
-  type: "door"
+  type: 'door'
 ): Component[] => {
   return [
     new GameObject(type),
     new Pos(pos.x, pos.y),
-    new Renderable(sprite, Layers.Floor),
-  ];
-};
+    new Renderable(sprite, Layers.Floor)
+  ]
+}
 
 // export const createSpawnPoint = (pos: DOMPoint): Component[] => {
 //   return {

@@ -1,81 +1,81 @@
-import { controls } from "@/core/controls";
-import { gameStateMachine } from "@/game-state-machine";
-import { menuState } from "@/game-states/menu.state";
-import { getGridPointInPixels } from "@/lib/utils";
+import { controls } from '@/core/controls'
+import { gameStateMachine } from '@/game-state-machine'
+import { menuState } from '@/game-states/menu.state'
+import { getGridPointInPixels } from '@/lib/utils'
 
 import {
   createFreight,
   createObstacle,
-  createTranspansiveObj,
-} from "@/core/ecs/helpers";
+  createTranspansiveObj
+} from '@/core/ecs/helpers'
 
-import { BOX, ROOM } from "@/tiles";
-import { Component, ECS } from "@/lib/ecs";
+import { BOX, ROOM } from '@/tiles'
+import { Component, ECS } from '@/lib/ecs'
 import {
   CollideSystem,
   DragSystem,
   MoveSystem,
   PhysicsSystem,
   RenderSystem,
-  SoundSystem,
-} from "@/core/ecs/system";
-import { State } from "@/core/state-machine";
+  SoundSystem
+} from '@/core/ecs/system'
+import { State } from '@/core/state-machine'
 
 // test only
 const createRoom = () => {
-  const ec: Component[][] = [];
-  const startX = 2;
-  const startY = 2;
+  const ec: Component[][] = []
+  const startX = 2
+  const startY = 2
   ROOM.forEach((row, y) => {
     row.forEach((tile, x) => {
       if (!Array.isArray(tile)) {
-        return;
+        return
       }
       // const isDoor =
       //   (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
       //   (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
-      const isDoor = false;
+      const isDoor = false
 
       // const isStairs = tile[0] === STAIRS[0] && tile[1] === STAIRS[0];
-      const isStairs = false;
-      const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY));
-      const components: Component[] = [];
+      const isStairs = false
+      const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY))
+      const components: Component[] = []
 
       if (isDoor) {
-        components.push(...createTranspansiveObj(point, tile, "door"));
+        components.push(...createTranspansiveObj(point, tile, 'door'))
       } else if (isStairs) {
         // components.push(
         //   ...createModifiedFloor(point, tile, "stairs", { dy: 0.1 })
         // );
       } else {
-        components.push(...createObstacle(point, tile, "wall"));
+        components.push(...createObstacle(point, tile, 'wall'))
       }
 
-      ec.push(components);
-    });
-  });
-  return ec;
-};
+      ec.push(components)
+    })
+  })
+  return ec
+}
 
 class GameState implements State {
   // gameData: { silver: number } = { silver: 0 };
 
-  ecs: ECS = new ECS();
+  ecs: ECS = new ECS()
 
-  constructor() {
-    this.ecs.addSystem(new DragSystem());
-    this.ecs.addSystem(new CollideSystem());
-    this.ecs.addSystem(new PhysicsSystem());
-    this.ecs.addSystem(new MoveSystem());
-    this.ecs.addSystem(new RenderSystem());
-    this.ecs.addSystem(new SoundSystem());
+  constructor () {
+    this.ecs.addSystem(new DragSystem())
+    this.ecs.addSystem(new CollideSystem())
+    this.ecs.addSystem(new PhysicsSystem())
+    this.ecs.addSystem(new MoveSystem())
+    this.ecs.addSystem(new RenderSystem())
+    this.ecs.addSystem(new SoundSystem())
   }
 
-  addEntities(...entitiesComponents: Component[][]) {
+  addEntities (...entitiesComponents: Component[][]) {
     for (const ec of entitiesComponents) {
-      const entity = this.ecs.addEntity();
+      const entity = this.ecs.addEntity()
       for (const c of ec) {
-        this.ecs.addComponent(entity, c);
+        this.ecs.addComponent(entity, c)
       }
     }
     // this.entities.sort((a, b) => a.layer - b.layer);
@@ -85,11 +85,11 @@ class GameState implements State {
   }
 
   // Make sure ball starts at the same spot when game is entered
-  onEnter() {
+  onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(new DOMPoint(5, 4)), BOX, "crate", 1),
-      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, "crate", 1)
-    );
+      createFreight(getGridPointInPixels(new DOMPoint(5, 4)), BOX, 'crate', 1),
+      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, 'crate', 1)
+    )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));
 
@@ -97,12 +97,12 @@ class GameState implements State {
     //   createSpawnPoint(getGridPointInPixels(new DOMPoint(10, 14)))
     // );
 
-    this.addEntities(...createRoom());
+    this.addEntities(...createRoom())
   }
 
-  onUpdate(deltaTime: number) {
-    this.ecs.currentDelta = deltaTime;
-    this.ecs.update();
+  onUpdate (deltaTime: number) {
+    this.ecs.currentDelta = deltaTime
+    this.ecs.update()
     // FIXME move to systems
     // Entity
     // for (const entity of this.entities) {
@@ -185,9 +185,9 @@ class GameState implements State {
     // drawEngine.drawText("Silver: " + this.gameData.silver, 24, 600, 40);
 
     if (controls.isEscape) {
-      gameStateMachine.setState(menuState);
+      gameStateMachine.setState(menuState)
     }
   }
 }
 
-export const gameState = new GameState();
+export const gameState = new GameState()

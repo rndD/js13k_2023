@@ -1,4 +1,4 @@
-import { tileSizeUpscaled } from "@/core/draw-engine";
+import { tileSizeUpscaled } from '@/core/draw-engine'
 
 type CollisionTest = {
   entity1MaxX: number;
@@ -19,17 +19,17 @@ export const testAABBCollision = (
     entity1MaxY: entity1pos.y + entity1wh.h,
     entity2MaxX: entity2pos.x + entity2wh.w,
     entity2MaxY: entity2pos.y + entity2wh.h,
-    collide: false,
-  };
+    collide: false
+  }
 
   test.collide =
     entity1pos.x < test.entity2MaxX &&
     test.entity1MaxX > entity2pos.x &&
     entity1pos.y < test.entity2MaxY &&
-    test.entity1MaxY > entity2pos.y;
+    test.entity1MaxY > entity2pos.y
 
-  return test;
-};
+  return test
+}
 
 // entity1 collided into entity2
 export const correctAABBCollision = (
@@ -38,7 +38,7 @@ export const correctAABBCollision = (
   test: CollisionTest // used for correction
 ) => {
   if (!entity1.mov) {
-    return;
+    return
   }
   // this is correction
   // const { entity1MaxX, entity1MaxY, entity2MaxX, entity2MaxY } = test;
@@ -112,38 +112,38 @@ export const correctAABBCollision = (
 
   // Reverse the entity1's velocity component that is heading towards the entity2
   if (entity1.mov!.dx > 0 && entity1.pos.x < entity2.pos.x) {
-    entity1.mov!.dx *= -1;
+    entity1.mov!.dx *= -1
     if (entity2.mov) {
-      entity2.mov.dx = -entity1.mov!.dx * 0.5; // mass?
+      entity2.mov.dx = -entity1.mov!.dx * 0.5 // mass?
     }
   }
   if (
     entity1.mov!.dx < 0 &&
     entity1.pos.x + tileSizeUpscaled > entity2.pos.x + tileSizeUpscaled
   ) {
-    entity1.mov!.dx *= -1;
+    entity1.mov!.dx *= -1
     if (entity2.mov) {
-      entity2.mov.dx = -entity1.mov!.dx * 0.5; // mass?
+      entity2.mov.dx = -entity1.mov!.dx * 0.5 // mass?
     }
   }
   if (entity1.mov!.dy > 0 && entity1.pos.y < entity2.pos.y) {
-    entity1.mov!.dy *= -1;
+    entity1.mov!.dy *= -1
     if (entity2.mov) {
-      entity2.mov.dy = -entity1.mov!.dy * 0.5; // mass ?
+      entity2.mov.dy = -entity1.mov!.dy * 0.5 // mass ?
     }
   }
   if (
     entity1.mov!.dy < 0 &&
     entity1.pos.y + tileSizeUpscaled > entity2.pos.y + tileSizeUpscaled
   ) {
-    entity1.mov!.dy *= -1;
+    entity1.mov!.dy *= -1
     if (entity2.mov) {
-      entity2.mov.dy = -entity1.mov!.dy * 0.5; //mass ?
+      entity2.mov.dy = -entity1.mov!.dy * 0.5 // mass ?
     }
   }
-};
+}
 
 export const isPointerIn = (
   pointer: DOMPoint,
   { x, y, w, h }: { x: number; y: number; w: number; h: number }
-) => pointer.x > x && pointer.x < x + w && pointer.y > y && pointer.y < y + h;
+) => pointer.x > x && pointer.x < x + w && pointer.y > y && pointer.y < y + h

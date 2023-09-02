@@ -1,12 +1,12 @@
 module.exports = {
   root: true,
   env: {
-    node: true,
+    node: true
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
-    sourceType: "module"
+    sourceType: 'module'
   },
   plugins: ['unused-imports', '@typescript-eslint'],
   rules: {
@@ -36,33 +36,33 @@ module.exports = {
     'id-denylist': [
       'warn', 'seed', 'direction', 'clone', 'normalize', 'setAttribute', 'done', 'all', 'translate', 'scale', 'rotate',
       'position', 'rotation', 'children', 'parent', 'remove', 'setRotation', 'textureRepeat', 'load', 'image',
-      'width', 'height',
+      'width', 'height'
     ],
     'unused-imports/no-unused-vars': [
       'warn',
       {
-        vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_',
-      },
+        vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_'
+      }
     ],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'no-shadow': 'off',
-    '@typescript-eslint/no-shadow': ['error'],
+    '@typescript-eslint/no-shadow': ['error']
   },
   overrides: [
     {
       files: [
         '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)'
       ],
       env: {
-        jest: true,
-      },
-    },
+        jest: true
+      }
+    }
   ],
   settings: {
     'import/resolver': {
-      typescript: {},
-    },
-  },
-};
+      typescript: {}
+    }
+  }
+}
