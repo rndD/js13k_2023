@@ -1,5 +1,17 @@
 {
-    "cSpell.words": [
-        "Collidable"
-    ]
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "standard.autoFixOnSave": true,
+  "standard.enable": true,
+  "standard.options": {},
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "standard.vscode-standard"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "standard.vscode-standard"
+  },
+  "cSpell.words": [
+    "Collidable"
+  ]
 }
