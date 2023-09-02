@@ -1,30 +1,32 @@
 // tile coordinates from file: public/tiles.png
-export const WALL_WOOD: [number, number] = [2, 3]
-export const ROOF_W_V: [number, number] = [3, 3]
-export const ROOF_W: [number, number] = [3, 2]
+// sprite size 8x4
+export const Tiles: {[tile: string]: number} = {
+  F_TABLE_0: 28,
+  F_TABLE_1: 20,
+
+  R_VERTICAL: 24,
+  R_CROSS: 25,
+
+  S_ENTRANCE_0: 18,
+  S_ENTRANCE_1: 10,
+  S_ENTRANCE_2: 2,
+  S_TOWER_0: 16,
+  S_WALL: 17,
+
+  T_BIRCH: 11,
+  T_FIR: 3,
+
+  U_ROOF_HORIZONTAL: 19,
+  U_ROOF_VERTICAL: 27,
+  U_WALL: 26,
+
+  W_SHORE: 0,
+  W_DEPTH: 1,
+
+  BRIDGE: 9
+}
 
 export const FLOOR: [number, number] = [4, 0]
-
-export const WATER_SHORE: [number, number] = [0, 0]
-export const WATER: [number, number] = [1, 0]
-
-export const BRIDGE: [number, number] = [1, 1]
-export const STONE_WALL: [number, number] = [1, 2]
-export const STONE_WALL_BIG: [number, number] = [0, 1]
-export const STONE_WALL_BIG_TOP: [number, number] = [0, 2]
-export const STONE_WALL_ENTRANCE: [number, number] = [2, 2]
-export const STONE_WALL_ENTRANCE_TOP: [number, number] = [2, 1]
-export const STONE_WALL_ENTRANCE_TOP_FLAG: [number, number] = [2, 0]
-
-export const ROAD: [number, number] = [0, 3]
-export const ROAD_CROSS: [number, number] = [1, 3]
-
-export const WOODEN_WALL: [number, number] = [2, 3]
-export const WOODEN_WALL_ROOF: [number, number] = [3, 3]
-export const WOODEN_WALL_ROOF_H: [number, number] = [3, 2]
-
-export const TREE_FIR: [number, number] = [3, 0]
-export const TREE_BIRCH: [number, number] = [3, 1]
 
 export const BOX: [number, number] = [6, 3]
 export const SACK_W: [number, number] = [7, 2]
@@ -37,113 +39,179 @@ export const EMPTY = 0
 
 export const MAP = [
   [
-    EMPTY, EMPTY, WOODEN_WALL, WOODEN_WALL, EMPTY, EMPTY,
-    EMPTY, EMPTY, TREE_FIR, TREE_BIRCH, EMPTY, EMPTY,
-    ROAD, EMPTY, EMPTY, WOODEN_WALL, WOODEN_WALL, WOODEN_WALL
+    null, null, null, null, null, null,
+    null, null, Tiles.T_FIR, Tiles.T_BIRCH, null, null,
+    Tiles.R_VERTICAL
   ],
   [
-    STONE_WALL_BIG_TOP, TREE_BIRCH, TREE_FIR, TREE_FIR, STONE_WALL_BIG_TOP, EMPTY,
-    EMPTY, EMPTY, STONE_WALL_BIG_TOP, EMPTY, EMPTY, TREE_FIR
+    null, Tiles.T_BIRCH, Tiles.T_FIR, Tiles.T_FIR, null, null,
+    null, null, null, null, null, Tiles.T_FIR,
+    Tiles.R_VERTICAL, Tiles.T_BIRCH, null, Tiles.T_BIRCH, null, Tiles.T_FIR
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.S_ENTRANCE_0
+  ],
+  [
+    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE,
+    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE,
+    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE
+  ],
+  [
+    Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH,
+    Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH,
+    Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH
+  ],
+  [
+    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE,
+    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE,
+    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.S_ENTRANCE_0, null, null, Tiles.T_BIRCH
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.R_VERTICAL
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.R_VERTICAL
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.R_VERTICAL
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.R_VERTICAL
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.R_VERTICAL
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.R_VERTICAL
+  ],
+  [
+    Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL,
+    Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL,
+    Tiles.R_CROSS, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL, Tiles.R_VERTICAL
   ]
 ]
 
-export const ROOM = [
+export const MAP_2 = [
+  null,
+  null,
+  null,
   [
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.BRIDGE
   ],
   [
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.BRIDGE
   ],
   [
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.BRIDGE
+  ]
+]
+
+export const WALLS = [
+  null,
+  null,
+  [
+    Tiles.S_TOWER_0, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_TOWER_0, Tiles.S_WALL,
+    Tiles.S_WALL, Tiles.S_WALL, Tiles.S_TOWER_0, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_WALL,
+    null, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_TOWER_0, Tiles.S_WALL
+  ],
+  null,
+  null,
+  null,
+  [
+    Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL,
+    Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, null, Tiles.S_WALL,
+    null, Tiles.S_WALL
   ],
   [
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD
+    Tiles.U_WALL, null, null, null, null, null,
+    null, null, null, Tiles.U_WALL
   ],
   [
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD
+    Tiles.U_WALL, null, null, null, null, null,
+    null, null, null, null, null, Tiles.F_TABLE_1
   ],
   [
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD
+    Tiles.U_WALL, null, null, null, null, null,
+    null, null, null, null, null, Tiles.F_TABLE_0
   ],
   [
-    WALL_WOOD,
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD,
-    EMPTY,
-    EMPTY,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD,
-    WALL_WOOD
+    Tiles.U_WALL, null, null, null, null, null,
+    null, null, null, Tiles.U_WALL
+  ],
+  [
+    Tiles.U_WALL, null, null, null, null, null,
+    null, null, null, Tiles.U_WALL
+  ],
+  [
+    Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL,
+    Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL
+  ]
+]
+
+export const TOP = [
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.S_ENTRANCE_2
+  ],
+  [
+    null, null, null, null, null, null,
+    null, null, null, null, null, null,
+    Tiles.S_ENTRANCE_1
+  ],
+  null,
+  null,
+  null,
+  [
+    Tiles.U_ROOF_VERTICAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL,
+    Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_VERTICAL, null, null,
+    Tiles.S_ENTRANCE_2
+  ],
+  [
+    Tiles.U_ROOF_VERTICAL, null, null, null, null, null,
+    null, null, null, Tiles.U_ROOF_VERTICAL
+  ],
+  [
+    Tiles.U_ROOF_VERTICAL
+  ],
+  [
+    Tiles.U_ROOF_VERTICAL
+  ],
+  [
+    Tiles.U_ROOF_VERTICAL, null, null, null, null, null,
+    null, null, null, Tiles.U_ROOF_VERTICAL
+  ],
+  [
+    Tiles.U_ROOF_VERTICAL, null, null, null, null, null,
+    null, null, null, Tiles.U_ROOF_VERTICAL
+  ],
+  [
+    Tiles.U_ROOF_VERTICAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL,
+    Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_HORIZONTAL, Tiles.U_ROOF_VERTICAL
   ]
 ]
