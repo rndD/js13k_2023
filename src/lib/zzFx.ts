@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-nocheck
 // ZzFX - Zuper Zmall Zound Zynth - Micro Edition
 // MIT License - Copyright 2019 Frank Force

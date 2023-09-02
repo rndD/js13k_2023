@@ -120,7 +120,7 @@ export class ECS {
 
   // Bookkeeping for entities.
   private nextEntityID = 0
-  private entitiesToDestroy = new Array<Entity>()
+  private entitiesToDestroy: Entity[] = []
 
   public currentDelta = 0
 
@@ -166,7 +166,7 @@ export class ECS {
     // Components list, or they'll run on every entity. Simply remove
     // or special case this check if you do want a System that runs
     // on everything.
-    if (system.componentsRequired.size == 0) {
+    if (system.componentsRequired.size === 0) {
       console.warn('System not added: empty Components list.')
       console.warn(system)
       return

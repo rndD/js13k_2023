@@ -49,6 +49,7 @@
       "Event",
       "EventTarget",
       "FocusEvent",
+      "Image",
       "KeyboardEvent",
       "MouseEvent",
       "PointerEvent",
@@ -178,7 +179,8 @@
       "Text",
       "TouchList",
       "WebGLRenderingContext",
-      "WebGL2RenderingContext"
+      "WebGL2RenderingContext",
+      "requestAnimationFrame"
     ],
     "parser": "@typescript-eslint/parser",
     "project": "./tsconfig.json"
