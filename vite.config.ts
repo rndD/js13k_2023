@@ -28,12 +28,12 @@ export default defineConfig(({ command, mode }) => {
 
   if (command === "build") {
     // @ts-ignore
-    config.esbuild = false;
+    config.esbuild = true;
     // @ts-ignore
     config.base = "";
     // @ts-ignore
     config.build = {
-      minify: false,
+      minify: true,
       target: "es2020",
       modulePreload: { polyfill: false },
       assetsInlineLimit: 800,
