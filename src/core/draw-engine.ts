@@ -1,6 +1,5 @@
 import { getGridPointInPixels, getTile } from "@/lib/utils";
 import { FLOOR } from "./tiles";
-import { Entity } from "@/core/entity";
 
 export const pixelScale = 2;
 export const tileSize = 16;
@@ -56,8 +55,7 @@ class DrawEngine {
     context.fillText(text, x, y);
   }
 
-  renderGame(entities: Entity[]) {
-    // overdraw
+  drawFloor() {
     this.context.fillStyle = "gray";
     this.context.fillRect(0, 0, this.w, this.h);
 
@@ -78,42 +76,39 @@ class DrawEngine {
         );
       }
     }
+  }
 
-    // draw entities
-    for (const entity of entities) {
-      if (entity.dragged) {
-        this.context.fillStyle = "rgba(0,0,0,0.2)";
-        this.context.fillRect(
-          Math.round(entity.pos.x + 1),
-          Math.round(entity.pos.y + 5),
-          tileSizeUpscaled,
-          tileSizeUpscaled
-        );
-      }
+  drawEntity(pos: { x: number; y: number }, sprite: [number, number]) {
+    this.context.drawImage(
+      getTile(this.tilemap, sprite[0], sprite[1])!,
+      0,
+      0,
+      tileSize,
+      tileSize,
+      Math.round(pos.x), // draw on pixel grid
+      Math.round(pos.y),
+      tileSizeUpscaled,
+      tileSizeUpscaled
+    );
+  }
 
-      this.context.drawImage(
-        getTile(this.tilemap, entity.sprite[0], entity.sprite[1])!,
-        0,
-        0,
-        tileSize,
-        tileSize,
-        Math.round(entity.pos.x), // draw on pixel grid
-        Math.round(entity.pos.y),
-        tileSizeUpscaled,
-        tileSizeUpscaled
-      );
-
-      if (entity.hovered && !entity.dragged) {
-        // draw transparent white overlay
-        this.context.fillStyle = "rgba(255,255,255,0.1)";
-        this.context.fillRect(
-          Math.round(entity.pos.x),
-          Math.round(entity.pos.y),
-          tileSizeUpscaled,
-          tileSizeUpscaled
-        );
-      }
-    }
+  drawShadow(pos: { x: number; y: number }, sprite?: [number, number]) {
+    this.context.fillStyle = "rgba(0,0,0,0.2)";
+    this.context.fillRect(
+      Math.round(pos.x + 1),
+      Math.round(pos.y + 5),
+      tileSizeUpscaled,
+      tileSizeUpscaled
+    );
+  }
+  drawOverlay(pos: { x: number; y: number }, sprite?: [number, number]) {
+    this.context.fillStyle = "rgba(255,255,255,0.1)";
+    this.context.fillRect(
+      Math.round(pos.x),
+      Math.round(pos.y),
+      tileSizeUpscaled,
+      tileSizeUpscaled
+    );
   }
 }
 

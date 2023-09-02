@@ -2,7 +2,8 @@ export enum Layers {
   Background,
   Floor,
   Points,
-  Effects,
   Objects,
+  Effects,
+  AlwaysOnTop,
   UI,
 }
