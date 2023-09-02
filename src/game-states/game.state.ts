@@ -9,7 +9,7 @@ import {
   createTranspansiveObj
 } from '@/core/ecs/helpers'
 
-import { BOX, MAP, MAP_2, WALLS, TOP } from '@/tiles'
+import { BOX, MAP, MAP_2, WALLS, TOP, Tiles } from '@/tiles'
 import { Component, ECS } from '@/lib/ecs'
 import {
   CollideSystem,
@@ -22,36 +22,43 @@ import {
 import { State } from '@/core/state-machine'
 
 // test only
-const createRoom = () => {
+const createMap = () => {
   const ec: Component[][] = []
   const startX = 2
   const startY = 2
 
   ;[MAP, MAP_2, WALLS, TOP].forEach(layer =>
     layer.forEach((row, y) => {
-      Array.isArray(row) && row.forEach((tile, x) => {
-        if (typeof tile !== 'number') return
+      Array.isArray(row) && row.forEach((tileOrTileArray, x) => {
+        if (tileOrTileArray === null) return
+
+        let angle = 0
+        let tile
+
+        if (Array.isArray(tileOrTileArray)) {
+          angle = tileOrTileArray[1]
+          tile = tileOrTileArray[0] as number
+        } else {
+          tile = tileOrTileArray as number
+        }
 
         const coords: [number, number] = [tile % 8, Math.floor(tile / 8)]
 
         // const isDoor =
         //   (tile[0] === DOOR_L[0] && tile[1] === DOOR_L[1]) ||
         //   (tile[0] === DOOR_R[0] && tile[1] === DOOR_R[1]);
-        const isDoor = false
 
         // const isStairs = tile[0] === STAIRS[0] && tile[1] === STAIRS[0];
-        const isStairs = false
         const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY))
         const components: Component[] = []
 
-        if (isDoor) {
-          components.push(...createTranspansiveObj(point, coords, 'door'))
-        } else if (isStairs) {
-          // components.push(
-          //   ...createModifiedFloor(point, tile, "stairs", { dy: 0.1 })
-          // );
-        } else {
-          components.push(...createObstacle(point, coords, 'wall'))
+        switch (tile) {
+          case Tiles.W_SHORE:
+            components.push(...createObstacle(point, coords, 'water', angle))
+            break
+          default:
+            components.push(...createObstacle(point, coords, 'wall'))
+            break
         }
 
         ec.push(components)
@@ -91,7 +98,7 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(new DOMPoint(5, 4)), BOX, 'crate', 1),
+      createFreight(getGridPointInPixels(new DOMPoint(15, 10)), BOX, 'crate', 1),
       createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, 'crate', 1)
     )
 
@@ -101,7 +108,7 @@ class GameState implements State {
     //   createSpawnPoint(getGridPointInPixels(new DOMPoint(10, 14)))
     // );
 
-    this.addEntities(...createRoom())
+    this.addEntities(...createMap())
   }
 
   onUpdate (deltaTime: number) {

@@ -65,9 +65,9 @@ export const MAP = [
     Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH, Tiles.W_DEPTH
   ],
   [
-    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE,
-    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE,
-    Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE, Tiles.W_SHORE
+    [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180],
+    [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180],
+    [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180], [Tiles.W_SHORE, 180]
   ],
   [
     null, null, null, null, null, null,

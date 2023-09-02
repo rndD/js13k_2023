@@ -5,10 +5,13 @@ export type EntityType =
   | 'wall'
   | 'door'
   | 'crate'
+  | 'floor'
+  | 'roof'
   | 'sellPoint'
   | 'spawnPoint'
   | 'stairs'
-  | 'ice';
+  | 'ice'
+  | 'water';
 
 export enum Layers {
   Background,
@@ -42,6 +45,7 @@ export class Renderable extends Component {
   constructor (
     public sprite: [number, number],
     public layer: Layers,
+    public spriteAngle: number = 0,
     public visible: boolean = true
   ) {
     super()
@@ -95,8 +99,7 @@ export class SpawnPoint extends Component {
 }
 
 interface SoundData {
-  colliding?: boolean;
-  dropping?: boolean;
+  // TODO do we need this?
 }
 
 export class Soundable extends Component {

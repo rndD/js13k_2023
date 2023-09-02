@@ -19,17 +19,10 @@ export const lerp = (start: number, end: number, amt: number) => {
 }
 
 export const getTile = memoize(
-  (tilemap: HTMLImageElement, x: number, y: number) => {
-    const horizontalTiles = 12
-    const verticalTiles = 11
-
-    if (x < 0 || x >= horizontalTiles || y < 0 || y >= verticalTiles) {
-      console.warn('Tile out of bounds', x, y)
-      return null
-    }
-
+  (tilemap: HTMLImageElement, x: number, y: number, angle = 0) => {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
+    // FIXME Remove when size limit hit
     if (!context) {
       throw new Error('Could not get context from canvas')
     }
@@ -38,6 +31,14 @@ export const getTile = memoize(
     canvas.height = tileSize
 
     context.clearRect(0, 0, tileSize, tileSize)
+    if (angle !== 0) {
+      context.save()
+      // move to the center of the canvas
+      context.translate(canvas.width / 2, canvas.height / 2)
+      // rotate the canvas to the specified degrees
+      context.rotate(angle * Math.PI / 180)
+      context.translate(-canvas.width * 0.5, -canvas.height * 0.5)
+    }
     context.drawImage(
       tilemap,
       x * tileSize,
@@ -49,6 +50,11 @@ export const getTile = memoize(
       tileSize,
       tileSize
     )
+
+    if (angle !== 0) {
+      context.restore()
+    }
+
     return context.canvas
   }
 )

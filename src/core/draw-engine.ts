@@ -81,9 +81,9 @@ class DrawEngine {
     }
   }
 
-  drawEntity (pos: { x: number; y: number }, sprite: [number, number]) {
+  drawEntity (pos: { x: number; y: number }, sprite: [number, number], angle = 0) {
     this.context.drawImage(
-      getTile(this.tilemap, sprite[0], sprite[1])!,
+      getTile(this.tilemap, sprite[0], sprite[1], angle)!,
       0,
       0,
       tileSize,

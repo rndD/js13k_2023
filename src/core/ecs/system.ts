@@ -179,7 +179,7 @@ export class RenderSystem extends System {
         }
       }
 
-      drawEngine.drawEntity(pos, render.sprite)
+      drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
     }
   }
 }
@@ -195,8 +195,10 @@ export class SoundSystem extends System {
   }
 
   sounds = {
+    // eslint-disable-next-line
     colliding: [1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53],
 
+    // eslint-disable-next-line
     dropping: [
       ,
       ,
@@ -243,6 +245,7 @@ export class SoundSystem extends System {
       if (!sound) {
         continue
       }
+      // FIXME colide sound is not working, probably because of the colide system
       const collidable = comps.get(Collidable)
       if (collidable) {
         // console.log("collidable", collidable.colliding);

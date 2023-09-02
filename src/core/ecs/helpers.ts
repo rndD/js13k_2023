@@ -17,13 +17,38 @@ import { tileSizeUpscaled } from '../draw-engine'
 export const createObstacle = (
   pos: DOMPoint,
   sprite: [number, number],
+  type: EntityType,
+  angle?: number
+): Component[] => {
+  return [
+    new GameObject(type),
+    new Pos(pos.x, pos.y),
+    new Renderable(sprite, Layers.Objects, angle),
+    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled })
+  ]
+}
+
+export const createFloor = (
+  pos: DOMPoint,
+  sprite: [number, number],
   type: EntityType
 ): Component[] => {
   return [
     new GameObject(type),
     new Pos(pos.x, pos.y),
-    new Renderable(sprite, Layers.Objects),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled })
+    new Renderable(sprite, Layers.Floor)
+  ]
+}
+
+export const alwaysOnTop = (
+  pos: DOMPoint,
+  sprite: [number, number],
+  type: EntityType
+): Component[] => {
+  return [
+    new GameObject(type),
+    new Pos(pos.x, pos.y),
+    new Renderable(sprite, Layers.AlwaysOnTop)
   ]
 }
 
@@ -62,6 +87,7 @@ export const createTranspansiveObj = (
   ]
 }
 
+// Fixme rework it into ecs
 // export const createSpawnPoint = (pos: DOMPoint): Component[] => {
 //   return {
 //     id: getId(),
