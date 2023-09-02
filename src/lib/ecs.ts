@@ -122,6 +122,8 @@ export class ECS {
   private nextEntityID = 0;
   private entitiesToDestroy = new Array<Entity>();
 
+  public currentDelta = 0;
+
   // API: Entities
 
   public addEntity(): Entity {

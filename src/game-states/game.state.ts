@@ -9,7 +9,7 @@ import {
   createTranspansiveObj,
 } from "@/core/ecs/helpers";
 
-import { BOX, ROOM } from "@/core/tiles";
+import { BOX, ROOM } from "@/tiles";
 import { Component, ECS } from "@/lib/ecs";
 import {
   CollideSystem,
@@ -17,6 +17,7 @@ import {
   MoveSystem,
   PhysicsSystem,
   RenderSystem,
+  SoundSystem,
 } from "@/core/ecs/system";
 import { State } from "@/core/state-machine";
 
@@ -67,6 +68,7 @@ class GameState implements State {
     this.ecs.addSystem(new PhysicsSystem());
     this.ecs.addSystem(new MoveSystem());
     this.ecs.addSystem(new RenderSystem());
+    this.ecs.addSystem(new SoundSystem());
   }
 
   addEntities(...entitiesComponents: Component[][]) {
@@ -99,6 +101,7 @@ class GameState implements State {
   }
 
   onUpdate(deltaTime: number) {
+    this.ecs.currentDelta = deltaTime;
     this.ecs.update();
     // FIXME move to systems
     // Entity

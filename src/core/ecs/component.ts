@@ -60,7 +60,7 @@ export class Physical extends Component {
 }
 
 export class Collidable extends Component {
-  constructor(public wh: { w: number; h: number }) {
+  constructor(public wh: { w: number; h: number }, public colliding = false) {
     super();
   }
 }
@@ -69,7 +69,8 @@ export class Draggable extends Component {
   constructor(
     public draggable: boolean = true,
     public dragging: boolean = false,
-    public hovered: boolean = false
+    public hovered: boolean = false,
+    public dropped: boolean = false
   ) {
     super();
   }
@@ -89,6 +90,17 @@ interface SpawnTimer {
 
 export class SpawnPoint extends Component {
   constructor(public timer: SpawnTimer) {
+    super();
+  }
+}
+
+interface SoundData {
+  colliding?: boolean;
+  dropping?: boolean;
+}
+
+export class Soundable extends Component {
+  constructor(public sound: SoundData) {
     super();
   }
 }

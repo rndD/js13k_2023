@@ -9,6 +9,7 @@ import {
   Physical,
   Pos,
   Renderable,
+  Soundable,
 } from "./component";
 import { tileSizeUpscaled } from "../draw-engine";
 
@@ -45,6 +46,7 @@ export const createFreight = (
     new Draggable(),
     new Mov(),
     new Physical({ mass: physics?.mass, friction: physics?.friction }),
+    new Soundable({}),
   ];
 };
 

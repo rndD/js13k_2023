@@ -7,6 +7,7 @@ import {
   Physical,
   Pos,
   Renderable,
+  Soundable,
 } from "./component";
 import { controls } from "../controls";
 import {
@@ -20,6 +21,7 @@ import {
   isPointerIn,
   testAABBCollision,
 } from "@/lib/physics";
+import { zzfx } from "@/lib/zzFx";
 
 // can be part of move system?
 export class PhysicsSystem extends System {
@@ -66,6 +68,7 @@ export class CollideSystem extends System {
       // check only mov
       const comps = this.ecs.getComponents(entity);
       const mov = comps.get(Mov);
+      const col = comps.get(Collidable);
       if (!mov) {
         continue;
       }
@@ -86,7 +89,10 @@ export class CollideSystem extends System {
           { w: tileSizeUpscaled, h: tileSizeUpscaled }
         );
 
+        col.colliding = t.collide;
+
         if (t.collide) {
+          //   console.log("collide", entity, col);
           const otherMov = otherComps.get(Mov) as Mov | undefined;
           //   console.log(
           //     "colide",
@@ -126,6 +132,9 @@ export class DragSystem extends System {
         h: tileSize * pixelScale,
       });
 
+      // reset value
+      drag.dropped = false;
+
       if (drag.hovered && !drag.dragging && this.dragging === -1) {
         if (controls.isMouseDown) {
           drag.dragging = true;
@@ -135,6 +144,7 @@ export class DragSystem extends System {
 
       if (!controls.isMouseDown && drag.dragging) {
         drag.dragging = false;
+        drag.dropped = true;
         this.dragging = -1;
       }
 
@@ -170,6 +180,93 @@ export class RenderSystem extends System {
       }
 
       drawEngine.drawEntity(pos, render.sprite);
+    }
+  }
+}
+
+export class SoundSystem extends System {
+  state = {
+    soundsPlaying: {
+      colliding: 0, // remaining duration in ms
+      dropping: 0,
+    },
+    muted: false,
+    volume: 0.01,
+  };
+
+  sounds = {
+    colliding: [1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53],
+
+    dropping: [
+      ,
+      ,
+      435,
+      0.02,
+      0.07,
+      0.06,
+      1,
+      1.6,
+      -12,
+      ,
+      ,
+      ,
+      ,
+      ,
+      ,
+      ,
+      ,
+      0.91,
+      0.01,
+    ],
+  };
+
+  componentsRequired = new Set<Function>([Soundable]);
+  update(entities: Set<Entity>): void {
+    if (this.state.muted) {
+      return;
+    }
+
+    // update volume
+    // @ts-ignore
+    window.zzfxV = this.state.volume;
+
+    for (const key in this.state.soundsPlaying) {
+      // @ts-ignore
+      if (this.state.soundsPlaying[key] > 0) {
+        // @ts-ignore
+        this.state.soundsPlaying[key] -= this.ecs.currentDelta;
+      }
+    }
+
+    for (const entity of entities) {
+      const comps = this.ecs.getComponents(entity);
+      const sound = comps.get(Soundable);
+      if (!sound) {
+        continue;
+      }
+      const collidable = comps.get(Collidable);
+      if (collidable) {
+        // console.log("collidable", collidable.colliding);
+      }
+      if (
+        collidable &&
+        collidable.colliding &&
+        this.state.soundsPlaying.colliding <= 0
+      ) {
+        zzfx(...this.sounds.colliding);
+        this.state.soundsPlaying.colliding = 100;
+      }
+
+      const draggable = comps.get(Draggable);
+
+      if (
+        draggable &&
+        draggable.dropped &&
+        this.state.soundsPlaying.dropping <= 0
+      ) {
+        zzfx(...this.sounds.dropping);
+        this.state.soundsPlaying.dropping = 500;
+      }
     }
   }
 }

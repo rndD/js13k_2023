@@ -1,5 +1,5 @@
 import { getGridPointInPixels, getTile } from "@/lib/utils";
-import { FLOOR } from "./tiles";
+import { FLOOR } from "../tiles";
 
 export const pixelScale = 2;
 export const tileSize = 16;
