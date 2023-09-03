@@ -105,7 +105,7 @@ export const MAP = [
     Tiles.R_VERTICAL
   ],
   [
-    [[Tiles.R_VERTICAL, 90], 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90],
+    [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90],
     [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90],
     [Tiles.R_CROSS, 270], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90], [Tiles.R_VERTICAL, 90]
   ]
@@ -133,7 +133,11 @@ export const MAP_2 = [
 ]
 
 export const WALLS = [
-  null,
+  [
+    null, null, Tiles.U_WALL, Tiles.U_WALL, null, null,
+    null, null, null, null, null, null,
+    null, null, null, Tiles.U_WALL, Tiles.U_WALL, Tiles.U_WALL
+  ],
   null,
   [
     Tiles.S_TOWER_0, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_WALL, Tiles.S_TOWER_0, Tiles.S_WALL,
