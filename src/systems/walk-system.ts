@@ -4,30 +4,32 @@ import { System } from '@/utils/elements'
 // animate character movement
 // detect collisions
 export class WalkSystem extends System {
+  _walkSpeed: number // tiles per frame
+  _walkTreshold: number
   components?: Walk[]
-  walkSpeed: number // tiles per frame
 
   constructor () {
     super()
     this._requiredComponent = Walk
-    this.walkSpeed = 0.05
+    this._walkSpeed = 0.05
+    this._walkTreshold = 1.5 * this._walkSpeed
   }
 
   update (elapsedFrames: number) {
     this.components!.forEach(walk => {
-      const isHorizontal = walk.tile.x !== walk.x
+      const isHorizontal = walk.x !== walk.tile.x
+      const multiplier = isHorizontal
+        ? (walk.x > walk.tile.x ? 1 : -1)
+        : (walk.y > walk.tile.y ? 1 : -1)
+
       if (isHorizontal) {
-        if (walk.tile.x < walk.x) {
-          walk.tile.x += this.walkSpeed * elapsedFrames
-        } else {
-          walk.tile.x -= this.walkSpeed * elapsedFrames
-        }
+        let nextX = walk.tile.x + this._walkSpeed * multiplier
+        if (this._walkTreshold > Math.abs(walk.x - nextX)) nextX = walk.x
+        walk.tile.x = nextX
       } else {
-        if (walk.tile.y < walk.y) {
-          walk.tile.y += this.walkSpeed * elapsedFrames
-        } else {
-          walk.tile.y -= this.walkSpeed * elapsedFrames
-        }
+        let nextY = walk.tile.y + this._walkSpeed * multiplier
+        if (this._walkTreshold > Math.abs(walk.y - nextY)) nextY = walk.y
+        walk.tile.y = nextY
       }
     })
   }
