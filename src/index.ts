@@ -1,14 +1,16 @@
+import { Player } from './entities/player'
 import { Surface } from './entities/surface'
+import { ControllerSystem } from './systems/controller-system'
 import { LoggerSystem } from './systems/logger-system'
 import { RenderSystem } from './systems/render-system'
+import { WalkSystem } from './systems/walk-system'
 import { GameController } from './utils/game-controller'
-import './state/controls'
 
 const fps = 48
 
 const gameController = new GameController(
-  [Surface],
-  [RenderSystem, LoggerSystem]
+  [Surface, Player],
+  [RenderSystem, ControllerSystem, WalkSystem, LoggerSystem]
 )
 
 function animate (

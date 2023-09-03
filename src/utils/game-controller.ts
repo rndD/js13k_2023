@@ -24,6 +24,7 @@ export class GameController {
       const entity = new EntityFactory()
       invariant(entity instanceof Entity)
       this._components.push(...entity.components)
+
       return entity
     })
 
@@ -48,12 +49,39 @@ export class GameController {
     this._totalFrames = 0
   }
 
+  _updateComponents () {
+    this._components = []
+    this._entities.forEach(entity => {
+      this._components.push(
+        ...entity.components
+      )
+    })
+    this._systems.forEach(system => {
+      if (system._requiredComponent != null) {
+        system.components = this._components.filter(component =>
+          isInstance(component, system._requiredComponent))
+      }
+      if (system._requiredEntity != null) {
+        system.entity = this._entities.find(entity =>
+          isInstance(entity, system._requiredEntity))
+      }
+    })
+  }
+
   update (elapsedFrames: number) {
     const totalFrames = this._totalFrames / 10
 
     this._systems.forEach(system => {
       const startTime = Date.now()
+
+      const componentsLength = system.entity?.components.length ?? 0
       system.update(elapsedFrames, totalFrames, this._perf)
+
+      if (
+        componentsLength > 0 &&
+        componentsLength !== system.entity?.components.length
+      ) this._updateComponents()
+
       this._perf[system.constructor.name] = Date.now() - startTime
     })
 

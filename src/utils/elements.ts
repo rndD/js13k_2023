@@ -1,4 +1,7 @@
-export class Component {}
+export class Component {
+  // eslint-disable-next-line no-useless-constructor
+  constructor (...args: any[]) {}
+}
 
 export class Entity {
   components: Component[]
@@ -9,8 +12,8 @@ export class Entity {
 }
 
 export class System {
-  _requiredComponent?: Component
-  _requiredEntity?: Entity
+  _requiredComponent?: typeof Component
+  _requiredEntity?: typeof Entity
 
   components?: Component[]
   entity?: Entity

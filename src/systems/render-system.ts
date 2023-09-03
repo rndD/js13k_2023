@@ -2,7 +2,8 @@ import type { TileData } from '@/utils/tiles'
 
 import { Tile } from '../components'
 import { System } from '@/utils/elements'
-import { gameMapWidth, genTileData } from '@/utils/tiles'
+import { Layers } from '@/utils/layers'
+import { bgColor, gameMapWidth, genTileData } from '@/utils/tiles'
 
 import { nullthrows } from '@/utils/validate'
 
@@ -33,8 +34,6 @@ export class RenderSystem extends System {
 
     const ctx = this._canvasContext = nullthrows(this._canvas.getContext('2d'))
     ctx.imageSmoothingEnabled = false
-    ctx.fillStyle = '#472d3c'
-    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height)
   }
 
   update () {
@@ -44,19 +43,25 @@ export class RenderSystem extends System {
     const tileData = this._tileData
     const tileWidth = this._tileWidth
 
-    this.components!.forEach(tile => {
-      const offsetX = tileWidth * tile._x
-      const offsetY = tileWidth * tile._y
+    ctx.fillStyle = bgColor
+    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height)
 
-      const imageTile = nullthrows(
-        tileData[tile._tile],
-        'No tile for ' + tile._tile
-      )
+    ;[Layers.Surface, Layers.Objects, Layers.Tops]
+      .forEach(layer => this.components!.forEach(tile => {
+        if (tile.layer !== layer) return
 
-      ctx.drawImage(
-        imageTile,
-        offsetX, offsetY
-      )
-    })
+        const offsetX = tileWidth * tile.x
+        const offsetY = tileWidth * tile.y
+
+        const imageTile = nullthrows(
+          tileData[nullthrows(tile.tileID, 'No tileID')],
+          'No tile for ' + tile.tileID
+        )
+
+        ctx.drawImage(
+          imageTile,
+          offsetX, offsetY
+        )
+      }))
   }
 }
