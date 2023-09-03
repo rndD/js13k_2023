@@ -7,6 +7,7 @@ import {
   Layers,
   Mov,
   Physical,
+  Player,
   Pos,
   Renderable,
   Soundable
@@ -85,6 +86,22 @@ export const createTranspansiveObj = (
     new GameObject(type),
     new Pos(pos.x, pos.y),
     new Renderable(sprite, Layers.Floor)
+  ]
+}
+
+export const createPlayer = (
+  pos: DOMPoint,
+  sprite: [number, number],
+  type: 'player'
+): Component[] => {
+  return [
+    new GameObject(type),
+    new Pos(pos.x, pos.y),
+    new Player(),
+    new Mov(),
+    new Renderable(sprite, Layers.Objects),
+    // new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
+    new Physical({ friction: 0.9 })
   ]
 }
 

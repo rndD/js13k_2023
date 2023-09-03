@@ -7,7 +7,7 @@ import {
   createFloor,
   createFreight,
   createObstacle,
-  createTranspansiveObj
+  createPlayer
 } from '@/core/ecs/helpers'
 
 import { BOX, MAP, MAP_2, WALLS, TOP, Tiles } from '@/tiles'
@@ -17,6 +17,7 @@ import {
   DragSystem,
   MoveSystem,
   PhysicsSystem,
+  PlayerControlSystem,
   RenderSystem,
   SoundSystem
 } from '@/core/ecs/system'
@@ -78,6 +79,7 @@ class GameState implements State {
     this.ecs.addSystem(new CollideSystem())
     this.ecs.addSystem(new PhysicsSystem())
     this.ecs.addSystem(new MoveSystem())
+    this.ecs.addSystem(new PlayerControlSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
   }
@@ -97,9 +99,12 @@ class GameState implements State {
 
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
+    const playerTile: [number, number] = [Tiles.H_PLAYER % 8, Math.floor(Tiles.H_PLAYER / 8)]
+
     this.addEntities(
       createFreight(getGridPointInPixels(new DOMPoint(15, 10)), BOX, 'crate', 1),
-      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, 'crate', 1)
+      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, 'crate', 1),
+      createPlayer(getGridPointInPixels(new DOMPoint(12, 10)), playerTile, 'player')
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

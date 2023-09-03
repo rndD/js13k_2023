@@ -5,6 +5,7 @@ import {
   Draggable,
   Layers,
   Mov,
+  Player,
   Physical,
   Pos,
   Renderable,
@@ -295,5 +296,41 @@ export class SoundSystem extends System {
         this.state.soundsPlaying.dropping = 500
       }
     }
+  }
+}
+
+export class PlayerControlSystem extends System {
+  componentsRequired = new Set<Function>([Player])
+  lastMove = 0
+
+  update (entities: Set<Entity>): void {
+    if (this.lastMove > 0) {
+      this.lastMove -= this.ecs.currentDelta
+      return
+    }
+
+    entities.forEach(player => {
+      const comps = this.ecs.getComponents(player)
+      const pos = comps.get(Pos)
+      const speed = tileSizeUpscaled
+
+      if (controls.isUp) {
+        pos.y -= speed
+      }
+
+      if (controls.isDown) {
+        pos.y += speed
+      }
+
+      if (controls.isLeft) {
+        pos.x -= speed
+      }
+
+      if (controls.isRight) {
+        pos.x += speed
+      }
+
+      this.lastMove = 200
+    })
   }
 }

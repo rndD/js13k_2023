@@ -6,6 +6,7 @@ export type EntityType =
   | 'door'
   | 'crate'
   | 'floor'
+  | 'player'
   | 'roof'
   | 'sellPoint'
   | 'spawnPoint'
@@ -39,6 +40,9 @@ export class Mov extends Component {
   constructor (public dx = 0, public dy = 0) {
     super()
   }
+}
+
+export class Player extends Component {
 }
 
 export class Renderable extends Component {
