@@ -121,7 +121,27 @@ export class Surface extends Entity {
       // tops
       new Tile(12, 0, Layers.Tops, Tiles.E_STORE_ENTRANCE_2),
       new Tile(12, 1, Layers.Tops, Tiles.E_STORE_ENTRANCE_1),
-      new Tile(12, 5, Layers.Tops, Tiles.E_STORE_ENTRANCE_2)
+      new Tile(12, 5, Layers.Tops, Tiles.E_STORE_ENTRANCE_2),
+      // roofs
+      new Tile(9, 5, Layers.Tops, Tiles.T_WOODEN_ROOF_V),
+      new Tile(9, 6, Layers.Tops, Tiles.T_WOODEN_ROOF_V),
+      new Tile(9, 9, Layers.Tops, Tiles.T_WOODEN_ROOF_V),
+      new Tile(9, 10, Layers.Tops, Tiles.T_WOODEN_ROOF_V),
+      new Tile(9, 11, Layers.Tops, Tiles.T_WOODEN_ROOF_V)
     )
+
+    iterate(5, 12, y => {
+      this.components.push(
+        new Tile(0, y, Layers.Tops, Tiles.T_WOODEN_ROOF_V),
+        new Tile(0, y, Layers.Tops, Tiles.T_WOODEN_ROOF_V)
+      )
+    })
+
+    iterate(1, 9, x => {
+      this.components.push(
+        new Tile(x, 5, Layers.Tops, Tiles.T_WOODEN_ROOF_H),
+        new Tile(x, 11, Layers.Tops, Tiles.T_WOODEN_ROOF_H)
+      )
+    })
   }
 }

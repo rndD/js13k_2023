@@ -19,6 +19,7 @@ export const Tiles = {
   E_STORE_TOWER_0: 16,
   E_STORE_WALL: 17,
   E_STORE_ENTRANCE_0: 18,
+  T_WOODEN_ROOF_H: 19,
 
   E_TABLE_1: 20,
 
@@ -29,6 +30,7 @@ export const Tiles = {
   S_ROAD_CROSS: 25,
   S_ROAD_CROSS_T: 3025,
   E_WOODEN_WALL: 26,
+  T_WOODEN_ROOF_V: 27,
 
   E_TABLE_0: 28
 }
