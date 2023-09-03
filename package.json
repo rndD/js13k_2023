@@ -50,6 +50,7 @@
       "EventTarget",
       "FocusEvent",
       "Image",
+      "ImageData",
       "KeyboardEvent",
       "MouseEvent",
       "PointerEvent",

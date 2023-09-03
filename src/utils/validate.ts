@@ -4,7 +4,7 @@ export function invariant (condition: unknown, message?: string) {
   }
 }
 
-export function nullthrows <T> (value?: T, message?: string): T {
+export function nullthrows <T> (value?: T | null | void, message?: string): T {
   if (value == null) {
     throw new Error(message ?? 'Got unexpected null')
   }

@@ -1,5 +1,12 @@
 import { nullthrows } from './validate'
 
+export function isInstance (
+  instance: unknown,
+  factory: any
+): boolean {
+  return instance instanceof factory
+}
+
 export function iterate (
   start: number,
   end: number | ((step: number) => void),

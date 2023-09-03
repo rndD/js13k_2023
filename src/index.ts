@@ -7,7 +7,7 @@ const fps = 48
 
 const gameController = new GameController(
   [Surface],
-  [LoggerSystem, RenderSystem]
+  [RenderSystem, LoggerSystem]
 )
 
 function animate (

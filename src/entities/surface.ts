@@ -1,4 +1,4 @@
-import { Entity } from '@/utils/game-controller'
+import { Entity } from '@/utils/elements'
 
 import { Tile } from '../components'
 import { Layers } from '@/utils/layers'
@@ -11,26 +11,28 @@ export class Surface extends Entity {
     super()
 
     iterate(18, x => {
-      this._components.push(
+      this.components.push(
         new Tile(x, 3, Layers.Surface, Tiles.S_WATER_SHORE),
         new Tile(x, 4, Layers.Surface, Tiles.S_WATER_DEPTH),
-        new Tile(x, 5, Layers.Surface, Tiles.S_WATER_SHORE, 2)
+        new Tile(x, 5, Layers.Surface, Tiles.S_WATER_SHORE_I)
       )
     })
 
     iterate(12, x => {
-      this._components.push(
-        new Tile(x, 13, Layers.Surface, Tiles.S_ROAD_STRAIGHT, x % 2 === 0 ? 1 : 3)
+      this.components.push(
+        new Tile(x, 13, Layers.Surface, x % 2 === 0
+          ? Tiles.S_ROAD_HORIZONTAL
+          : Tiles.S_ROAD_HORIZONTAL_I)
       )
     })
 
     iterate(3, 6, y => {
-      this._components.push(
+      this.components.push(
         new Tile(12, y, Layers.Surface, Tiles.E_BRIDGE)
       )
     })
 
-    this._components.push(
+    this.components.push(
       new Tile(12, 2, Layers.Surface, Tiles.E_STORE_ENTRANCE_0),
       new Tile(12, 6, Layers.Surface, Tiles.E_STORE_ENTRANCE_0),
 
@@ -80,19 +82,19 @@ export class Surface extends Entity {
     )
 
     iterate(0, 10, x => {
-      this._components.push(
+      this.components.push(
         new Tile(x, 6, Layers.Objects, Tiles.E_WOODEN_WALL),
         new Tile(x, 12, Layers.Objects, Tiles.E_WOODEN_WALL)
       )
     })
 
     iterate(7, 12, y => {
-      this._components.push(
+      this.components.push(
         new Tile(0, y, Layers.Objects, Tiles.E_WOODEN_WALL)
       )
     })
 
-    this._components.push(
+    this.components.push(
       new Tile(9, 7, Layers.Objects, Tiles.E_WOODEN_WALL),
       new Tile(9, 10, Layers.Objects, Tiles.E_WOODEN_WALL),
       new Tile(9, 11, Layers.Objects, Tiles.E_WOODEN_WALL),

@@ -1,65 +1,61 @@
-import { Tile } from '../components'
-import { System } from '@/utils/game-controller'
+import type { TileData } from '@/utils/tiles'
 
-const fieldWidth = 18
-const fieldHeight = 14
+import { Tile } from '../components'
+import { System } from '@/utils/elements'
+import { gameMapWidth, genTileData } from '@/utils/tiles'
+
+import { nullthrows } from '@/utils/validate'
 
 export class RenderSystem extends System {
-  static requiredComponents = Tile
-
   _canvas: HTMLCanvasElement
-  _context: CanvasRenderingContext2D
-  _isReady: boolean
-  _tileMap: HTMLImageElement
+  _canvasContext: CanvasRenderingContext2D
+  _tileData: TileData
   _tileWidth: number
-  // @ts-ignore
-  components: Tile[]
+  _isReady: boolean
 
-  constructor (components: Tile[]) {
-    super(components)
+  components?: Tile[]
 
-    this._canvas = document.querySelector('#c2d') as HTMLCanvasElement
+  constructor () {
+    super()
+    this._requiredComponent = Tile
+
+    this._canvas = nullthrows(document.querySelector('#canvas')) as HTMLCanvasElement
+    // normalize viewport
     this._canvas.width = this._canvas.clientWidth
     this._canvas.height = this._canvas.clientHeight
-    this._tileWidth = Math.round(this._canvas.width / fieldWidth)
 
-    this._context = this._canvas.getContext('2d') as CanvasRenderingContext2D
-    this._context.fillStyle = '#472d3c'
-    this._context.fillRect(0, 0, this._canvas.width, this._canvas.height)
-    this._context.imageSmoothingEnabled = false
+    const tileWidth = this._tileWidth = Math.round(this._canvas.width / gameMapWidth)
 
     this._isReady = false
-    this._tileMap = new Image()
-    this._tileMap.src = 'tiles.png'
-    this._tileMap.onload = () => {
+    this._tileData = genTileData('tiles.png', tileWidth, _ => {
       this._isReady = true
-    }
+    })
+
+    const ctx = this._canvasContext = nullthrows(this._canvas.getContext('2d'))
+    ctx.imageSmoothingEnabled = false
+    ctx.fillStyle = '#472d3c'
+    ctx.fillRect(0, 0, this._canvas.width, this._canvas.height)
   }
 
   update () {
     if (!this._isReady) return
 
-    const ctx = this._context
-    const originalTileWidth = 16
+    const ctx = this._canvasContext
+    const tileData = this._tileData
     const tileWidth = this._tileWidth
-    const offsetError = 0
 
-    this.components.forEach(tile => {
-      const sourceX = originalTileWidth * (tile._tile % 8) + offsetError
-      const sourceY = originalTileWidth * Math.floor(tile._tile / 8) + offsetError
-      const offsetX = tileWidth * tile._x + offsetError
-      const offsetY = tileWidth * tile._y + offsetError
+    this.components!.forEach(tile => {
+      const offsetX = tileWidth * tile._x
+      const offsetY = tileWidth * tile._y
+
+      const imageTile = nullthrows(
+        tileData[tile._tile],
+        'No tile for ' + tile._tile
+      )
 
       ctx.drawImage(
-        this._tileMap,
-        sourceX,
-        sourceY,
-        originalTileWidth,
-        originalTileWidth,
-        offsetX,
-        offsetY,
-        tileWidth,
-        tileWidth
+        imageTile,
+        offsetX, offsetY
       )
     })
   }
