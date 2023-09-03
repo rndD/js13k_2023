@@ -26,6 +26,22 @@ export class Surface extends Entity {
       )
     })
 
+    iterate(13, 18, x => {
+      this.components.push(
+        new Tile(x, 13, Layers.Surface, x % 2 === 0
+          ? Tiles.S_ROAD_HORIZONTAL
+          : Tiles.S_ROAD_HORIZONTAL_I)
+      )
+    })
+
+    iterate(7, 13, y => {
+      this.components.push(
+        new Tile(12, y, Layers.Surface, y % 2 === 0
+          ? Tiles.S_ROAD_VERTICAL
+          : Tiles.S_ROAD_VERTICAL_I)
+      )
+    })
+
     iterate(3, 6, y => {
       this.components.push(
         new Tile(12, y, Layers.Surface, Tiles.E_BRIDGE)
@@ -33,6 +49,7 @@ export class Surface extends Entity {
     })
 
     this.components.push(
+      new Tile(12, 13, Layers.Surface, Tiles.S_ROAD_CROSS_T),
       new Tile(12, 2, Layers.Surface, Tiles.E_STORE_ENTRANCE_0),
       new Tile(12, 6, Layers.Surface, Tiles.E_STORE_ENTRANCE_0),
 
