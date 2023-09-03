@@ -4,8 +4,6 @@ export const Tiles: {[tile: string]: number} = {
   F_TABLE_0: 28,
   F_TABLE_1: 20,
 
-  H_PLAYER: 6,
-
   R_VERTICAL: 24,
   R_CROSS: 25,
 
