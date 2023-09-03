@@ -2,6 +2,7 @@ import { Surface } from './entities/surface'
 import { LoggerSystem } from './systems/logger-system'
 import { RenderSystem } from './systems/render-system'
 import { GameController } from './utils/game-controller'
+import './state/controls'
 
 const fps = 48
 
