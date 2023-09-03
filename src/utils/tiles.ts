@@ -1,0 +1,26 @@
+/* eslint-disable */
+export enum Tiles {
+  S_WATER_SHORE = 0,
+  S_WATER_DEPTH = 1,
+  E_STORE_ENTRANCE_2 = 2,
+  E_TREE_FIR = 3,
+
+  I_PLAYER = 6,
+  I_NPC_0 = 7,
+  E_STORE_TOWER_1 = 8,
+  E_BRIDGE = 9,
+  E_STORE_ENTRANCE_1 = 10,
+  E_TREE_BIRCH = 11,
+
+  E_STORE_TOWER_0 = 16,
+  E_STORE_WALL = 17,
+  E_STORE_ENTRANCE_0 = 18,
+
+  E_TABLE_1 = 20,
+
+  S_ROAD_STRAIGHT = 24,
+  S_ROAD_CROSS = 25,
+  E_WOODEN_WALL = 26,
+
+  E_TABLE_0 = 28
+}
