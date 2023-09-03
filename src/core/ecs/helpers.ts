@@ -18,13 +18,14 @@ export const createObstacle = (
   pos: DOMPoint,
   sprite: number,
   type: EntityType,
+  w = tileSizeUpscaled, h = tileSizeUpscaled,
   angle?: number
 ): Component[] => {
   return [
     new GameObject(type),
     new Pos(pos.x, pos.y),
     new Renderable(sprite, Layers.Objects, angle),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled })
+    new Collidable({ w, h })
   ]
 }
 
@@ -57,6 +58,7 @@ export const createFreight = (
   pos: DOMPoint,
   sprite: number,
   type: EntityType,
+  w = tileSizeUpscaled - 8, h = tileSizeUpscaled - 8,
   price?: number,
   physics?: {
     mass: number;
@@ -68,7 +70,7 @@ export const createFreight = (
     new GameObject(type),
     new Pos(pos.x, pos.y),
     new Renderable(sprite, Layers.Objects),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
+    new Collidable({ w, h }),
     new Draggable(),
     new Mov(),
     new Physical({ mass: physics?.mass, friction: physics?.friction }),

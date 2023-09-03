@@ -1,4 +1,5 @@
 import { getTile } from '@/lib/utils'
+import { getColPos } from './ecs/systems/collide'
 
 export const pixelScale = 2
 export const tileSize = 16
@@ -121,6 +122,18 @@ class DrawEngine {
       Math.round(pos.y),
       tileSizeUpscaled,
       tileSizeUpscaled
+    )
+  }
+
+  drawDebugRect (pos: { x: number; y: number }, w: number, h: number) {
+    const newPos = getColPos(pos, { wh: { w, h } })
+    this.context.strokeStyle = 'red'
+    this.context.lineWidth = 1
+    this.context.strokeRect(
+      newPos.x,
+      newPos.y,
+      w,
+      h
     )
   }
 }

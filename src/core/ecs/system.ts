@@ -1,26 +1,19 @@
 /* eslint-disable max-classes-per-file */
-import { ComponentContainer, Entity, System } from '@/lib/ecs'
+import { Entity, System } from '@/lib/ecs'
 import {
-  Collidable,
   Draggable,
-  Layers,
   Mov,
   Physical,
   Pos,
-  Renderable,
   Soundable
 } from './component'
 import { controls } from '../controls'
 import {
-  drawEngine,
   pixelScale,
-  tileSize,
-  tileSizeUpscaled
+  tileSize
 } from '../draw-engine'
 import {
-  correctAABBCollision,
-  isPointerIn,
-  testAABBCollision
+  isPointerIn
 } from '@/lib/physics'
 import { zzfx } from '@/lib/zzFx'
 
@@ -57,58 +50,6 @@ export class MoveSystem extends System {
       }
       if (Math.abs(mov.dy) < 0.01) {
         mov.dy = 0
-      }
-    }
-  }
-}
-
-export class CollideSystem extends System {
-  componentsRequired = new Set<Function>([Pos, Collidable])
-  update (entities: Set<Entity>): void {
-    for (const entity of entities) {
-      // check only mov
-      const comps = this.ecs.getComponents(entity)
-      const mov = comps.get(Mov)
-      const col = comps.get(Collidable)
-      if (!mov) {
-        continue
-      }
-
-      const pos = comps.get(Pos)
-
-      for (const other of entities) {
-        if (other === entity) {
-          continue
-        }
-
-        const otherComps = this.ecs.getComponents(other)
-        const otherPos = otherComps.get(Pos)
-        const t = testAABBCollision(
-          pos,
-          { w: tileSizeUpscaled, h: tileSizeUpscaled }, // FIXME: implement and use w ,h from col
-          otherPos,
-          { w: tileSizeUpscaled, h: tileSizeUpscaled }
-        )
-
-        col.colliding = t.collide
-
-        if (t.collide) {
-          //   console.log("collide", entity, col);
-          const otherMov = otherComps.get(Mov) as Mov | undefined
-          //   console.log(
-          //     "colide",
-          //     comps.get(GameObject)?.type,
-          //     entity,
-          //     otherComps.get(GameObject)?.type,
-          //     other
-          //   );
-
-          correctAABBCollision(
-            { mov, pos },
-            { mov: otherMov, pos: otherPos },
-            t
-          )
-        }
       }
     }
   }
@@ -153,57 +94,6 @@ export class DragSystem extends System {
         const mov = comps.get(Mov)
         mov.dx = (mousePos.x - pos.x) / 50 // FIXME: use mass and mouse force
         mov.dy = (mousePos.y - pos.y) / 50
-      }
-    }
-  }
-}
-
-export class RenderSystem extends System {
-  componentsRequired = new Set<Function>([Renderable])
-
-  entitiesByLayers = new Map<Layers, Set<Entity>>()
-
-  public addEntity (entity: number, componentContainer: ComponentContainer): void {
-    const render = componentContainer.get(Renderable)
-    if (!this.entitiesByLayers.has(render.layer)) {
-      this.entitiesByLayers.set(render.layer, new Set())
-    }
-    this.entitiesByLayers.get(render.layer)?.add(entity)
-  }
-
-  public removeEntity (entity: number): void {
-    for (const layer of this.entitiesByLayers.values()) {
-      layer.delete(entity)
-    }
-  }
-
-  update (entities: Set<Entity>): void {
-    drawEngine.drawBg()
-    // draw entities
-    for (const layer of Object.values(Layers)) {
-      // FIXME: remove then size limit hits
-      if (typeof layer === 'string' || !this.entitiesByLayers.has(layer)) {
-        continue
-      }
-
-      for (const entity of this.entitiesByLayers.get(layer)!) {
-        const comps = this.ecs.getComponents(entity)
-        const render = comps.get(Renderable)
-        if (!render.visible) {
-          continue
-        }
-        const pos = comps.get(Pos)
-        const drag = comps.get(Draggable)
-        if (drag) {
-          if (drag.dragging) {
-            drawEngine.drawShadow(pos)
-          }
-          if (drag.hovered && !drag.dragging) {
-            drawEngine.drawOverlay(pos)
-          }
-        }
-
-        drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
       }
     }
   }
@@ -271,18 +161,18 @@ export class SoundSystem extends System {
         continue
       }
       // FIXME colide sound is not working, probably because of the colide system
-      const collidable = comps.get(Collidable)
-      if (collidable) {
-        // console.log("collidable", collidable.colliding);
-      }
-      if (
-        collidable &&
-        collidable.colliding &&
-        this.state.soundsPlaying.colliding <= 0
-      ) {
-        zzfx(...this.sounds.colliding)
-        this.state.soundsPlaying.colliding = 100
-      }
+      // const collidable = comps.get(Collidable)
+      // if (collidable) {
+      //   // console.log("collidable", collidable.colliding);
+      // }
+      // if (
+      //   collidable &&
+      //   collidable.colliding &&
+      //   this.state.soundsPlaying.colliding <= 0
+      // ) {
+      //   zzfx(...this.sounds.colliding)
+      //   this.state.soundsPlaying.colliding = 100
+      // }
 
       const draggable = comps.get(Draggable)
 

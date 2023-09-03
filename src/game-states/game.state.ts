@@ -12,16 +12,17 @@ import {
 
 import { Component, ECS } from '@/lib/ecs'
 import {
-  CollideSystem,
   DragSystem,
   MoveSystem,
   PhysicsSystem,
-  RenderSystem,
   SoundSystem
 } from '@/core/ecs/system'
 import { State } from '@/core/state-machine'
 import { SACK, TileInfo, map } from '@/tiles'
 import { Layers } from '@/core/ecs/component'
+import { RenderSystem } from '@/core/ecs/systems/render'
+import { CollideSystem } from '@/core/ecs/systems/collide'
+import { tileSizeUpscaled } from '@/core/draw-engine'
 
 // test only
 const createMap = () => {
@@ -39,10 +40,10 @@ const createMap = () => {
 
       switch (layer) {
         case Layers.Floor:
-          components.push(...createFloor(point, tile, 'floor', rot))
+          components.push(...createFloor(point, tile, 'floor'))
           break
         case Layers.Objects:
-          components.push(...createObstacle(point, tile, 'wall', rot))
+          components.push(...createObstacle(point, tile, 'wall'))
           break
         case Layers.AlwaysOnTop:
           components.push(...createAlwaysOnTop(point, tile, 'roof'))
@@ -57,11 +58,10 @@ const createMap = () => {
 }
 
 class GameState implements State {
-  // gameData: { silver: number } = { silver: 0 };
-
-  ecs: ECS = new ECS()
+  ecs: ECS
 
   constructor () {
+    this.ecs = new ECS()
     this.ecs.addSystem(new DragSystem())
     this.ecs.addSystem(new CollideSystem())
     this.ecs.addSystem(new PhysicsSystem())
@@ -86,8 +86,8 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(new DOMPoint(15, 10)), SACK, 'crate', 1),
-      createFreight(getGridPointInPixels(new DOMPoint(4, 6)), SACK, 'crate', 1)
+      createFreight(getGridPointInPixels(new DOMPoint(15, 10)), SACK, 'freight'),
+      createFreight(getGridPointInPixels(new DOMPoint(4, 6)), SACK, 'freight')
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

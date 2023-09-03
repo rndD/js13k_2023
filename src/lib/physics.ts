@@ -1,5 +1,3 @@
-import { tileSizeUpscaled } from '@/core/draw-engine'
-
 type CollisionTest = {
   entity1MaxX: number;
   entity1MaxY: number;
@@ -33,8 +31,8 @@ export const testAABBCollision = (
 
 // entity1 collided into entity2
 export const correctAABBCollision = (
-  entity1: { pos: { x: number; y: number }; mov: { dx: number; dy: number } },
-  entity2: { pos: { x: number; y: number }; mov?: { dx: number; dy: number } },
+  entity1: { pos: { x: number; y: number }; mov: { dx: number; dy: number }, col: { wh: { w: number; h: number } } },
+  entity2: { pos: { x: number; y: number }; mov?: { dx: number; dy: number }, col: { wh: { w: number; h: number } } },
   test: CollisionTest // used for correction
 ) => {
   if (!entity1.mov) {
@@ -119,7 +117,7 @@ export const correctAABBCollision = (
   }
   if (
     entity1.mov!.dx < 0 &&
-    entity1.pos.x + tileSizeUpscaled > entity2.pos.x + tileSizeUpscaled
+    entity1.pos.x + entity1.col.wh.w > entity2.pos.x + entity2.col.wh.w
   ) {
     entity1.mov!.dx *= -1
     if (entity2.mov) {
@@ -134,7 +132,7 @@ export const correctAABBCollision = (
   }
   if (
     entity1.mov!.dy < 0 &&
-    entity1.pos.y + tileSizeUpscaled > entity2.pos.y + tileSizeUpscaled
+    entity1.pos.y + entity1.col.wh.h > entity2.pos.y + entity2.col.wh.h
   ) {
     entity1.mov!.dy *= -1
     if (entity2.mov) {

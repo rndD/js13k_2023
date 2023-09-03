@@ -4,7 +4,7 @@ import { Component } from '@/lib/ecs'
 export type EntityType =
   | 'wall'
   | 'door'
-  | 'crate'
+  | 'freight'
   | 'floor'
   | 'roof'
   | 'sellPoint'
@@ -64,7 +64,7 @@ export class Physical extends Component {
 }
 
 export class Collidable extends Component {
-  constructor (public wh: { w: number; h: number }, public colliding = false) {
+  constructor (public wh: { w: number; h: number }) {
     super()
   }
 }
