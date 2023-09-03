@@ -11,6 +11,7 @@ class DrawEngine {
   ready = false
 
   constructor () {
+    // c2d - id of canvas element
     this.context = c2d.getContext('2d')
     // needed for pixel art
     this.context.imageSmoothingEnabled = false

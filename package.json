@@ -180,7 +180,8 @@
       "TouchList",
       "WebGLRenderingContext",
       "WebGL2RenderingContext",
-      "requestAnimationFrame"
+      "requestAnimationFrame",
+      "c2d"
     ],
     "parser": "@typescript-eslint/parser",
     "project": "./tsconfig.json"
