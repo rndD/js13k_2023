@@ -43,7 +43,7 @@ export class Mov extends Component {
 
 export class Renderable extends Component {
   constructor (
-    public sprite: [number, number],
+    public sprite: number,
     public layer: Layers,
     public spriteAngle: number = 0,
     public visible: boolean = true

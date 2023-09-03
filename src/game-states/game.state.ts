@@ -7,10 +7,9 @@ import {
   createFloor,
   createFreight,
   createObstacle,
-  createTranspansiveObj
+  createAlwaysOnTop
 } from '@/core/ecs/helpers'
 
-import { BOX, MAP, MAP_2, WALLS, TOP, Tiles } from '@/tiles'
 import { Component, ECS } from '@/lib/ecs'
 import {
   CollideSystem,
@@ -21,49 +20,38 @@ import {
   SoundSystem
 } from '@/core/ecs/system'
 import { State } from '@/core/state-machine'
+import { SACK, TileInfo, map } from '@/tiles'
+import { Layers } from '@/core/ecs/component'
 
 // test only
 const createMap = () => {
   const ec: Component[][] = []
   const startX = 2
   const startY = 2
+  const ls: [TileInfo[], Layers][] = [[map.floor, Layers.Floor], [map.walls, Layers.Objects], [map.top, Layers.AlwaysOnTop]]
+  ls.forEach(([ld, layer]) =>
+    ld.forEach(({ tile, x, y, rot, flipX }: TileInfo) => {
+      const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY))
+      const components: Component[] = []
+      if (tile === -1) {
+        return
+      }
 
-  ;[MAP, MAP_2, WALLS, TOP].forEach(layer =>
-    layer.forEach((row, y) => {
-      Array.isArray(row) && row.forEach((tileOrTileArray, x) => {
-        if (tileOrTileArray === null) return
+      switch (layer) {
+        case Layers.Floor:
+          components.push(...createFloor(point, tile, 'floor', rot))
+          break
+        case Layers.Objects:
+          components.push(...createObstacle(point, tile, 'wall', rot))
+          break
+        case Layers.AlwaysOnTop:
+          components.push(...createAlwaysOnTop(point, tile, 'roof'))
+          break
+      }
 
-        let angle = 0
-        let tile
-
-        if (Array.isArray(tileOrTileArray)) {
-          angle = tileOrTileArray[1] as number
-          tile = tileOrTileArray[0] as number
-        } else {
-          tile = tileOrTileArray as number
-        }
-
-        const coords: [number, number] = [tile % 8, Math.floor(tile / 8)]
-
-        const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY))
-        const components: Component[] = []
-
-        switch (tile) {
-          case Tiles.W_SHORE:
-            components.push(...createObstacle(point, coords, 'water', angle))
-            break
-          case Tiles.R_VERTICAL:
-          case Tiles.R_CROSS:
-            components.push(...createFloor(point, coords, 'floor', angle))
-            break
-          default:
-            components.push(...createObstacle(point, coords, 'wall', angle))
-            break
-        }
-
-        ec.push(components)
-      })
-    }))
+      ec.push(components)
+    })
+  )
 
   return ec
 }
@@ -98,8 +86,8 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(new DOMPoint(15, 10)), BOX, 'crate', 1),
-      createFreight(getGridPointInPixels(new DOMPoint(5, 6)), BOX, 'crate', 1)
+      createFreight(getGridPointInPixels(new DOMPoint(15, 10)), SACK, 'crate', 1),
+      createFreight(getGridPointInPixels(new DOMPoint(4, 6)), SACK, 'crate', 1)
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

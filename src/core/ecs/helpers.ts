@@ -16,7 +16,7 @@ import { tileSizeUpscaled } from '../draw-engine'
 // helper functions to create entities
 export const createObstacle = (
   pos: DOMPoint,
-  sprite: [number, number],
+  sprite: number,
   type: EntityType,
   angle?: number
 ): Component[] => {
@@ -30,7 +30,7 @@ export const createObstacle = (
 
 export const createFloor = (
   pos: DOMPoint,
-  sprite: [number, number],
+  sprite: number,
   type: EntityType,
   angle?: number
 ): Component[] => {
@@ -41,9 +41,9 @@ export const createFloor = (
   ]
 }
 
-export const alwaysOnTop = (
+export const createAlwaysOnTop = (
   pos: DOMPoint,
-  sprite: [number, number],
+  sprite: number,
   type: EntityType
 ): Component[] => {
   return [
@@ -55,7 +55,7 @@ export const alwaysOnTop = (
 
 export const createFreight = (
   pos: DOMPoint,
-  sprite: [number, number],
+  sprite: number,
   type: EntityType,
   price?: number,
   physics?: {
@@ -78,7 +78,7 @@ export const createFreight = (
 
 export const createTranspansiveObj = (
   pos: DOMPoint,
-  sprite: [number, number],
+  sprite: number,
   type: 'door'
 ): Component[] => {
   return [
@@ -118,7 +118,7 @@ export const createTranspansiveObj = (
 
 // export const createModifiedFloor = (
 //   pos: DOMPoint,
-//   sprite: [number, number],
+//   sprite: number,
 //   type: "stairs" | "ice",
 //   modifiers: Entity["physicsModifiers"]
 // ): Component[] => {

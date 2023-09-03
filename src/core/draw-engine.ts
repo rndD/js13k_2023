@@ -1,8 +1,15 @@
-import { getGridPointInPixels, getTile } from '@/lib/utils'
-import { FLOOR } from '../tiles'
+import { getTile } from '@/lib/utils'
 
 export const pixelScale = 2
 export const tileSize = 16
+
+const tileMapW = 8
+// find x,y in tilemap by tile number
+export const getTileXY = (tile: number) => {
+  const x = tile % tileMapW
+  const y = Math.floor(tile / tileMapW)
+  return [x, y]
+}
 
 export const tileSizeUpscaled = tileSize * pixelScale
 class DrawEngine {
@@ -16,7 +23,7 @@ class DrawEngine {
     // needed for pixel art
     this.context.imageSmoothingEnabled = false
 
-    this.tilemap.src = 'tiles.png'
+    this.tilemap.src = 'tilemap_13k_23.png'
     this.tilemap.onload = () => {
       this.ready = true
     }
@@ -63,28 +70,29 @@ class DrawEngine {
     this.context.fillStyle = '#ff3f2631'
     this.context.fillRect(0, 0, this.w, this.h)
 
-    // draw floor
-    for (let x = 0; x < this.wInTiles; x++) {
-      for (let y = 0; y < this.hInTiles; y++) {
-        const point = getGridPointInPixels(new DOMPoint(x, y))
-        this.context.drawImage(
-          getTile(this.tilemap, FLOOR[0], FLOOR[1])!,
-          0,
-          0,
-          tileSize,
-          tileSize,
-          point.x,
-          point.y,
-          tileSize * pixelScale,
-          tileSize * pixelScale
-        )
-      }
-    }
+    // // draw floor
+    // for (let x = 0; x < this.wInTiles; x++) {
+    //   for (let y = 0; y < this.hInTiles; y++) {
+    //     const point = getGridPointInPixels(new DOMPoint(x, y))
+    //     this.context.drawImage(
+    //       getTile(this.tilemap, FLOOR[0], FLOOR[1])!,
+    //       0,
+    //       0,
+    //       tileSize,
+    //       tileSize,
+    //       point.x,
+    //       point.y,
+    //       tileSize * pixelScale,
+    //       tileSize * pixelScale
+    //     )
+    //   }
+    // }
   }
 
-  drawEntity (pos: { x: number; y: number }, sprite: [number, number], angle = 0) {
+  drawEntity (pos: { x: number; y: number }, sprite: number, angle = 0) {
+    const s = getTileXY(sprite)
     this.context.drawImage(
-      getTile(this.tilemap, sprite[0], sprite[1], angle)!,
+      getTile(this.tilemap, s[0], s[1], angle)!,
       0,
       0,
       tileSize,
