@@ -4,22 +4,20 @@
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
 
-export const SACK = 103
+export const SACK = 62
 
 type MapSchema = {
   tileswide: number;
   tileshigh: number;
   layers:
-    {
-      name: string;
-      tiles: {
-        tile: number;
-        x: number;
-        y: number;
-        rot?: number;
-        flipX?: boolean;
-      }[]
-    }[]
+    {tiles: [
+      number,
+      number,
+      number,
+      number?
+    ][]
+  }[]
+
 }
 const tilemap: MapSchema = t
 
@@ -46,9 +44,9 @@ const m = {
 
 for (const layer of tilemap.layers) {
   for (const t of layer.tiles) {
-    const { x, y, rot, flipX, tile } = t
+    const [tile, x, y, rot] = t
     // @ts-ignore
-    m[layer.name].push({ x, y, rot, flipX, tile })
+    m[layer.name].push({ x, y, rot, tile })
   }
 }
 
