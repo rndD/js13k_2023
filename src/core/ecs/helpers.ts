@@ -15,7 +15,7 @@ import { Layers } from './systems/render'
 
 // helper functions to create entities
 export const createObstacle = (
-  pos: DOMPoint,
+  [x, y]: [number, number],
   sprite: number,
   type: EntityType,
   w = tileSizeUpscaled, h = tileSizeUpscaled,
@@ -23,39 +23,39 @@ export const createObstacle = (
 ): Component[] => {
   return [
     new GameObject(type),
-    new Pos(pos.x, pos.y),
+    new Pos(x, y),
     new Renderable(sprite, Layers.Objects, angle),
     new Collidable({ w, h })
   ]
 }
 
 export const createFloor = (
-  pos: DOMPoint,
+  [x, y]: [number, number],
   sprite: number,
   type: EntityType,
   angle?: number
 ): Component[] => {
   return [
     new GameObject(type),
-    new Pos(pos.x, pos.y),
+    new Pos(x, y),
     new Renderable(sprite, Layers.Floor, angle)
   ]
 }
 
 export const createAlwaysOnTop = (
-  pos: DOMPoint,
+  [x, y]: [number, number],
   sprite: number,
   type: EntityType
 ): Component[] => {
   return [
     new GameObject(type),
-    new Pos(pos.x, pos.y),
+    new Pos(x, y),
     new Renderable(sprite, Layers.AlwaysOnTop)
   ]
 }
 
 export const createFreight = (
-  pos: DOMPoint,
+  [x, y]: [number, number],
   sprite: number,
   type: EntityType,
   w = tileSizeUpscaled - 8, h = tileSizeUpscaled - 8,
@@ -68,7 +68,7 @@ export const createFreight = (
   // add price
   return [
     new GameObject(type),
-    new Pos(pos.x, pos.y),
+    new Pos(x, y),
     new Renderable(sprite, Layers.Objects),
     new Collidable({ w, h }),
     new Draggable(),
@@ -79,13 +79,13 @@ export const createFreight = (
 }
 
 export const createTranspansiveObj = (
-  pos: DOMPoint,
+  [x, y]: [number, number],
   sprite: number,
   type: 'door'
 ): Component[] => {
   return [
     new GameObject(type),
-    new Pos(pos.x, pos.y),
+    new Pos(x, y),
     new Renderable(sprite, Layers.Floor)
   ]
 }

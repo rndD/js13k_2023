@@ -4,9 +4,10 @@
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
 
-export const SACK = 62
-export const WAGON = 32
+export const SACK = 57
+export const WAGON = 27
 export const GRASS = 0
+export const MAN = 13
 
 type MapSchema = {
   tileswide: number;

@@ -1,6 +1,7 @@
-import { getGridPointInPixels, getTile } from '@/lib/utils'
+import { getGridPointInPixels } from '@/lib/utils'
 import { getColPos } from './ecs/systems/collide'
 import { GRASS } from '@/tiles'
+import { getTile } from '@/lib/graphics'
 
 export const pixelScale = 2
 export const tileSize = 16
@@ -75,7 +76,7 @@ class DrawEngine {
     // draw floor
     for (let x = 0; x < this.wInTiles; x++) {
       for (let y = 0; y < this.hInTiles; y++) {
-        const point = getGridPointInPixels(new DOMPoint(x, y))
+        const point = getGridPointInPixels(x, y)
         this.context.drawImage(
           // @ts-ignore
           getTile(this.tilemap, ...getTileXY(GRASS))!,
@@ -83,8 +84,8 @@ class DrawEngine {
           0,
           tileSize,
           tileSize,
-          point.x,
-          point.y,
+          point[0],
+          point[1],
           tileSize * pixelScale,
           tileSize * pixelScale
         )

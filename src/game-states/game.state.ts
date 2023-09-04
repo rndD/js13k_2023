@@ -23,16 +23,17 @@ import { SACK, TileInfo, WAGON, map } from '@/tiles'
 import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
 import { tileSizeUpscaled } from '@/core/draw-engine'
+import { BuyerSystem } from '@/core/ecs/systems/ai'
 
 // test only
 const createMap = () => {
   const ec: Component[][] = []
-  const startX = 2
-  const startY = 2
+  const startX = 0
+  const startY = 0
   const ls: [TileInfo[], Layers][] = [[map.floor, Layers.Floor], [map.walls, Layers.Objects], [map.top, Layers.AlwaysOnTop]]
   ls.forEach(([ld, layer]) =>
     ld.forEach(({ tile, x, y, rot, flipX }: TileInfo) => {
-      const point = getGridPointInPixels(new DOMPoint(x + startX, y + startY))
+      const point = getGridPointInPixels(x + startX, y + startY)
       const components: Component[] = []
       if (tile === -1) {
         return
@@ -66,6 +67,7 @@ class GameState implements State {
     this.ecs.addSystem(new CollideSystem())
     this.ecs.addSystem(new PhysicsSystem())
     this.ecs.addSystem(new ParticleSystem())
+    this.ecs.addSystem(new BuyerSystem())
     this.ecs.addSystem(new MoveSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
@@ -87,9 +89,9 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(new DOMPoint(15, 10)), SACK, 'freight'),
-      createFreight(getGridPointInPixels(new DOMPoint(4, 6)), SACK, 'freight'),
-      createFreight(getGridPointInPixels(new DOMPoint(10, 10)), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 })
+      createFreight(getGridPointInPixels(15, 10), SACK, 'freight'),
+      createFreight(getGridPointInPixels(4, 6), SACK, 'freight'),
+      createFreight(getGridPointInPixels(10, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 })
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

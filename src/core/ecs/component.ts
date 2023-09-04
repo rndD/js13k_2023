@@ -14,6 +14,8 @@ export type EntityType =
   | 'ice'
   | 'water';
 
+// FIXME remove super to reduce size
+
 export class GameObject extends Component {
   constructor (public type: EntityType) {
     super()
@@ -55,7 +57,7 @@ export class Physical extends Component {
 }
 
 export class Collidable extends Component {
-  constructor (public wh: { w: number; h: number }) {
+  constructor (public wh: { w:number, h: number }) {
     super()
   }
 }
@@ -118,6 +120,16 @@ export class Particle extends Component {
     public size: number,
     public color: string
   ) {
+    super()
+  }
+}
+
+type Resource = 'wood' | 'stone' | 'food';
+
+type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
+export class Buyer extends Component {
+  // @ts-ignore
+  constructor (public resToBuy: { [key: Resource]: number } = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking') {
     super()
   }
 }

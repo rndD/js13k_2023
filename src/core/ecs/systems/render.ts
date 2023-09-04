@@ -1,5 +1,5 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Collidable, Draggable, GameObject, Particle, Pos, Renderable } from '../component'
+import { Collidable, Draggable, Particle, Pos, Renderable } from '../component'
 import { drawEngine } from '@/core/draw-engine'
 export enum Layers {
   Background,
