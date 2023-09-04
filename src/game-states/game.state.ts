@@ -14,13 +14,13 @@ import { Component, ECS } from '@/lib/ecs'
 import {
   DragSystem,
   MoveSystem,
+  ParticleSystem,
   PhysicsSystem,
   SoundSystem
 } from '@/core/ecs/system'
 import { State } from '@/core/state-machine'
-import { SACK, TileInfo, map } from '@/tiles'
-import { Layers } from '@/core/ecs/component'
-import { RenderSystem } from '@/core/ecs/systems/render'
+import { SACK, TileInfo, WAGON, map } from '@/tiles'
+import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 
@@ -65,6 +65,7 @@ class GameState implements State {
     this.ecs.addSystem(new DragSystem())
     this.ecs.addSystem(new CollideSystem())
     this.ecs.addSystem(new PhysicsSystem())
+    this.ecs.addSystem(new ParticleSystem())
     this.ecs.addSystem(new MoveSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
@@ -87,7 +88,8 @@ class GameState implements State {
   onEnter () {
     this.addEntities(
       createFreight(getGridPointInPixels(new DOMPoint(15, 10)), SACK, 'freight'),
-      createFreight(getGridPointInPixels(new DOMPoint(4, 6)), SACK, 'freight')
+      createFreight(getGridPointInPixels(new DOMPoint(4, 6)), SACK, 'freight'),
+      createFreight(getGridPointInPixels(new DOMPoint(10, 10)), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 })
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

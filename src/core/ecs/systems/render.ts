@@ -1,7 +1,15 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Collidable, Draggable, Layers, Pos, Renderable } from '../component'
+import { Collidable, Draggable, GameObject, Particle, Pos, Renderable } from '../component'
 import { drawEngine } from '@/core/draw-engine'
-
+export enum Layers {
+  Background,
+  Floor,
+  Points,
+  Effects,
+  Objects,
+  AlwaysOnTop,
+  UI,
+}
 export class RenderSystem extends System {
   debug = false
 
@@ -34,6 +42,11 @@ export class RenderSystem extends System {
 
       for (const entity of this.entitiesByLayers.get(layer)!) {
         const comps = this.ecs.getComponents(entity)
+        // We need this check because entity can be removed from the
+        // ECS mid-update.
+        if (!comps) {
+          continue
+        }
         const render = comps.get(Renderable)
         if (!render.visible) {
           continue
@@ -49,7 +62,13 @@ export class RenderSystem extends System {
           }
         }
 
-        drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
+        if (render.sprite !== undefined) {
+          drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
+        } else {
+          // particle
+          const particle = comps.get(Particle)
+          drawEngine.drawParticle(pos, particle.color, particle.size)
+        }
 
         if (this.debug) {
           const coll = comps.get(Collidable)

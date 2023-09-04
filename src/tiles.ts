@@ -5,6 +5,8 @@
 import * as t from '../tiles/tilemap_13k_23.json'
 
 export const SACK = 62
+export const WAGON = 32
+export const GRASS = 0
 
 type MapSchema = {
   tileswide: number;

@@ -4,7 +4,6 @@ import {
   Draggable,
   EntityType,
   GameObject,
-  Layers,
   Mov,
   Physical,
   Pos,
@@ -12,6 +11,7 @@ import {
   Soundable
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
+import { Layers } from './systems/render'
 
 // helper functions to create entities
 export const createObstacle = (

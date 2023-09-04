@@ -1,5 +1,6 @@
 // eslint-disable-next-line max-classes-per-file
 import { Component } from '@/lib/ecs'
+import { Layers } from './systems/render'
 
 export type EntityType =
   | 'wall'
@@ -12,16 +13,6 @@ export type EntityType =
   | 'stairs'
   | 'ice'
   | 'water';
-
-export enum Layers {
-  Background,
-  Floor,
-  Points,
-  Objects,
-  Effects,
-  AlwaysOnTop,
-  UI,
-}
 
 export class GameObject extends Component {
   constructor (public type: EntityType) {
@@ -43,7 +34,7 @@ export class Mov extends Component {
 
 export class Renderable extends Component {
   constructor (
-    public sprite: number,
+    public sprite: number | undefined,
     public layer: Layers,
     public spriteAngle: number = 0,
     public visible: boolean = true
@@ -117,6 +108,16 @@ interface PhysicsModifiers {
 
 export class FloorModifier extends Component {
   constructor (public physicsModifiers: PhysicsModifiers) {
+    super()
+  }
+}
+
+export class Particle extends Component {
+  constructor (
+    public lifeTime: number,
+    public size: number,
+    public color: string
+  ) {
     super()
   }
 }

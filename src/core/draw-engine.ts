@@ -1,5 +1,6 @@
-import { getTile } from '@/lib/utils'
+import { getGridPointInPixels, getTile } from '@/lib/utils'
 import { getColPos } from './ecs/systems/collide'
+import { GRASS } from '@/tiles'
 
 export const pixelScale = 2
 export const tileSize = 16
@@ -71,23 +72,24 @@ class DrawEngine {
     this.context.fillStyle = '#ff3f2631'
     this.context.fillRect(0, 0, this.w, this.h)
 
-    // // draw floor
-    // for (let x = 0; x < this.wInTiles; x++) {
-    //   for (let y = 0; y < this.hInTiles; y++) {
-    //     const point = getGridPointInPixels(new DOMPoint(x, y))
-    //     this.context.drawImage(
-    //       getTile(this.tilemap, FLOOR[0], FLOOR[1])!,
-    //       0,
-    //       0,
-    //       tileSize,
-    //       tileSize,
-    //       point.x,
-    //       point.y,
-    //       tileSize * pixelScale,
-    //       tileSize * pixelScale
-    //     )
-    //   }
-    // }
+    // draw floor
+    for (let x = 0; x < this.wInTiles; x++) {
+      for (let y = 0; y < this.hInTiles; y++) {
+        const point = getGridPointInPixels(new DOMPoint(x, y))
+        this.context.drawImage(
+          // @ts-ignore
+          getTile(this.tilemap, ...getTileXY(GRASS))!,
+          0,
+          0,
+          tileSize,
+          tileSize,
+          point.x,
+          point.y,
+          tileSize * pixelScale,
+          tileSize * pixelScale
+        )
+      }
+    }
   }
 
   drawEntity (pos: { x: number; y: number }, sprite: number, angle = 0) {
@@ -108,10 +110,10 @@ class DrawEngine {
   drawShadow (pos: { x: number; y: number }, sprite?: [number, number]) {
     this.context.fillStyle = 'rgba(0,0,0,0.2)'
     this.context.fillRect(
-      Math.round(pos.x + 1),
-      Math.round(pos.y + 5),
+      Math.round(pos.x),
+      Math.round(pos.y + tileSizeUpscaled - 6),
       tileSizeUpscaled,
-      tileSizeUpscaled
+      6
     )
   }
 
@@ -122,6 +124,16 @@ class DrawEngine {
       Math.round(pos.y),
       tileSizeUpscaled,
       tileSizeUpscaled
+    )
+  }
+
+  drawParticle (pos: { x: number; y: number }, color: string, size = 1) {
+    this.context.fillStyle = color
+    this.context.fillRect(
+      Math.round(pos.x),
+      Math.round(pos.y),
+      size,
+      size
     )
   }
 
