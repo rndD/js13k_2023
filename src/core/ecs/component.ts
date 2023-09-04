@@ -39,7 +39,8 @@ export class Renderable extends Component {
     public sprite: number | undefined,
     public layer: Layers,
     public spriteAngle: number = 0,
-    public visible: boolean = true
+    public visible: boolean = true,
+    public carry: number|null = null
   ) {
     super()
   }
@@ -79,18 +80,19 @@ export class FloorPoint extends Component {
   }
 }
 
-interface SpawnTimer {
-  nextSpawn?: number;
-  spawnInterval?: number;
-  whatToSpawn?: EntityType;
-}
+// interface SpawnTimer {
+//   nextSpawn?: number;
+//   spawnInterval?: number;
+//   whatToSpawn?: EntityType;
+// }
 
-export class SpawnPoint extends Component {
-  constructor (public timer: SpawnTimer) {
-    super()
-  }
-}
+// export class SpawnPoint extends Component {
+//   constructor (public timer: SpawnTimer) {
+//     super()
+//   }
+// }
 
+// REMOVE
 interface SoundData {
   // TODO do we need this?
 }
@@ -129,7 +131,7 @@ type Resource = 'wood' | 'stone' | 'food';
 type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
 export class Buyer extends Component {
   // @ts-ignore
-  constructor (public resToBuy: { [key: Resource]: number } = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking') {
+  constructor (public resToBuy: { [key: Resource]: number } = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking', public bought: boolean = false) {
     super()
   }
 }

@@ -63,7 +63,11 @@ export class RenderSystem extends System {
         }
 
         if (render.sprite !== undefined) {
+          // draw sprite
           drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
+          if (render.carry !== null) {
+            drawEngine.drawCarry(pos, render.carry)
+          }
         } else {
           // particle
           const particle = comps.get(Particle)

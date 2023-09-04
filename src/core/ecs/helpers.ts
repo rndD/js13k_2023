@@ -3,6 +3,7 @@ import {
   Collidable,
   Draggable,
   EntityType,
+  FloorPoint,
   GameObject,
   Mov,
   Physical,
@@ -12,6 +13,7 @@ import {
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
+import { SELL_P } from '@/tiles'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -107,16 +109,14 @@ export const createTranspansiveObj = (
 //   };
 // };
 
-// export const createSellPoint = (pos: DOMPoint): Component[] => {
-//   return {
-//     id: getId(),
-//     pos,
-//     sprite: [0, 5],
-//     type: "sellPoint",
-//     layer: Layers.Points,
-//     gameData: {},
-//   };
-// };
+export const createSellPoint = ([x, y]: [number, number]): Component[] => {
+  return [
+    new GameObject('sellPoint'),
+    new Pos(x, y),
+    new Renderable(SELL_P, Layers.Points),
+    new FloorPoint()
+  ]
+}
 
 // export const createModifiedFloor = (
 //   pos: DOMPoint,

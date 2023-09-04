@@ -3,15 +3,15 @@ import { Buyer, Collidable, Pos, Renderable } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { getGridPointInPixels } from '@/lib/utils'
 import { Layers } from './render'
-import { MAN } from '@/tiles'
+import { MAN, SACK } from '@/tiles'
 
 export class BuyerSystem extends System {
   maxBuyers = 4
   componentsRequired = new Set<Function>([Buyer, Pos])
-  start = [12, 19]
-  end: [number, number] = [9, 20]
-  qPosEnd: [number, number] = [12, 14]
-  qPosStart: [number, number] = [9, 14]
+  start = [14, 22]
+  end: [number, number] = [11, 22]
+  qPosEnd: [number, number] = [14, 14]
+  qPosStart: [number, number] = [11, 14]
 
   q:Entity[] = []
 
@@ -132,6 +132,11 @@ export class BuyerSystem extends System {
           buyer.state = 'walkingBack'
           buyer.targetPos = this.end
           this.q.shift()
+          // if (buyer.bought) {
+          if (true) {
+            const r = comps.get(Renderable)
+            r.carry = SACK
+          }
         }
       }
     }

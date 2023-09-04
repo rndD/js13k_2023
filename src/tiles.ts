@@ -1,6 +1,3 @@
-// tile coordinates from file: public/tiles.png
-// sprite size 8x4, numbers represent tile position (left to right)
-
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
 
@@ -8,6 +5,7 @@ export const SACK = 57
 export const WAGON = 27
 export const GRASS = 0
 export const MAN = 13
+export const SELL_P = 51
 
 type MapSchema = {
   tileswide: number;

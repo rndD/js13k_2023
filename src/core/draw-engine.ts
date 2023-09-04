@@ -108,6 +108,21 @@ class DrawEngine {
     )
   }
 
+  drawCarry (pos: { x: number; y: number }, sprite: number) {
+    const s = getTileXY(sprite)
+    this.context.drawImage(
+      getTile(this.tilemap, s[0], s[1])!,
+      0,
+      0,
+      tileSize,
+      tileSize,
+      Math.round(pos.x) + tileSizeUpscaled / 4,
+      Math.round(pos.y),
+      tileSizeUpscaled / 2,
+      tileSizeUpscaled / 2
+    )
+  }
+
   drawShadow (pos: { x: number; y: number }, sprite?: [number, number]) {
     this.context.fillStyle = 'rgba(0,0,0,0.2)'
     this.context.fillRect(
