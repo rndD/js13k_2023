@@ -25,6 +25,10 @@ fs.readFile(filePath, "utf8", function (err, data) {
     // loop through rows
     for (const row in tilemap.layers[layer].tiles) {
       const t = tilemap.layers[layer].tiles[row];
+      if (Array.isArray(t)) {
+        console.log("Error: tilemap is already cleaned");
+        process.exit(1);
+      }
       if (t.tile === -1) {
         continue;
       }
@@ -41,5 +45,11 @@ fs.readFile(filePath, "utf8", function (err, data) {
     tilemap.layers[layer] = newLayer;
   }
 
+  // write new tilemap
+
   console.log(JSON.stringify(tilemap));
+  fs.writeFile(filePath, JSON.stringify(tilemap), function (err) {
+    if (err) return console.log(err);
+    console.log("Cleaned tilemap");
+  });
 });

@@ -1,15 +1,14 @@
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
 
-export const SACK = 57
-export const WAGON = 27
+export const SACK = 54
+export const WAGON = 26
 export const GRASS = 0
-export const MAN = 13
-export const SELL_P = 51
+export const MAN = 12
+export const SELL_P = 48
 
 type MapSchema = {
-  tileswide: number;
-  tileshigh: number;
+  // FIXME remove  tileswide... etc
   layers:
     {tiles: [
       number,
@@ -30,8 +29,6 @@ export type TileInfo = {
   tile: number;
 }
 type Map = {
-  tileswide: number;
-  tileshigh: number;
   'floor': TileInfo[];
   'walls': TileInfo[];
   'top': TileInfo[];
@@ -52,8 +49,6 @@ for (const layer of tilemap.layers) {
 }
 
 export const map: Map = {
-  tileswide: tilemap.tileswide,
-  tileshigh: tilemap.tileshigh,
   floor: m.floor,
   walls: m.walls,
   top: m.top

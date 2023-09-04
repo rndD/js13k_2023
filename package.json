@@ -191,6 +191,7 @@
     "build": "cross-env LEVEL_2_BUILD=true vite build",
     "find-best-roadroller": "node find-best-roadroller.js",
     "build-with-best-roadroller": "cross-env USE_RR_CONFIG=true vite build",
+    "cleanTileMap": "node cleanTileMap.js tiles/tilemap_13k_23.json",
     "lint": "standard",
     "vite": "vite serve",
     "tsc": "tsc --watch --noEmit"
