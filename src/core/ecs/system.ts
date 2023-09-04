@@ -6,8 +6,7 @@ import {
   Particle,
   Physical,
   Pos,
-  Renderable,
-  Soundable
+  Renderable
 } from './component'
 import { controls } from '../controls'
 import {
@@ -78,19 +77,17 @@ export class DragSystem extends System {
         h: tileSize * pixelScale
       })
 
-      // reset value
-      drag.dropped = false
-
       if (drag.hovered && !drag.dragging && this.dragging === -1) {
         if (controls.isMouseDown) {
           drag.dragging = true
+          this.ecs.ee.emit('pickup', entity)
           this.dragging = entity
         }
       }
 
       if (!controls.isMouseDown && drag.dragging) {
         drag.dragging = false
-        drag.dropped = true
+        this.ecs.ee.emit('drop', entity)
         this.dragging = -1
       }
 
@@ -103,101 +100,54 @@ export class DragSystem extends System {
   }
 }
 
-export class SoundSystem extends System {
-  state = {
-    soundsPlaying: {
-      colliding: 0, // remaining duration in ms
-      dropping: 0
-    },
-    muted: false,
-    volume: 0.01
-  }
-
-  sounds = {
-    // eslint-disable-next-line
-    colliding: [1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53],
-
-    // eslint-disable-next-line
-    dropping: [
-      ,
-      ,
-      435,
-      0.02,
-      0.07,
-      0.06,
-      1,
-      1.6,
-      -12,
-      ,
-      ,
-      ,
-      ,
-      ,
-      ,
-      ,,
-      0.91,
-      0.01
-    ]
-  }
-
-  componentsRequired = new Set<Function>([Soundable])
-  update (entities: Set<Entity>): void {
-    if (this.state.muted) {
-      return
-    }
-
-    // update volume
-    // @ts-ignore
-    window.zzfxV = this.state.volume
-
-    for (const key in this.state.soundsPlaying) {
-      // @ts-ignore
-      if (this.state.soundsPlaying[key] > 0) {
-        // @ts-ignore
-        this.state.soundsPlaying[key] -= this.ecs.currentDelta
-      }
-    }
-
-    for (const entity of entities) {
-      const comps = this.ecs.getComponents(entity)
-      const sound = comps.get(Soundable)
-      if (!sound) {
-        continue
-      }
-      // FIXME colide sound is not working, probably because of the colide system
-      // const collidable = comps.get(Collidable)
-      // if (collidable) {
-      //   // console.log("collidable", collidable.colliding);
-      // }
-      // if (
-      //   collidable &&
-      //   collidable.colliding &&
-      //   this.state.soundsPlaying.colliding <= 0
-      // ) {
-      //   zzfx(...this.sounds.colliding)
-      //   this.state.soundsPlaying.colliding = 100
-      // }
-
-      const draggable = comps.get(Draggable)
-
-      if (
-        draggable &&
-        draggable.dropped &&
-        this.state.soundsPlaying.dropping <= 0
-      ) {
-        zzfx(...this.sounds.dropping)
-        this.state.soundsPlaying.dropping = 500
-      }
-    }
-  }
-}
-
 export class ParticleSystem extends System {
+  inited = false
   nextTick = 0
   tick = 200
 
   componentsRequired = new Set<Function>([Pos, Mov])
+
+  init (): void {
+    this.ecs.ee.on('collide', (entity: Entity, other :Entity) => {
+      const comps = this.ecs.getComponents(entity)
+      const pos = comps.get(Pos)
+      const mov = comps.get(Mov)
+
+      const otherComps = this.ecs.getComponents(other)
+      const otherPos = otherComps.get(Pos)
+
+      // find center of the collision
+      const impactPoint = {
+        x: (pos.x + otherPos.x) / 2,
+        y: (pos.y + otherPos.y) / 2 - tileSizeUpscaled / 2
+      }
+
+      // random 3-6 particles
+      const count = Math.floor(Math.random() * 3) + 3
+      for (let i = 0; i < count; i++) {
+        this.createParticle(impactPoint, mov, i, 'white')
+      }
+    })
+  }
+
+  createParticle (pos: Pos, mov: Mov, i: number, color: string): void {
+    const e = this.ecs.addEntity()
+    this.ecs.addComponent(e, new Pos(pos.x + tileSizeUpscaled / 2 + i, pos.y + tileSizeUpscaled))
+    // randomise dx, dy a bit to make it more interesting and limit the speed by 0.5
+    const dx = (Math.random() - 0.5) / 2
+    const dy = (Math.random() - 0.5) / 2
+    this.ecs.addComponent(e, new Mov(dx, dy))
+    // color should be transparent
+    this.ecs.addComponent(e, new Particle(500, 3, color))
+    this.ecs.addComponent(e, new Renderable(undefined, Layers.Effects))
+  }
+
   update (entities: Set<Entity>): void {
+    if (!this.inited) {
+      this.init()
+      this.inited = true
+    }
+
     this.nextTick -= this.ecs.currentDelta
     if (this.nextTick <= 0) {
       for (const entity of entities) {
@@ -214,15 +164,8 @@ export class ParticleSystem extends System {
           const count = Math.floor(Math.random() * 3) + 3
           for (let i = 0; i < count; i++) {
             const pos = comps.get(Pos)
-            const e = this.ecs.addEntity()
-            this.ecs.addComponent(e, new Pos(pos.x + tileSizeUpscaled / 2 + i, pos.y + tileSizeUpscaled))
-            // randomise dx, dy a bit to make it more interesting and limit the speed by 0.5
-            const dx = (Math.random() - 0.5) / 2
-            const dy = (Math.random() - 0.5) / 2
-            this.ecs.addComponent(e, new Mov(dx, dy))
-            // color should be transparent
-            this.ecs.addComponent(e, new Particle(500, 3, 'rgba(145, 79, 25, 0.2)'))
-            this.ecs.addComponent(e, new Renderable(undefined, Layers.Effects))
+            const DIRT_COLOR = 'rgba(145, 79, 25, 0.2)'
+            this.createParticle(pos, mov, i, DIRT_COLOR)
           }
         }
       }

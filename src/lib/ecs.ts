@@ -1,9 +1,12 @@
-// Note: this is copy paste from https://maxwellforbes.com/posts/typescript-ecs-implementation/
+// Note: this is copy paste (with some modifications) from https://maxwellforbes.com/posts/typescript-ecs-implementation/
 // Thanks to Maxwell Forbes for the great article!
 /**
  * An entity is just an ID. This is used to look up its associated
  * Components.
  */
+
+import { EventEmitter } from './utils';
+
 // eslint-disable-next-line max-classes-per-file
 export type Entity = number;
 
@@ -129,6 +132,7 @@ export class ECS {
   private entitiesToDestroy: Entity[] = []
 
   public currentDelta = 0
+  public ee = EventEmitter()
 
   // API: Entities
 

@@ -15,8 +15,7 @@ import {
   DragSystem,
   MoveSystem,
   ParticleSystem,
-  PhysicsSystem,
-  SoundSystem
+  PhysicsSystem
 } from '@/core/ecs/system'
 import { State } from '@/core/state-machine'
 import { SACK, TileInfo, WAGON, map } from '@/tiles'
@@ -24,6 +23,7 @@ import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { BuyerSystem } from '@/core/ecs/systems/ai'
+import { SoundSystem } from '@/core/ecs/systems/sound'
 
 // test only
 const createMap = () => {

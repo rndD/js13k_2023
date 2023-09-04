@@ -41,15 +41,8 @@ export class CollideSystem extends System {
         )
 
         if (t.collide) {
-          //   console.log("collide", entity, col);
           const otherMov = otherComps.get(Mov)
-          //   console.log(
-          //     "colide",
-          //     comps.get(GameObject)?.type,
-          //     entity,
-          //     otherComps.get(GameObject)?.type,
-          //     other
-          //   );
+          this.ecs.ee.emit('collide', entity, other)
 
           correctAABBCollision(
             { mov, pos, col },

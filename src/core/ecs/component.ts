@@ -67,8 +67,7 @@ export class Draggable extends Component {
   constructor (
     public draggable: boolean = true,
     public dragging: boolean = false,
-    public hovered: boolean = false,
-    public dropped: boolean = false
+    public hovered: boolean = false
   ) {
     super()
   }
@@ -91,17 +90,6 @@ export class FloorPoint extends Component {
 //     super()
 //   }
 // }
-
-// REMOVE
-interface SoundData {
-  // TODO do we need this?
-}
-
-export class Soundable extends Component {
-  constructor (public sound: SoundData) {
-    super()
-  }
-}
 
 interface PhysicsModifiers {
   frictionMulti?: number;

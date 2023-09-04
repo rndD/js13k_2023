@@ -9,7 +9,7 @@ class MenuState implements State {
 
   onUpdate () {
     const xCenter = drawEngine.context.canvas.width / 2
-    drawEngine.drawText('Menu', 80, xCenter, 90)
+    drawEngine.drawText('13th merchant', 80, xCenter, 90)
     drawEngine.drawText(
       'Start Game',
       60,

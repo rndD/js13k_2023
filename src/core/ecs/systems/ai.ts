@@ -132,6 +132,7 @@ export class BuyerSystem extends System {
           buyer.state = 'walkingBack'
           buyer.targetPos = this.end
           this.q.shift()
+          // FIXME
           // if (buyer.bought) {
           if (true) {
             const r = comps.get(Renderable)

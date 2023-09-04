@@ -8,8 +8,7 @@ import {
   Mov,
   Physical,
   Pos,
-  Renderable,
-  Soundable
+  Renderable
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
@@ -75,8 +74,7 @@ export const createFreight = (
     new Collidable({ w, h }),
     new Draggable(),
     new Mov(),
-    new Physical({ mass: physics?.mass, friction: physics?.friction }),
-    new Soundable({})
+    new Physical({ mass: physics?.mass, friction: physics?.friction })
   ]
 }
 
