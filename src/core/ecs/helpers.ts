@@ -8,11 +8,13 @@ import {
   Mov,
   Physical,
   Pos,
-  Renderable
+  Renderable,
+  Resource,
+  Sell
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
-import { SELL_P } from '@/tiles'
+import { P_SELL } from '@/tiles'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -64,7 +66,8 @@ export const createFreight = (
   physics?: {
     mass: number;
     friction: number;
-  }
+  },
+  resourceType: Resource = 'wood'
 ): Component[] => {
   // add price
   return [
@@ -74,7 +77,8 @@ export const createFreight = (
     new Collidable({ w, h }),
     new Draggable(),
     new Mov(),
-    new Physical({ mass: physics?.mass, friction: physics?.friction })
+    new Physical({ mass: physics?.mass, friction: physics?.friction }),
+    new Sell(resourceType, price)
   ]
 }
 
@@ -111,8 +115,9 @@ export const createSellPoint = ([x, y]: [number, number]): Component[] => {
   return [
     new GameObject('sellPoint'),
     new Pos(x, y),
-    new Renderable(SELL_P, Layers.Points),
-    new FloorPoint()
+    new Renderable(P_SELL, Layers.Points),
+    new FloorPoint('sellPoint'),
+    new Sell('point')
   ]
 }
 

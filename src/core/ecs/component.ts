@@ -2,6 +2,8 @@
 import { Component } from '@/lib/ecs'
 import { Layers } from './systems/render'
 
+export type Resource = 'wood' | 'stone' | 'food';
+
 export type EntityType =
   | 'wall'
   | 'door'
@@ -73,8 +75,16 @@ export class Draggable extends Component {
   }
 }
 
+type PointType = 'sellPoint' | 'spawnPoint';
 export class FloorPoint extends Component {
-  constructor (public occupiedBy: number = -1) {
+  constructor (public type: PointType, public occupiedBy: number = -1, public bindedTo: number = -1) {
+    super()
+  }
+}
+
+type SellObjectType = Resource | 'point';
+export class Sell extends Component {
+  constructor (public type: SellObjectType, public price: number = -1) {
     super()
   }
 }
@@ -113,8 +123,6 @@ export class Particle extends Component {
     super()
   }
 }
-
-type Resource = 'wood' | 'stone' | 'food';
 
 type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
 export class Buyer extends Component {

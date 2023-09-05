@@ -24,6 +24,9 @@ export class SoundSystem extends System {
 
     // eslint-disable-next-line
     drop: [1.1,,332,,.06,.14,1,.31,,8,,,,,,.1,,.49,.01,.03],
+
+    // eslint-disable-next-line
+    sold: [,,684,.05,.23,.2,1,1.09,3.9,-0.8,-9,.05,,,,,,.49,.18,.13],
     // eslint-disable-next-line
     pickup: [
       ,

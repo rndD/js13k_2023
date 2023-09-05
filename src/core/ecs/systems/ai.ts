@@ -1,11 +1,13 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Collidable, Pos, Renderable } from '../component'
+import { Buyer, Collidable, Pos, Renderable, Sell } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { getGridPointInPixels, randomFromList } from '@/lib/utils'
 import { Layers } from './render'
 import { MEN, SACK } from '@/tiles'
 
 export class BuyerSystem extends System {
+  inited = false
+
   maxBuyers = 4
   componentsRequired = new Set<Function>([Buyer, Pos])
   start = [24, 22]
@@ -21,10 +23,38 @@ export class BuyerSystem extends System {
   tickMove = 30
   nextTickMove = 0
 
+  init (): void {
+    this.ecs.ee.on('sell', (entity: Entity) => {
+      const comps = this.ecs.getComponents(entity)
+      const sell = comps.get(Sell)
+
+      if (!sell) {
+        return
+      }
+
+      if (this.q.length) {
+        const b = this.q[0]
+        const buyerComp = this.ecs.getComponents(b)
+        const buyer = buyerComp.get(Buyer)
+        if (buyer.state !== 'buying') {
+          return
+        }
+        // @ts-ignore
+        if ((buyer.resToBuy[sell.type] || 0) > 0) {
+          this.ecs.ee.emit('sold', sell.type)
+          // @ts-ignore
+          buyer.resToBuy[sell.type] -= 1
+          // console.log(buyer, sell.type, buyer.resToBuy[sell.type])
+          this.ecs.removeEntity(entity)
+        }
+      }
+    })
+  }
+
   createBuyer (): void {
     const buyer = this.ecs.addEntity()
     this.ecs.addComponent(buyer, new Buyer(
-      { wood: 1, stone: 1 },
+      { wood: 3, stone: 1 },
       10000, // time,
       this.qPosEnd
     ))
@@ -97,6 +127,11 @@ export class BuyerSystem extends System {
   }
 
   update (entities: Set<Entity>): void {
+    if (!this.inited) {
+      this.init()
+      this.inited = true
+    }
+
     // create
     this.nextTick -= this.ecs.currentDelta
     if (this.nextTick <= 0) {

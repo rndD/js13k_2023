@@ -7,7 +7,8 @@ import {
   createFloor,
   createFreight,
   createObstacle,
-  createAlwaysOnTop
+  createAlwaysOnTop,
+  createSellPoint
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
@@ -24,6 +25,7 @@ import { tileSizeUpscaled } from '@/core/draw-engine'
 import { BuyerSystem } from '@/core/ecs/systems/ai'
 import { SoundSystem } from '@/core/ecs/systems/sound'
 import { ParticleSystem } from '@/core/ecs/particles'
+import { PointSystem } from '@/core/ecs/systems/point'
 
 // test only
 const createMap = () => {
@@ -69,6 +71,7 @@ class GameState implements State {
     this.ecs.addSystem(new ParticleSystem())
     this.ecs.addSystem(new BuyerSystem())
     this.ecs.addSystem(new MoveSystem())
+    this.ecs.addSystem(new PointSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
   }
@@ -91,7 +94,9 @@ class GameState implements State {
     this.addEntities(
       createFreight(getGridPointInPixels(25, 10), SACK, 'freight'),
       createFreight(getGridPointInPixels(14, 6), SACK, 'freight'),
-      createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 })
+      createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
+      createSellPoint(getGridPointInPixels(20, 12)),
+      createSellPoint(getGridPointInPixels(19, 12))
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

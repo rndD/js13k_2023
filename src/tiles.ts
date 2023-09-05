@@ -5,7 +5,8 @@ export const SACK = 51
 export const WAGON = 25
 export const GRASS = 0
 export const MEN = [67, 68, 70, 72, 74, 74, 75]
-export const SELL_P = 59
+export const P_SELL = 59
+export const P_SPAWN = 59
 
 type MapSchema = {
   // FIXME remove  tileswide... etc
