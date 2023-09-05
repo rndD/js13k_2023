@@ -9,15 +9,15 @@ import { nullthrows } from '@/utils/validate'
 // animate character movement
 // detect collisions
 export class ControllerSystem extends System {
-  entity?: Player
+  entities?: Player[]
 
   constructor () {
     super()
-    this._requiredEntity = Player
+    this._requiredEntities = [Player]
   }
 
   update () {
-    const player = nullthrows(this.entity)
+    const player = nullthrows(this.entities)[0]
     const walkIndex = player.components.findIndex(component =>
       isInstance(component, Walk))
     const walk = (walkIndex > -1 ? player.components[walkIndex] : null) as Walk | null

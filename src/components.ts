@@ -23,6 +23,26 @@ export class Tile extends Component {
   }
 }
 
+export class Carry extends Component {
+  tile: Tile
+
+  constructor (tile: Tile) {
+    super()
+
+    this.tile = tile
+  }
+}
+
+export class Direction extends Component {
+  angle: number
+
+  constructor (angle: number) {
+    super()
+
+    this.angle = angle
+  }
+}
+
 export class Walk extends Component {
   x: number
   y: number

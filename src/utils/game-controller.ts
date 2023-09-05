@@ -1,6 +1,6 @@
 import { Component, Entity, System } from './elements'
 
-import { isInstance } from './helpers'
+import { isInstanceOfAny } from './helpers'
 import { invariant } from './validate'
 
 /**
@@ -16,6 +16,11 @@ import { invariant } from './validate'
  * if "_requiredComponent" or "_requiredEntity" are specified.
  * 6. System.update receives elapsedFrames and totalFrames as argument.
  * Speed is 48 frames per second, 1 frame ~ 21ms
+ *
+ * How to:
+ * 1. Any changes are introduced on the entity level through the components.
+ * 2. Components represent the app state.
+ * 3. Any process is implmeneted through the components.
  */
 
 export class GameController {
@@ -43,15 +48,7 @@ export class GameController {
       const system = new SystemFactory()
       invariant(system instanceof System)
 
-      if (system._requiredComponent != null) {
-        system.components = this._components.filter(component =>
-          isInstance(component, system._requiredComponent))
-      }
-
-      if (system._requiredEntity != null) {
-        system.entity = this._entities.find(entity =>
-          isInstance(entity, system._requiredEntity))
-      }
+      this._updateSystem(system)
 
       return system
     })
@@ -67,16 +64,20 @@ export class GameController {
         ...entity.components
       )
     })
-    this._systems.forEach(system => {
-      if (system._requiredComponent != null) {
-        system.components = this._components.filter(component =>
-          isInstance(component, system._requiredComponent))
-      }
-      if (system._requiredEntity != null) {
-        system.entity = this._entities.find(entity =>
-          isInstance(entity, system._requiredEntity))
-      }
-    })
+    this._systems.forEach(system =>
+      this._updateSystem(system))
+  }
+
+  _updateSystem (system: System) {
+    if (system._requiredComponents != null) {
+      system.components = this._components.filter(component =>
+        isInstanceOfAny(component, system._requiredComponents!))
+    }
+
+    if (system._requiredEntities != null) {
+      system.entities = this._entities.filter(entity =>
+        isInstanceOfAny(entity, system._requiredEntities!))
+    }
   }
 
   update (elapsedFrames: number) {
@@ -85,13 +86,15 @@ export class GameController {
     this._systems.forEach(system => {
       const startTime = Date.now()
 
-      const componentsLength = system.entity?.components.length ?? 0
+      const snapshot = system.entities?.map(entity => entity.components.length)
       system.update(elapsedFrames, totalFrames, this._perf)
 
-      if (
-        componentsLength > 0 &&
-        componentsLength !== system.entity?.components.length
-      ) this._updateComponents()
+      const hasChange =
+        snapshot != null &&
+        snapshot.some((count, index) =>
+          system.entities?.[index].components.length !== count)
+
+      if (hasChange) this._updateComponents()
 
       this._perf[system.constructor.name] = Date.now() - startTime
     })

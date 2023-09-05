@@ -10,7 +10,7 @@ export class WalkSystem extends System {
 
   constructor () {
     super()
-    this._requiredComponent = Walk
+    this._requiredComponents = [Walk]
     this._walkSpeed = 0.05
     this._walkTreshold = 1.5 * this._walkSpeed
   }

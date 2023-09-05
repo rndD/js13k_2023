@@ -1,10 +1,19 @@
+import { Component, Entity } from './elements'
+
 import { nullthrows } from './validate'
 
 export function isInstance (
   instance: unknown,
-  factory: any
+  factory: typeof Component | typeof Entity
 ): boolean {
   return instance instanceof factory
+}
+
+export function isInstanceOfAny (
+  instance: unknown,
+  factories: Array<typeof Component> | Array<typeof Entity>
+): boolean {
+  return factories.some(factory => isInstance(instance, factory))
 }
 
 export function iterate (

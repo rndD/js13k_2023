@@ -18,7 +18,7 @@ export class RenderSystem extends System {
 
   constructor () {
     super()
-    this._requiredComponent = Tile
+    this._requiredComponents = [Tile]
 
     this._canvas = nullthrows(document.querySelector('#canvas')) as HTMLCanvasElement
     // normalize viewport

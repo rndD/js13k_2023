@@ -12,11 +12,11 @@ export class Entity {
 }
 
 export class System {
-  _requiredComponent?: typeof Component
-  _requiredEntity?: typeof Entity
+  _requiredComponents?: Array<typeof Component>
+  _requiredEntities?: Array<typeof Entity>
 
   components?: Component[]
-  entity?: Entity
+  entities?: Entity[]
 
   update (elapsedFrames: number, totalFrames: number, perf: unknown) {}
 }
