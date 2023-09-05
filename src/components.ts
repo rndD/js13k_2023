@@ -48,11 +48,19 @@ export class Walk extends Component {
   y: number
   tile: Tile
 
+  isBlocked: boolean
+  isValidated: boolean
+  startFrame: number
+
   constructor (x: number, y: number, tile: Tile) {
     super()
 
     this.x = x
     this.y = y
     this.tile = tile
+
+    this.isBlocked = false
+    this.isValidated = false
+    this.startFrame = 0
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Entity, System } from './elements'
 
-import { isInstanceOfAny } from './helpers'
+import { isInstance, isInstanceOfAny } from './helpers'
 import { invariant } from './validate'
 
 /**
@@ -38,7 +38,7 @@ export class GameController {
     this._components = []
     this._entities = entities.map(EntityFactory => {
       const entity = new EntityFactory()
-      invariant(entity instanceof Entity)
+      invariant(isInstance(entity, Entity))
       this._components.push(...entity.components)
 
       return entity
@@ -46,7 +46,7 @@ export class GameController {
 
     this._systems = systems.map(SystemFactory => {
       const system = new SystemFactory()
-      invariant(system instanceof System)
+      invariant(isInstance(system, System))
 
       this._updateSystem(system)
 

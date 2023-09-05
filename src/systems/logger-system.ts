@@ -5,6 +5,7 @@ export class LoggerSystem extends System {
 
   constructor () {
     super()
+
     this._lastOutput = Date.now()
   }
 

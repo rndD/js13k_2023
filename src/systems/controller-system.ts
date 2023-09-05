@@ -13,14 +13,14 @@ export class ControllerSystem extends System {
 
   constructor () {
     super()
+
     this._requiredEntities = [Player]
   }
 
   update () {
     const player = nullthrows(this.entities)[0]
-    const walkIndex = player.components.findIndex(component =>
-      isInstance(component, Walk))
-    const walk = (walkIndex > -1 ? player.components[walkIndex] : null) as Walk | null
+    const walk = player.components.find(component =>
+      isInstance(component, Walk)) as Walk | null
 
     const isMoving =
       Controls.isDown ||
@@ -33,8 +33,10 @@ export class ControllerSystem extends System {
       isMoving && !isWalking
 
     if (isFirstStep) {
-      const tile = nullthrows(player.components.find(component =>
-        isInstance(component, Tile))) as Tile
+      const tile = nullthrows(
+        player.components.find(component =>
+          isInstance(component, Tile))
+      ) as Tile
 
       const x = tile.x + (Controls.isLeft ? -1 : Controls.isRight ? 1 : 0)
       const y = tile.y + (Controls.isUp ? -1 : Controls.isDown ? 1 : 0)
@@ -43,16 +45,6 @@ export class ControllerSystem extends System {
       player.components.push(
         new Walk(x, y, tile)
       )
-      return
-    }
-
-    const isDestinationReached =
-      walk != null &&
-      walk.x === walk.tile.x &&
-      walk.y === walk.tile.y
-
-    if (isDestinationReached) {
-      player.components.splice(walkIndex, 1)
     }
   }
 }
