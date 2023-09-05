@@ -16,6 +16,7 @@ fs.readFile(filePath, "utf8", function (err, data) {
 
   // parse json
   const tilemap = JSON.parse(data);
+  const newTilemap = { layers: [] };
 
   // loop through layers
   for (const layer in tilemap.layers) {
@@ -42,13 +43,13 @@ fs.readFile(filePath, "utf8", function (err, data) {
       newLayer.tiles.push(filter(newTile));
     }
     // add layer to new tilemap
-    tilemap.layers[layer] = newLayer;
+    newTilemap.layers[layer] = newLayer;
   }
 
   // write new tilemap
 
-  console.log(JSON.stringify(tilemap));
-  fs.writeFile(filePath, JSON.stringify(tilemap), function (err) {
+  console.log(JSON.stringify(newTilemap));
+  fs.writeFile(filePath, JSON.stringify(newTilemap), function (err) {
     if (err) return console.log(err);
     console.log("Cleaned tilemap");
   });

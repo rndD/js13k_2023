@@ -1,17 +1,17 @@
 import { Entity, System } from '@/lib/ecs'
 import { Buyer, Collidable, Pos, Renderable } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
-import { getGridPointInPixels } from '@/lib/utils'
+import { getGridPointInPixels, randomFromList } from '@/lib/utils'
 import { Layers } from './render'
-import { MAN, SACK } from '@/tiles'
+import { MEN, SACK } from '@/tiles'
 
 export class BuyerSystem extends System {
   maxBuyers = 4
   componentsRequired = new Set<Function>([Buyer, Pos])
-  start = [14, 22]
-  end: [number, number] = [11, 22]
-  qPosEnd: [number, number] = [14, 14]
-  qPosStart: [number, number] = [11, 14]
+  start = [24, 22]
+  end: [number, number] = [21, 22]
+  qPosEnd: [number, number] = [24, 14]
+  qPosStart: [number, number] = [21, 14]
 
   q:Entity[] = []
 
@@ -25,13 +25,13 @@ export class BuyerSystem extends System {
     const buyer = this.ecs.addEntity()
     this.ecs.addComponent(buyer, new Buyer(
       { wood: 1, stone: 1 },
-      3000, // time,
+      10000, // time,
       this.qPosEnd
     ))
 
     // @ts-ignore
     this.ecs.addComponent(buyer, new Pos(...getGridPointInPixels(...this.start)))
-    this.ecs.addComponent(buyer, new Renderable(MAN, Layers.Objects))
+    this.ecs.addComponent(buyer, new Renderable(randomFromList(MEN), Layers.Objects))
     this.ecs.addComponent(buyer, new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }))
   }
 

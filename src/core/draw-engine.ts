@@ -116,8 +116,8 @@ class DrawEngine {
       0,
       tileSize,
       tileSize,
-      Math.round(pos.x) + tileSizeUpscaled / 4,
-      Math.round(pos.y),
+      Math.round(pos.x),
+      Math.round(pos.y) + tileSizeUpscaled / 4,
       tileSizeUpscaled / 2,
       tileSizeUpscaled / 2
     )

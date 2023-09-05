@@ -1,11 +1,11 @@
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
 
-export const SACK = 54
-export const WAGON = 26
+export const SACK = 51
+export const WAGON = 25
 export const GRASS = 0
-export const MAN = 12
-export const SELL_P = 48
+export const MEN = [67, 68, 70, 72, 74, 74, 75]
+export const SELL_P = 59
 
 type MapSchema = {
   // FIXME remove  tileswide... etc
