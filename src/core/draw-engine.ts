@@ -123,6 +123,42 @@ class DrawEngine {
     )
   }
 
+  drawBuying (pos: { x: number; y: number }, res: {[sprite: number]: number}) {
+    let { x, y } = pos
+    y += tileSizeUpscaled - 2
+    const pad = 2
+    this.context.fillStyle = 'rgba(0,0,0,0.4)'
+    this.context.fillRect(
+      Math.round(x),
+      Math.round(y),
+      tileSizeUpscaled,
+      Object.keys(res).length * tileSize + pad * 2
+    )
+
+    Object.entries(res).forEach(([sprite, count], i) => {
+      const s = getTileXY(Number(sprite))
+      this.context.drawImage(
+        getTile(this.tilemap, s[0], s[1])!,
+        0,
+        0,
+        tileSize,
+        tileSize,
+        Math.round(x) + pad,
+        Math.round(y) + pad + i * tileSize,
+        tileSize,
+        tileSize
+      )
+      this.drawText(
+        count.toString(),
+        10,
+        Math.round(x) + pad * 3 + tileSize,
+        Math.round(y) + pad + i * tileSize + tileSize / 2 + 4,
+        'white',
+        'left'
+      )
+    })
+  }
+
   drawShadow (pos: { x: number; y: number }, sprite?: [number, number]) {
     this.context.fillStyle = 'rgba(0,0,0,0.2)'
     this.context.fillRect(
@@ -133,6 +169,7 @@ class DrawEngine {
     )
   }
 
+  // FIXME not used
   drawOverlay (pos: { x: number; y: number }, sprite?: [number, number]) {
     this.context.fillStyle = 'rgba(255,255,255,0.1)'
     this.context.fillRect(

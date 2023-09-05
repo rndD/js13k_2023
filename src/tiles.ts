@@ -1,5 +1,6 @@
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
+import { Resource } from './core/ecs/component'
 
 export const SACK = 51
 export const WAGON = 25
@@ -7,6 +8,19 @@ export const GRASS = 0
 export const MEN = [67, 68, 70, 72, 74, 74, 75]
 export const P_SELL = 59
 export const P_SPAWN = 59
+export const WOOD = 50
+export const STONE = 62
+
+export const convertResToSprite = (res: Resource): number => {
+  switch (res) {
+    case 'wood':
+      return WOOD
+    case 'stone':
+      return STONE
+    default:
+      return 0
+  }
+}
 
 type MapSchema = {
   // FIXME remove  tileswide... etc

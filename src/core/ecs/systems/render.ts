@@ -1,6 +1,7 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Collidable, Draggable, Particle, Pos, Renderable } from '../component'
+import { Buyer, Collidable, Draggable, Particle, Pos, Renderable } from '../component'
 import { drawEngine } from '@/core/draw-engine'
+import { convertResToSprite } from '@/tiles'
 export enum Layers {
   Background,
   Floor,
@@ -53,6 +54,7 @@ export class RenderSystem extends System {
         }
         const pos = comps.get(Pos)
         const drag = comps.get(Draggable)
+        const buyer = comps.get(Buyer)
         if (drag) {
           if (drag.dragging) {
             drawEngine.drawShadow(pos)
@@ -65,6 +67,15 @@ export class RenderSystem extends System {
         if (render.sprite !== undefined) {
           // draw sprite
           drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
+
+          if (buyer?.state === 'buying') {
+            const res = Object.keys(buyer.resToBuy).reduce((acc, curr) => {
+              // @ts-ignore
+              acc[convertResToSprite(curr)] = buyer.resToBuy[curr]
+              return acc
+            }, {})
+            drawEngine.drawBuying(pos, res)
+          }
           if (render.carry !== null) {
             drawEngine.drawCarry(pos, render.carry)
           }
