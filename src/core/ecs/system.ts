@@ -5,7 +5,8 @@ import {
   Draggable,
   Mov,
   Physical,
-  Pos
+  Pos,
+  ResourceSource
 } from './component'
 import { controls } from '../controls'
 import {
@@ -16,6 +17,7 @@ import {
 import {
   isPointerIn
 } from '@/lib/physics'
+import { createFreight } from './helpers'
 
 // can be part of move system?
 export class PhysicsSystem extends System {
@@ -57,15 +59,31 @@ export class MoveSystem extends System {
 
 export class ClickSystem extends System {
   componentsRequired = new Set<Function>([Clickable, Pos])
+  prevMouse = false
 
   click (entity: Entity): void {
     const comps = this.ecs.getComponents(entity)
     const cl = comps.get(Clickable)
+
+    const resS = comps.get(ResourceSource)
+    const pos = comps.get(Pos)
+
+    if (resS) {
+      const e = this.ecs.addEntity()
+
+      createFreight([pos.x, pos.y + tileSizeUpscaled], 'freight', 'wood').forEach((c) => {
+        this.ecs.addComponent(e, c)
+      })
+      const mov = this.ecs.getComponents(e).get(Mov)
+      mov.dx = 0
+      mov.dy = 0.2
+    }
     // cl.clicked = true
   }
 
   update (entities: Set<Entity>): void {
     const mousePos = controls.mousePosition
+
     for (const entity of entities) {
       const comps = this.ecs.getComponents(entity)
       const pos = comps.get(Pos)
@@ -76,7 +94,13 @@ export class ClickSystem extends System {
         w: tileSizeUpscaled,
         h: cl.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled
       })
+
+      if (cl.hovered && this.prevMouse !== controls.isMouseDown) {
+        this.click(entity)
+      }
     }
+
+    this.prevMouse = controls.isMouseDown
   }
 }
 

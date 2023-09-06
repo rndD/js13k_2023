@@ -6,6 +6,7 @@
 
 /* Get rid of any margins, set background black, use flexbox to center */
 html, body {
+    cursor: none;
     margin: 0;
     background-color: #232B2B;
     display: flex;

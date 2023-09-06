@@ -1,7 +1,7 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
 import { Buyer, Clickable, Collidable, Draggable, Particle, Pos, Renderable, ResourceSource } from '../component'
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
-import { TREE_TOP, convertResToSprite } from '@/tiles'
+import { I_AXE, P_SPAWN, TREE_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
 export enum Layers {
   Background,
@@ -38,11 +38,12 @@ export class RenderSystem extends System {
 
   update (entities: Set<Entity>): void {
     this.tmpTopLayer = []
-    this.mouseIcon = null
+    this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, P_SPAWN]
 
     drawEngine.drawBg()
     // draw entities
     for (const layer of Object.values(Layers)) {
+      // mouse icon
       if (layer === Layers.UI && this.mouseIcon) {
         drawEngine.drawIcon(...this.mouseIcon)
       }

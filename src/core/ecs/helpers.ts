@@ -62,13 +62,13 @@ export const createAlwaysOnTop = (
 export const createFreight = (
   [x, y]: [number, number],
   type: EntityType,
+  resourceType: Resource = 'wood',
   w = tileSizeUpscaled - 8, h = tileSizeUpscaled - 8,
   price?: number,
   physics?: {
     mass: number;
     friction: number;
-  },
-  resourceType: Resource = 'wood'
+  }
 ): Component[] => {
   // add price
   return [
@@ -91,6 +91,7 @@ export const createTree = (
     new GameObject('tree'),
     new Pos(x, y),
     new Renderable(TREE_BOTTOM, Layers.Objects),
+    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
     new ResourceSource('wood'),
     new Clickable(I_AXE, true)
   ]
