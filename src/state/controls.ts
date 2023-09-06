@@ -7,6 +7,7 @@ const keyMap = {
   a: 'isLeft',
   d: 'isRight',
   w: 'isUp',
+  Enter: 'isAction',
   ' ': 'isAction'
 }
 
