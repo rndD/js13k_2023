@@ -1,5 +1,6 @@
 import { Component } from '@/lib/ecs'
 import {
+  Clickable,
   Collidable,
   Draggable,
   EntityType,
@@ -10,11 +11,12 @@ import {
   Pos,
   Renderable,
   Resource,
+  ResourceSource,
   Sell
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
-import { P_SELL, convertResToSprite } from '@/tiles'
+import { I_AXE, P_SELL, TREE_BOTTOM, convertResToSprite } from '@/tiles'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -75,21 +77,22 @@ export const createFreight = (
     new Renderable(convertResToSprite(resourceType), Layers.Objects),
     new Collidable({ w, h }),
     new Draggable(),
+    new Clickable(I_AXE),
     new Mov(),
     new Physical({ mass: physics?.mass, friction: physics?.friction }),
     new Sell(resourceType, price)
   ]
 }
 
-export const createTranspansiveObj = (
-  [x, y]: [number, number],
-  sprite: number,
-  type: 'door'
+export const createTree = (
+  [x, y]: [number, number]
 ): Component[] => {
   return [
-    new GameObject(type),
+    new GameObject('tree'),
     new Pos(x, y),
-    new Renderable(sprite, Layers.Floor)
+    new Renderable(TREE_BOTTOM, Layers.Objects),
+    new ResourceSource('wood'),
+    new Clickable(I_AXE, true)
   ]
 }
 

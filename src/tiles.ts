@@ -8,6 +8,12 @@ export const GRASS = 0
 export const MEN = [67, 68, 70, 72, 74, 74, 75]
 export const P_SELL = 59
 export const P_SPAWN = 59
+export const TREE_BOTTOM = 6
+export const TREE_TOP = 2
+export const TREE_SMALL = 11
+
+export const I_AXE = 53
+
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {
   wood: 50,

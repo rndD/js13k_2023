@@ -8,11 +8,13 @@ import {
   createFreight,
   createObstacle,
   createAlwaysOnTop,
-  createSellPoint
+  createSellPoint,
+  createTree
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
 import {
+  ClickSystem,
   DragSystem,
   MoveSystem,
   PhysicsSystem
@@ -48,7 +50,7 @@ const createMap = () => {
           components.push(...createObstacle(point, tile, 'wall'))
           break
         case Layers.AlwaysOnTop:
-          components.push(...createAlwaysOnTop(point, tile, 'roof'))
+          components.push(...createAlwaysOnTop(point, tile, 'top'))
           break
       }
 
@@ -64,13 +66,14 @@ class GameState implements State {
 
   constructor () {
     this.ecs = new ECS()
+    this.ecs.addSystem(new ClickSystem())
     this.ecs.addSystem(new DragSystem())
     this.ecs.addSystem(new CollideSystem())
     this.ecs.addSystem(new PhysicsSystem())
     this.ecs.addSystem(new ParticleSystem())
-    this.ecs.addSystem(new BuyerSystem())
     this.ecs.addSystem(new MoveSystem())
     this.ecs.addSystem(new PointSystem())
+    this.ecs.addSystem(new BuyerSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
   }
@@ -95,7 +98,10 @@ class GameState implements State {
       createFreight(getGridPointInPixels(14, 6), 'freight'),
       // createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
       createSellPoint(getGridPointInPixels(20, 12)),
-      createSellPoint(getGridPointInPixels(19, 12))
+      createSellPoint(getGridPointInPixels(19, 12)),
+
+      // trees
+      createTree(getGridPointInPixels(8, 7))
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

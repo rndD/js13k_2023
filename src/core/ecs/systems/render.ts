@@ -1,7 +1,8 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, Collidable, Draggable, Particle, Pos, Renderable } from '../component'
-import { drawEngine } from '@/core/draw-engine'
-import { convertResToSprite } from '@/tiles'
+import { Buyer, Clickable, Collidable, Draggable, Particle, Pos, Renderable, ResourceSource } from '../component'
+import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
+import { TREE_TOP, convertResToSprite } from '@/tiles'
+import { controls } from '@/core/controls'
 export enum Layers {
   Background,
   Floor,
@@ -17,6 +18,9 @@ export class RenderSystem extends System {
   componentsRequired = new Set<Function>([Renderable])
 
   entitiesByLayers = new Map<Layers, Set<Entity>>()
+  tmpTopLayer: {x:number, y:number, sprite: number}[] = []
+
+  mouseIcon: [number, number, number] | null = null
 
   public addEntity (entity: number, componentContainer: ComponentContainer): void {
     const render = componentContainer.get(Renderable)
@@ -33,12 +37,24 @@ export class RenderSystem extends System {
   }
 
   update (entities: Set<Entity>): void {
+    this.tmpTopLayer = []
+    this.mouseIcon = null
+
     drawEngine.drawBg()
     // draw entities
     for (const layer of Object.values(Layers)) {
+      if (layer === Layers.UI && this.mouseIcon) {
+        drawEngine.drawIcon(...this.mouseIcon)
+      }
       // FIXME: remove then size limit hits
       if (typeof layer === 'string' || !this.entitiesByLayers.has(layer)) {
         continue
+      }
+      // hack for tree
+      if (layer === Layers.AlwaysOnTop) {
+        for (const t of this.tmpTopLayer) {
+          drawEngine.drawEntity({ x: t.x, y: t.y }, t.sprite)
+        }
       }
 
       for (const entity of this.entitiesByLayers.get(layer)!) {
@@ -54,14 +70,24 @@ export class RenderSystem extends System {
         }
         const pos = comps.get(Pos)
         const drag = comps.get(Draggable)
+        const click = comps.get(Clickable)
         const buyer = comps.get(Buyer)
         if (drag) {
           if (drag.dragging) {
             drawEngine.drawShadow(pos)
           }
-          if (drag.hovered && !drag.dragging) {
+          if (click?.hovered && !drag.dragging) {
             drawEngine.drawOverlay(pos)
           }
+        }
+        if (click?.hovered) {
+          this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, click.icon]
+        }
+
+        // hack for tree
+        const t = comps.get(ResourceSource)
+        if (t && t.type === 'wood' && t.ready === 1) {
+          this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: TREE_TOP })
         }
 
         if (render.sprite !== undefined) {

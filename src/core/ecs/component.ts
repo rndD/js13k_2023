@@ -6,15 +6,15 @@ export type Resource = 'wood' | 'stone' | 'food';
 
 export type EntityType =
   | 'wall'
-  | 'door'
   | 'freight'
   | 'floor'
-  | 'roof'
   | 'sellPoint'
   | 'spawnPoint'
-  | 'stairs'
-  | 'ice'
-  | 'water';
+  | 'tree'
+  | 'top';
+  // | 'stairs'
+  // | 'ice'
+  // | 'water';
 
 // FIXME remove super to reduce size
 
@@ -124,10 +124,23 @@ export class Particle extends Component {
   }
 }
 
+// @ts-ignore
+type ResourceNMap = { [key: Resource]: number };
 type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
 export class Buyer extends Component {
-  // @ts-ignore
-  constructor (public resToBuy: { [key: Resource]: number } = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking', public bought: boolean = false) {
+  constructor (public resToBuy: ResourceNMap = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking', public bought: boolean = false) {
+    super()
+  }
+}
+
+export class ResourceSource extends Component {
+  constructor (public type: Resource, public needResource: ResourceNMap = {}, public ready: number = 1, public nextIn: number = 0) {
+    super()
+  }
+}
+
+export class Clickable extends Component {
+  constructor (public icon:number, public withTop: boolean = false, public enabled: boolean = true, public hovered: boolean = false) {
     super()
   }
 }

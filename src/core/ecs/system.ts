@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { Entity, System } from '@/lib/ecs'
 import {
+  Clickable,
   Draggable,
   Mov,
   Physical,
@@ -9,7 +10,8 @@ import {
 import { controls } from '../controls'
 import {
   pixelScale,
-  tileSize
+  tileSize,
+  tileSizeUpscaled
 } from '../draw-engine'
 import {
   isPointerIn
@@ -53,8 +55,33 @@ export class MoveSystem extends System {
   }
 }
 
+export class ClickSystem extends System {
+  componentsRequired = new Set<Function>([Clickable, Pos])
+
+  click (entity: Entity): void {
+    const comps = this.ecs.getComponents(entity)
+    const cl = comps.get(Clickable)
+    // cl.clicked = true
+  }
+
+  update (entities: Set<Entity>): void {
+    const mousePos = controls.mousePosition
+    for (const entity of entities) {
+      const comps = this.ecs.getComponents(entity)
+      const pos = comps.get(Pos)
+      const cl = comps.get(Clickable)
+      cl.hovered = isPointerIn(mousePos, {
+        x: pos.x,
+        y: cl.withTop ? pos.y - tileSizeUpscaled : pos.y,
+        w: tileSizeUpscaled,
+        h: cl.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled
+      })
+    }
+  }
+}
+
 export class DragSystem extends System {
-  componentsRequired = new Set<Function>([Mov, Pos, Draggable])
+  componentsRequired = new Set<Function>([Mov, Pos, Draggable, Clickable])
   dragging = -1
 
   update (entities: Set<Entity>): void {
@@ -64,15 +91,9 @@ export class DragSystem extends System {
       const comps = this.ecs.getComponents(entity)
       const pos = comps.get(Pos)
       const drag = comps.get(Draggable)
+      const cl = comps.get(Clickable)
 
-      drag.hovered = isPointerIn(mousePos, {
-        x: pos.x,
-        y: pos.y,
-        w: tileSize * pixelScale,
-        h: tileSize * pixelScale
-      })
-
-      if (drag.hovered && !drag.dragging && this.dragging === -1) {
+      if (cl.hovered && !drag.dragging && this.dragging === -1) {
         if (controls.isMouseDown) {
           drag.dragging = true
           this.ecs.ee.emit('pickup', entity)

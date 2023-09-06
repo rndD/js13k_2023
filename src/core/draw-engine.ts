@@ -123,6 +123,21 @@ class DrawEngine {
     )
   }
 
+  drawIcon (x: number, y: number, sprite: number) {
+    const s = getTileXY(sprite)
+    this.context.drawImage(
+      getTile(this.tilemap, s[0], s[1])!,
+      0,
+      0,
+      tileSize,
+      tileSize,
+      Math.round(x),
+      Math.round(y),
+      tileSizeUpscaled / 2,
+      tileSizeUpscaled / 2
+    )
+  }
+
   drawBuying (pos: { x: number; y: number }, res: {[sprite: number]: number}) {
     let { x, y } = pos
     y += tileSizeUpscaled - 2
