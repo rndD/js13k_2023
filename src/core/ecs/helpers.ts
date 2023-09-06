@@ -14,7 +14,7 @@ import {
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
-import { P_SELL } from '@/tiles'
+import { P_SELL, convertResToSprite } from '@/tiles'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -59,7 +59,6 @@ export const createAlwaysOnTop = (
 
 export const createFreight = (
   [x, y]: [number, number],
-  sprite: number,
   type: EntityType,
   w = tileSizeUpscaled - 8, h = tileSizeUpscaled - 8,
   price?: number,
@@ -73,7 +72,7 @@ export const createFreight = (
   return [
     new GameObject(type),
     new Pos(x, y),
-    new Renderable(sprite, Layers.Objects),
+    new Renderable(convertResToSprite(resourceType), Layers.Objects),
     new Collidable({ w, h }),
     new Draggable(),
     new Mov(),

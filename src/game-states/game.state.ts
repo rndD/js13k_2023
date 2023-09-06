@@ -18,10 +18,9 @@ import {
   PhysicsSystem
 } from '@/core/ecs/system'
 import { State } from '@/core/state-machine'
-import { SACK, TileInfo, WAGON, map } from '@/tiles'
+import { TileInfo, map } from '@/tiles'
 import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
-import { tileSizeUpscaled } from '@/core/draw-engine'
 import { BuyerSystem } from '@/core/ecs/systems/ai'
 import { SoundSystem } from '@/core/ecs/systems/sound'
 import { ParticleSystem } from '@/core/ecs/particles'
@@ -92,9 +91,9 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(25, 10), SACK, 'freight'),
-      createFreight(getGridPointInPixels(14, 6), SACK, 'freight'),
-      createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
+      createFreight(getGridPointInPixels(25, 10), 'freight'),
+      createFreight(getGridPointInPixels(14, 6), 'freight'),
+      // createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
       createSellPoint(getGridPointInPixels(20, 12)),
       createSellPoint(getGridPointInPixels(19, 12))
     )

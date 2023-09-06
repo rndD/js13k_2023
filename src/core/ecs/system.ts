@@ -3,22 +3,17 @@ import { Entity, System } from '@/lib/ecs'
 import {
   Draggable,
   Mov,
-  Particle,
   Physical,
-  Pos,
-  Renderable
+  Pos
 } from './component'
 import { controls } from '../controls'
 import {
   pixelScale,
-  tileSize,
-  tileSizeUpscaled
+  tileSize
 } from '../draw-engine'
 import {
   isPointerIn
 } from '@/lib/physics'
-import { zzfx } from '@/lib/zzFx'
-import { Layers } from './systems/render'
 
 // can be part of move system?
 export class PhysicsSystem extends System {
