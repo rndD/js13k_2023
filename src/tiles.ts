@@ -3,25 +3,32 @@ import * as t from '../tiles/tilemap_13k_23.json'
 import { Resource } from './core/ecs/component'
 
 export const WAGON = 25
-export const SACK = 56
+export const SACK = 50
 export const GRASS = 0
-export const MEN = [67, 68, 70, 72, 74, 74, 75]
-export const P_SELL = 59
-export const P_SPAWN = 59
+export const MEN = [65, 66, 68, 70, 71]
+export const P_SELL = 56
+export const P_SPAWN = 57
 export const TREE_BOTTOM = 6
 export const TREE_TOP = 2
 export const TREE_SMALL = 11
+export const WELL_BOTTOM = 48
+export const WELL_TOP = 45
+export const CROP = 7
+
+export const I_ARROW = 81
 
 export const I_COIN = 46
 
-export const I_AXE = 53
+export const I_AXE = 52
+export const I_TAPKA = 54
 
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {
-  wood: 50,
-  box: 61,
-  barrel: 66,
-  water: 90
+  wood: 49,
+  box: 59,
+  food: SACK,
+  barrel: 64,
+  water: 77
 }
 
 export const convertResToSprite = (res: Resource): number => {

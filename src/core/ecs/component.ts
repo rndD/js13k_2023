@@ -4,28 +4,6 @@ import { Layers } from './systems/render'
 
 export type Resource = 'wood' | 'food' | 'box' | 'water' | 'barrel';
 
-export type EntityType =
-  | 'wall'
-  | 'freight'
-  | 'floor'
-  | 'sellPoint'
-  | 'spawnPoint'
-  | 'particle'
-  | 'tree'
-  | 'top'
-  | 'uiMoney';
-  // | 'stairs'
-  // | 'ice'
-  // | 'water';
-
-// FIXME remove super to reduce size
-
-export class GameObject extends Component {
-  constructor (public type: EntityType) {
-    super()
-  }
-}
-
 export class GameData extends Component {
   time = 0
   level = 0
@@ -145,13 +123,29 @@ export class Buyer extends Component {
 }
 
 export class ResourceSource extends Component {
-  constructor (public type: Resource, public needResource: ResourceNMap = {}, public ready: number = 1, public nextIn: number = 0) {
+  constructor (public type: Resource, public needResource: ResourceNMap = {}, public interval: number = 0, public nextIn: number = 0) {
     super()
   }
 }
 
 export class Clickable extends Component {
-  constructor (public icon:number, public withTop: boolean = false, public enabled: boolean = true, public hovered: boolean = false) {
+  constructor (public icon: number, public withTop: boolean = false, public enabled: boolean = true, public hovered: boolean = false) {
     super()
   }
+}
+
+export const ResourcesPhysics: Record<Resource, Physics> = {
+  wood: { mass: 50, friction: 0.94 },
+  food: { mass: 10, friction: 0.98 },
+  barrel: { mass: 100, friction: 0.9 },
+  box: { mass: 200, friction: 0.8 },
+  water: { mass: 10, friction: 0.96 }
+}
+
+export const ResourcesPrices: Record<Resource, number> = {
+  wood: 1,
+  food: 5,
+  barrel: 5,
+  box: 3,
+  water: 10
 }

@@ -9,7 +9,9 @@ import {
   createObstacle,
   createAlwaysOnTop,
   createSellPoint,
-  createTree
+  createTree,
+  createWell,
+  createCrop
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
@@ -40,13 +42,13 @@ const createMap = () => {
 
       switch (layer) {
         case Layers.Floor:
-          components.push(...createFloor(point, tile, 'floor'))
+          components.push(...createFloor(point, tile))
           break
         case Layers.Objects:
-          components.push(...createObstacle(point, tile, 'wall'))
+          components.push(...createObstacle(point, tile))
           break
         case Layers.AlwaysOnTop:
-          components.push(...createAlwaysOnTop(point, tile, 'top'))
+          components.push(...createAlwaysOnTop(point, tile))
           break
       }
 
@@ -91,14 +93,23 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(25, 10), 'freight', 1, 'wood'),
-      createFreight(getGridPointInPixels(14, 6), 'freight', 10, 'box'),
+      createFreight(getGridPointInPixels(25, 10), 'wood'),
+      createFreight(getGridPointInPixels(14, 6), 'box'),
       // createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
       createSellPoint(getGridPointInPixels(20, 12)),
       createSellPoint(getGridPointInPixels(19, 12)),
 
       // trees
-      createTree(getGridPointInPixels(8, 7))
+      createTree(getGridPointInPixels(8, 7)),
+      // well
+      createWell(getGridPointInPixels(28, 8)),
+
+      createCrop(getGridPointInPixels(1, 5)),
+      createCrop(getGridPointInPixels(2, 5)),
+
+      createCrop(getGridPointInPixels(27, 16)),
+      createCrop(getGridPointInPixels(28, 16))
+
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

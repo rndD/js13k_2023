@@ -1,6 +1,6 @@
 import { Entity, System } from '@/lib/ecs'
 import { zzfx } from '@/lib/zzFx'
-import { GameObject } from '../component'
+import { GameData } from '../component'
 
 export class SoundSystem extends System {
   inited = false
@@ -83,7 +83,8 @@ export class SoundSystem extends System {
     }
   }
 
-  componentsRequired = new Set<Function>([GameObject])
+  componentsRequired = new Set<Function>([GameData])
+
   update (entities: Set<Entity>): void {
     if (!this.inited) {
       this.init()

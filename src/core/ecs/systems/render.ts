@@ -1,7 +1,7 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
 import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Renderable, ResourceSource } from '../component'
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
-import { I_AXE, P_SPAWN, TREE_TOP, convertResToSprite } from '@/tiles'
+import { I_ARROW, I_AXE, P_SPAWN, TREE_TOP, WELL_BOTTOM, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
 export enum Layers {
   Background,
@@ -38,7 +38,7 @@ export class RenderSystem extends System {
 
   update (entities: Set<Entity>): void {
     this.tmpTopLayer = []
-    this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, P_SPAWN]
+    this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, I_ARROW]
 
     drawEngine.drawBg()
     // draw entities
@@ -47,6 +47,7 @@ export class RenderSystem extends System {
       if (layer === Layers.UI && this.mouseIcon) {
         drawEngine.drawIcon(...this.mouseIcon)
       }
+
       // FIXME: remove then size limit hits
       if (typeof layer === 'string' || !this.entitiesByLayers.has(layer)) {
         continue
@@ -84,7 +85,7 @@ export class RenderSystem extends System {
         } else {
           // hoverl for clickable
           if (click?.hovered) {
-            const h = click.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled 
+            const h = click.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled
             const y = click.withTop ? pos.y - tileSizeUpscaled : pos.y
             drawEngine.drawOverlay({ x: pos.x, y }, { w: tileSizeUpscaled, h })
           }
@@ -96,8 +97,11 @@ export class RenderSystem extends System {
 
         // hack for tree
         const t = comps.get(ResourceSource)
-        if (t && t.type === 'wood' && t.ready === 1) {
+        if (t && t.type === 'wood') {
           this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: TREE_TOP })
+        }
+        if (t && t.type === 'water') {
+          this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: WELL_TOP })
         }
 
         if (render.sprite !== undefined) {
@@ -126,6 +130,12 @@ export class RenderSystem extends System {
           if (gameData) {
             drawEngine.drawUIMoney(gameData.money)
           }
+        }
+
+        // Progress Bards
+        const resS = comps.get(ResourceSource)
+        if (resS?.nextIn > 0) {
+          drawEngine.drawProgress(pos, resS.nextIn, resS.interval)
         }
 
         if (this.debug) {

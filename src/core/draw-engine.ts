@@ -159,7 +159,7 @@ class DrawEngine {
       'left'
     )
     this.drawIcon(
-      22 + m.length * 10,
+      16 + m.length * 10,
       -5,
       I_COIN,
       true
@@ -228,6 +228,25 @@ class DrawEngine {
     )
     this.context.stroke()
     this.context.closePath()
+  }
+
+  drawProgress (pos: { x: number; y: number }, nextIn: number, interval: number) {
+    const progress = 1 - (nextIn / interval)
+    const x = Math.round(pos.x) + 2
+    const y = Math.round(pos.y) + tileSizeUpscaled / 4 * 3
+    this.context.fillStyle = '#000'
+    this.context.fillRect(
+      x,
+      y,
+      tileSizeUpscaled - 4,
+      4
+    )
+    this.context.fillStyle = '#fff'
+    this.context.fillRect(
+      x, y,
+      progress * (tileSizeUpscaled - 4),
+      4
+    )
   }
 
   drawParticle (pos: { x: number; y: number }, color: string, size = 1, sprite?: number) {

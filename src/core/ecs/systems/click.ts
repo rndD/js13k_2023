@@ -27,10 +27,10 @@ export class ClickSystem extends System {
     const resS = comps.get(ResourceSource)
     const pos = comps.get(Pos)
 
-    if (resS) {
+    if (resS?.nextIn <= 0) {
       const e = this.ecs.addEntity()
 
-      createFreight([pos.x, pos.y + tileSizeUpscaled / 2], 'freight', 1, 'wood').forEach((c) => {
+      createFreight([pos.x, pos.y + tileSizeUpscaled], resS.type).forEach((c) => {
         this.ecs.addComponent(e, c)
       })
       const mov = this.ecs.getComponents(e).get(Mov)
@@ -38,6 +38,7 @@ export class ClickSystem extends System {
       mov.dy = 1.5
 
       this.ecs.ee.emit('gether', entity)
+      resS.nextIn = resS.interval
     }
   }
 
@@ -48,6 +49,7 @@ export class ClickSystem extends System {
       const comps = this.ecs.getComponents(entity)
       const pos = comps.get(Pos)
       const cl = comps.get(Clickable)
+
       cl.hovered = isPointerIn(mousePos, {
         x: pos.x,
         y: cl.withTop ? pos.y - tileSizeUpscaled : pos.y,
@@ -60,6 +62,11 @@ export class ClickSystem extends System {
           this.click(entity)
           this.nextClickIn = this.clickTime
         }
+      }
+
+      const resS = comps.get(ResourceSource)
+      if (resS?.nextIn > 0) {
+        resS.nextIn -= this.ecs.currentDelta
       }
     }
 
