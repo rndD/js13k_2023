@@ -47,7 +47,8 @@ export class ParticleSystem extends System {
 
   createParticle (pos: Pos, mov: Mov|undefined, i: number, color: string, sprite?: number, time = 500): void {
     const e = this.ecs.addEntity()
-    this.ecs.addComponent(e, new Pos(pos.x + tileSizeUpscaled / 2 + i, pos.y + tileSizeUpscaled))
+    i = Math.min(i, 5)
+    this.ecs.addComponent(e, new Pos(pos.x + tileSizeUpscaled / 2 + i, pos.y + tileSizeUpscaled - 2))
     // randomise dx, dy a bit to make it more interesting and limit the speed by 0.5
     const dx = (Math.random() - 0.5) / 2 + (mov?.dx || 0)
     const dy = (Math.random() - 0.5) / 2 + (mov?.dy || 0)
@@ -63,6 +64,7 @@ export class ParticleSystem extends System {
       this.inited = true
     }
 
+    // This is ground particle system, creates dirt for every moving entity
     this.nextTick -= this.ecs.currentDelta
     if (this.nextTick <= 0) {
       for (const entity of entities) {
@@ -76,11 +78,14 @@ export class ParticleSystem extends System {
 
         if (Math.abs(mov.dx) > 0.2 || Math.abs(mov.dy) > 0.2) {
           // random 3-6 particles
-          const count = Math.floor(Math.random() * 3) + 3
+          const count = Math.floor(Math.random() * 10) + 7
           for (let i = 0; i < count; i++) {
             const pos = comps.get(Pos)
             const DIRT_COLOR = 'rgba(145, 79, 25, 0.2)'
-            this.createParticle(pos, mov, i, DIRT_COLOR)
+            // limit speed to 0.5 -0.5, make it reverse
+            const dx = mov.dx > 0 ? -Math.min(mov.dx, 0.5) : -Math.max(mov.dx, -0.5)
+            const dy = mov.dy > 0 ? -Math.min(mov.dy, 0.5) : -Math.max(mov.dy, -0.5)
+            this.createParticle(pos, { dx, dy }, i, DIRT_COLOR)
           }
         }
       }

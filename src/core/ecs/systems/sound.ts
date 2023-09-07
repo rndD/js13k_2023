@@ -22,7 +22,7 @@ export class SoundSystem extends System {
     // eslint-disable-next-line
     gether: [2.24,,53,,,.07,3,.57,,,,,,1.2,,.3,,.46,,.01],
     // eslint-disable-next-line
-    collide: [1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53],
+    collide: [[1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53], 500],
 
     // eslint-disable-next-line
     drop: [1.1,,332,,.06,.14,1,.31,,8,,,,,,.1,,.49,.01,.03],
