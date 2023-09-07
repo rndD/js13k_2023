@@ -117,7 +117,7 @@ export const createCrop = (
     new Renderable(CROP, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
     new ResourceSource('food', {}, 25000),
-    new Clickable(I_TAPKA, true)
+    new Clickable(I_TAPKA)
   ]
 }
 
