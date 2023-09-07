@@ -13,20 +13,16 @@ import {
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
-import {
-  ClickSystem,
-  DragSystem,
-  MoveSystem,
-  PhysicsSystem
-} from '@/core/ecs/system'
 import { State } from '@/core/state-machine'
 import { TileInfo, map } from '@/tiles'
 import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
-import { BuyerSystem } from '@/core/ecs/systems/ai'
 import { SoundSystem } from '@/core/ecs/systems/sound'
-import { ParticleSystem } from '@/core/ecs/particles'
+import { ParticleSystem } from '@/core/ecs/systems/particles'
 import { PointSystem } from '@/core/ecs/systems/point'
+import { DragSystem, MoveSystem, PhysicsSystem } from '@/core/ecs/systems/move'
+import { ClickSystem } from '@/core/ecs/systems/click'
+import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 
 // test only
 const createMap = () => {
@@ -73,9 +69,10 @@ class GameState implements State {
     this.ecs.addSystem(new ParticleSystem())
     this.ecs.addSystem(new MoveSystem())
     this.ecs.addSystem(new PointSystem())
-    this.ecs.addSystem(new BuyerSystem())
+    this.ecs.addSystem(new SellSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
+    this.ecs.addSystem(new GameDataSystem())
   }
 
   addEntities (...entitiesComponents: Component[][]) {
@@ -94,8 +91,8 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(25, 10), 'freight'),
-      createFreight(getGridPointInPixels(14, 6), 'freight'),
+      createFreight(getGridPointInPixels(25, 10), 'freight', 1, 'wood'),
+      createFreight(getGridPointInPixels(14, 6), 'freight', 10, 'box'),
       // createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
       createSellPoint(getGridPointInPixels(20, 12)),
       createSellPoint(getGridPointInPixels(19, 12)),

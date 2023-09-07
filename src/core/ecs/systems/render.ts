@@ -1,5 +1,5 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, Collidable, Draggable, Particle, Pos, Renderable, ResourceSource } from '../component'
+import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Renderable, ResourceSource } from '../component'
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
 import { I_AXE, P_SPAWN, TREE_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
@@ -77,10 +77,19 @@ export class RenderSystem extends System {
           if (drag.dragging) {
             drawEngine.drawShadow(pos)
           }
+          // hover for objects
           if (click?.hovered && !drag.dragging) {
-            drawEngine.drawOverlay(pos)
+            drawEngine.drawOverlay(pos, { w: tileSizeUpscaled, h: tileSizeUpscaled })
+          }
+        } else {
+          // hoverl for clickable
+          if (click?.hovered) {
+            const h = click.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled 
+            const y = click.withTop ? pos.y - tileSizeUpscaled : pos.y
+            drawEngine.drawOverlay({ x: pos.x, y }, { w: tileSizeUpscaled, h })
           }
         }
+
         if (click?.hovered) {
           this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, click.icon]
         }
@@ -107,9 +116,16 @@ export class RenderSystem extends System {
             drawEngine.drawCarry(pos, render.carry)
           }
         } else {
-          // particle
+          // not sprites
+
           const particle = comps.get(Particle)
-          drawEngine.drawParticle(pos, particle.color, particle.size)
+          if (particle) {
+            drawEngine.drawParticle(pos, particle.color, particle.size, particle.sprite)
+          }
+          const gameData = comps.get(GameData)
+          if (gameData) {
+            drawEngine.drawUIMoney(gameData.money)
+          }
         }
 
         if (this.debug) {

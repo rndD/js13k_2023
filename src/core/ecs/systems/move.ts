@@ -5,19 +5,9 @@ import {
   Draggable,
   Mov,
   Physical,
-  Pos,
-  ResourceSource
-} from './component'
-import { controls } from '../controls'
-import {
-  pixelScale,
-  tileSize,
-  tileSizeUpscaled
-} from '../draw-engine'
-import {
-  isPointerIn
-} from '@/lib/physics'
-import { createFreight } from './helpers'
+  Pos
+} from '../component'
+import { controls } from '@/core/controls'
 
 // can be part of move system?
 export class PhysicsSystem extends System {
@@ -54,53 +44,6 @@ export class MoveSystem extends System {
         mov.dy = 0
       }
     }
-  }
-}
-
-export class ClickSystem extends System {
-  componentsRequired = new Set<Function>([Clickable, Pos])
-  prevMouse = false
-
-  click (entity: Entity): void {
-    const comps = this.ecs.getComponents(entity)
-    const cl = comps.get(Clickable)
-
-    const resS = comps.get(ResourceSource)
-    const pos = comps.get(Pos)
-
-    if (resS) {
-      const e = this.ecs.addEntity()
-
-      createFreight([pos.x, pos.y + tileSizeUpscaled], 'freight', 'wood').forEach((c) => {
-        this.ecs.addComponent(e, c)
-      })
-      const mov = this.ecs.getComponents(e).get(Mov)
-      mov.dx = 0
-      mov.dy = 0.2
-    }
-    // cl.clicked = true
-  }
-
-  update (entities: Set<Entity>): void {
-    const mousePos = controls.mousePosition
-
-    for (const entity of entities) {
-      const comps = this.ecs.getComponents(entity)
-      const pos = comps.get(Pos)
-      const cl = comps.get(Clickable)
-      cl.hovered = isPointerIn(mousePos, {
-        x: pos.x,
-        y: cl.withTop ? pos.y - tileSizeUpscaled : pos.y,
-        w: tileSizeUpscaled,
-        h: cl.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled
-      })
-
-      if (cl.hovered && this.prevMouse !== controls.isMouseDown) {
-        this.click(entity)
-      }
-    }
-
-    this.prevMouse = controls.isMouseDown
   }
 }
 

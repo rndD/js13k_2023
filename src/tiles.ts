@@ -2,8 +2,8 @@
 import * as t from '../tiles/tilemap_13k_23.json'
 import { Resource } from './core/ecs/component'
 
-export const SACK = 51
 export const WAGON = 25
+export const SACK = 56
 export const GRASS = 0
 export const MEN = [67, 68, 70, 72, 74, 74, 75]
 export const P_SELL = 59
@@ -12,12 +12,16 @@ export const TREE_BOTTOM = 6
 export const TREE_TOP = 2
 export const TREE_SMALL = 11
 
+export const I_COIN = 46
+
 export const I_AXE = 53
 
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {
   wood: 50,
-  stone: 62
+  box: 61,
+  barrel: 66,
+  water: 90
 }
 
 export const convertResToSprite = (res: Resource): number => {

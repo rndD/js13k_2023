@@ -1,14 +1,15 @@
-import { Entity, System } from '@/lib/ecs'
-import { Buyer, Collidable, Pos, Renderable, Sell } from '../component'
+import { ComponentContainer, Entity, System } from '@/lib/ecs'
+import { Buyer, Collidable, GameData, GameObject, Pos, Renderable, Sell, SellObjectType } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { getGridPointInPixels, randomFromList } from '@/lib/utils'
 import { Layers } from './render'
 import { MEN, SACK } from '@/tiles'
 
-export class BuyerSystem extends System {
+export class SellSystem extends System {
   inited = false
 
   maxBuyers = 4
+  bSpeed = 4 // only odd numbers
   componentsRequired = new Set<Function>([Buyer, Pos])
   start = [24, 22]
   end: [number, number] = [21, 22]
@@ -24,6 +25,7 @@ export class BuyerSystem extends System {
   nextTickMove = 0
 
   init (): void {
+    // sell event
     this.ecs.ee.on('sell', (entity: Entity) => {
       const comps = this.ecs.getComponents(entity)
       const sell = comps.get(Sell)
@@ -41,11 +43,14 @@ export class BuyerSystem extends System {
         }
         // @ts-ignore
         if ((buyer.resToBuy[sell.type] || 0) > 0) {
-          this.ecs.ee.emit('sold', sell.type)
+          this.ecs.ee.emit('sold', entity, sell.type, sell.price)
           // @ts-ignore
           buyer.resToBuy[sell.type] -= 1
+          buyer.bought = true
           // console.log(buyer, sell.type, buyer.resToBuy[sell.type])
           this.ecs.removeEntity(entity)
+        } else {
+          this.ecs.ee.emit('notSold', entity)
         }
       }
     })
@@ -112,16 +117,16 @@ export class BuyerSystem extends System {
       }
     } else {
       if (pos.x < bx) {
-        pos.x += 1
+        pos.x += this.bSpeed
       }
       if (pos.x > bx) {
-        pos.x -= 1
+        pos.x -= this.bSpeed
       }
       if (pos.y < by) {
-        pos.y += 1
+        pos.y += this.bSpeed
       }
       if (pos.y > by) {
-        pos.y -= 1
+        pos.y -= this.bSpeed
       }
     }
   }
@@ -168,13 +173,43 @@ export class BuyerSystem extends System {
           buyer.targetPos = this.end
           this.q.shift()
           // FIXME
-          // if (buyer.bought) {
-          if (true) {
+          if (buyer.bought) {
             const r = comps.get(Renderable)
             r.carry = SACK
           }
         }
       }
+    }
+  }
+}
+
+export class GameDataSystem extends System {
+  componentsRequired = new Set<Function>([GameData])
+
+  inited = false
+  e: Entity = -1
+
+  init (): void {
+    this.e = this.ecs.addEntity()
+    this.ecs.addComponent(this.e, new GameData(0))
+    this.ecs.addComponent(this.e, new Renderable(undefined, Layers.UI))
+
+    this.ecs.ee.on('sold', (entity: Entity, type: SellObjectType, price: number) => {
+      this.ecs.getComponents(this.e).get(GameData).money += price
+    })
+    this.inited = true
+  }
+
+  update (entities: Set<Entity>): void {
+    if (!this.inited) {
+      this.init()
+    }
+
+    for (const entity of entities) {
+      const comps = this.ecs.getComponents(entity)
+      const gameData = comps.get(GameData)
+
+      gameData.time += this.ecs.currentDelta
     }
   }
 }

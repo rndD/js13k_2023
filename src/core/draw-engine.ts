@@ -1,6 +1,6 @@
 import { getGridPointInPixels } from '@/lib/utils'
 import { getColPos } from './ecs/systems/collide'
-import { GRASS } from '@/tiles'
+import { GRASS, I_COIN } from '@/tiles'
 import { getTile } from '@/lib/graphics'
 
 export const pixelScale = 2
@@ -123,7 +123,7 @@ class DrawEngine {
     )
   }
 
-  drawIcon (x: number, y: number, sprite: number) {
+  drawIcon (x: number, y: number, sprite: number, big?:boolean) {
     const s = getTileXY(sprite)
     this.context.drawImage(
       getTile(this.tilemap, s[0], s[1])!,
@@ -133,8 +133,36 @@ class DrawEngine {
       tileSize,
       Math.round(x),
       Math.round(y),
-      tileSizeUpscaled / 2,
-      tileSizeUpscaled / 2
+      tileSizeUpscaled / (big ? 1 : 2),
+      tileSizeUpscaled / (big ? 1 : 2)
+    )
+  }
+
+  drawUIMoney (money: number) {
+    const m = money.toString()
+    // drop box
+
+    this.context.fillStyle = 'rgba(0,0,0,0.4)'
+    this.context.fillRect(
+      0,
+      0,
+      22 + m.length * 10 + 10,
+      23
+    )
+
+    this.drawText(
+      m,
+      24,
+      2,
+      19,
+      'gold',
+      'left'
+    )
+    this.drawIcon(
+      22 + m.length * 10,
+      -5,
+      I_COIN,
+      true
     )
   }
 
@@ -185,24 +213,47 @@ class DrawEngine {
   }
 
   // FIXME not used
-  drawOverlay (pos: { x: number; y: number }, sprite?: [number, number]) {
-    this.context.fillStyle = 'rgba(255,255,255,0.1)'
-    this.context.fillRect(
-      Math.round(pos.x),
-      Math.round(pos.y),
-      tileSizeUpscaled,
-      tileSizeUpscaled
+  drawOverlay (pos: { x: number; y: number }, { w, h }: { w: number; h: number }) {
+    // draw dashed box around the object
+    this.context.strokeStyle = 'rgba(0,0,0,0.8)'
+    this.context.lineWidth = 2
+
+    this.context.beginPath()
+    this.context.setLineDash([4, 4])
+    this.context.rect(
+      Math.round(pos.x) - 2,
+      Math.round(pos.y) - 2,
+      w + 4,
+      h + 4
     )
+    this.context.stroke()
+    this.context.closePath()
   }
 
-  drawParticle (pos: { x: number; y: number }, color: string, size = 1) {
-    this.context.fillStyle = color
-    this.context.fillRect(
-      Math.round(pos.x),
-      Math.round(pos.y),
-      size,
-      size
-    )
+  drawParticle (pos: { x: number; y: number }, color: string, size = 1, sprite?: number) {
+    if (sprite !== undefined) {
+      const s = getTileXY(sprite)
+      // Ignore size for sprite
+      this.context.drawImage(
+        getTile(this.tilemap, s[0], s[1])!,
+        0,
+        0,
+        tileSize,
+        tileSize,
+        Math.round(pos.x),
+        Math.round(pos.y),
+        tileSize,
+        tileSize
+      )
+    } else {
+      this.context.fillStyle = color
+      this.context.fillRect(
+        Math.round(pos.x),
+        Math.round(pos.y),
+        size,
+        size
+      )
+    }
   }
 
   drawDebugRect (pos: { x: number; y: number }, w: number, h: number) {

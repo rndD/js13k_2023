@@ -15,15 +15,20 @@ export class SoundSystem extends System {
 
       },
       muted: false,
-      volume: 0.01
+      volume: 0.03
     }
 
   sounds = {
+    // eslint-disable-next-line
+    gether: [2.24,,53,,,.07,3,.57,,,,,,1.2,,.3,,.46,,.01],
     // eslint-disable-next-line
     collide: [1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53],
 
     // eslint-disable-next-line
     drop: [1.1,,332,,.06,.14,1,.31,,8,,,,,,.1,,.49,.01,.03],
+
+    // eslint-disable-next-line
+    notSold: [[1.32,, 164,, 0.24, 0.08, 4, 1.14,,,,,, 0.1, 72,, 0.27,, 0.18, 0.43], 2000],
 
     // eslint-disable-next-line
     sold: [,,684,.05,.23,.2,1,1.09,3.9,-0.8,-9,.05,,,,,,.49,.18,.13],
@@ -59,12 +64,20 @@ export class SoundSystem extends System {
     for (const s in this.sounds) {
       this.state.soundsPlaying[s] = 0
       this.ecs.ee.on(s, () => {
+        // @ts-ignore
+        let sound = this.sounds[s]
+        let t = 300
+        // @ts-ignore
+        if (this.sounds[s].length === 2) {
+          t = sound[1]
+          sound = sound[0]
+        }
+
         if (
           this.state.soundsPlaying[s] <= 0
         ) {
-          // @ts-ignore
-          zzfx(...this.sounds[s])
-          this.state.soundsPlaying[s] = 300
+          zzfx(...sound)
+          this.state.soundsPlaying[s] = t
         }
       })
     }

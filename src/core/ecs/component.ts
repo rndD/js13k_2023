@@ -2,7 +2,7 @@
 import { Component } from '@/lib/ecs'
 import { Layers } from './systems/render'
 
-export type Resource = 'wood' | 'stone' | 'food';
+export type Resource = 'wood' | 'food' | 'box' | 'water' | 'barrel';
 
 export type EntityType =
   | 'wall'
@@ -10,8 +10,10 @@ export type EntityType =
   | 'floor'
   | 'sellPoint'
   | 'spawnPoint'
+  | 'particle'
   | 'tree'
-  | 'top';
+  | 'top'
+  | 'uiMoney';
   // | 'stairs'
   // | 'ice'
   // | 'water';
@@ -20,6 +22,14 @@ export type EntityType =
 
 export class GameObject extends Component {
   constructor (public type: EntityType) {
+    super()
+  }
+}
+
+export class GameData extends Component {
+  time = 0
+  level = 0
+  constructor (public money: number) {
     super()
   }
 }
@@ -82,7 +92,7 @@ export class FloorPoint extends Component {
   }
 }
 
-type SellObjectType = Resource | 'point';
+export type SellObjectType = Resource | 'point';
 export class Sell extends Component {
   constructor (public type: SellObjectType, public price: number = -1) {
     super()
@@ -118,7 +128,8 @@ export class Particle extends Component {
   constructor (
     public lifeTime: number,
     public size: number,
-    public color: string
+    public color: string,
+    public sprite?: number
   ) {
     super()
   }

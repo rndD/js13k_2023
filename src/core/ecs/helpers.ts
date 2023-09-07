@@ -62,9 +62,9 @@ export const createAlwaysOnTop = (
 export const createFreight = (
   [x, y]: [number, number],
   type: EntityType,
+  price?: number,
   resourceType: Resource = 'wood',
   w = tileSizeUpscaled - 8, h = tileSizeUpscaled - 8,
-  price?: number,
   physics?: {
     mass: number;
     friction: number;
