@@ -1,6 +1,6 @@
 import { Entity } from '@/utils/elements'
 
-import { Tile } from '../components'
+import { Direction, Tile } from '../components'
 import { Layers } from '@/utils/layers'
 import { Tiles } from '@/utils/tiles'
 
@@ -9,7 +9,8 @@ export class Player extends Entity {
     super()
 
     this.components.push(
-      new Tile(10, 6, Layers.Objects, Tiles.I_PLAYER)
+      new Tile(10, 6, Layers.Objects, Tiles.I_PLAYER),
+      new Direction(0)
     )
   }
 }
