@@ -25,6 +25,8 @@ export const Tiles = {
 
   E_TABLE_1: 20,
 
+  I_SACK_GRAIN: 22,
+  I_SACK_SALT: 23,
   S_ROAD_VERTICAL: 24,
   S_ROAD_VERTICAL_I: 2024,
   S_ROAD_HORIZONTAL: 1024,

@@ -23,16 +23,6 @@ export class Tile extends Component {
   }
 }
 
-export class Carry extends Component {
-  tile: Tile
-
-  constructor (tile: Tile) {
-    super()
-
-    this.tile = tile
-  }
-}
-
 export class Direction extends Component {
   angle: number
 
@@ -40,6 +30,38 @@ export class Direction extends Component {
     super()
 
     this.angle = angle
+  }
+}
+
+export class Grab extends Component {
+  isValidated: boolean
+  startFrame: number
+
+  constructor () {
+    super()
+
+    this.isValidated = false
+    this.startFrame = 0
+  }
+}
+
+export class Haul extends Component {
+  origin: Tile
+  target: Tile
+  direction: Direction
+  drop: boolean
+
+  constructor (
+    origin: Tile,
+    target: Tile,
+    direction: Direction
+  ) {
+    super()
+
+    this.origin = origin
+    this.target = target
+    this.direction = direction
+    this.drop = false
   }
 }
 

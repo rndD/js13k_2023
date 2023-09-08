@@ -5,6 +5,7 @@ import { System } from '@/utils/elements'
 import {
   genObstacleKey, genObstacleMap,
   getAngle, getElapsedFrames
+  , offsetX, offsetY
 } from '@/utils/collision'
 import { findInstance, isInstance, removeInstance } from '@/utils/helpers'
 import { nullthrows } from '@/utils/validate'
@@ -70,8 +71,10 @@ export class WalkSystem extends System {
       const destination =
         (angle % 2 === 0 ? walk.y : walk.x)
       const nextValue =
-        (angle % 2 === 0 ? walk.tile.y : walk.tile.x) +
-        (angle === 1 || angle === 2 ? 1 : -1) * walkDelta
+        angle % 2 === 0
+          ? walk.tile.y + offsetY[angle] * walkDelta
+          : walk.tile.x + offsetX[angle] * walkDelta
+
       walk.tile[angle % 2 === 0 ? 'y' : 'x'] =
         this._walkTreshold > Math.abs(destination - nextValue)
           ? destination

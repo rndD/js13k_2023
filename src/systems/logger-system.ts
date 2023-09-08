@@ -38,11 +38,7 @@ export class LoggerSystem extends System {
     ].join('\n')
   }
 
-  update (
-    elapsedFrames: number,
-    totalFrames: number,
-    perf: unknown
-  ) {
+  update () {
     const player = this.entities![0]
     this._container.innerHTML = this._serializeEntity(player)
   }

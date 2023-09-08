@@ -5,6 +5,19 @@ import { Layers } from './layers'
 import { gameMapWidth, gameMapHeight } from './tiles'
 import { isInstance } from './helpers'
 
+// maps angle to coordinate offset
+export const offsetX = [0, 1, 0, -1]
+export const offsetY = [-1, 0, 1, 0]
+
+export function getAngle (to: Tile | Walk, from: Tile | Walk): number {
+  const deltaX = to.x - from.x // greater than zero, move right
+  const deltaY = to.y - from.y // greater than zero, move down
+  if (deltaX > 0) return 1
+  if (deltaY > 0) return 2
+  if (deltaX < 0) return 3
+  return 0
+}
+
 export function genObstacleKey (tile: Tile | Walk): number {
   return tile.x + tile.y * gameMapWidth
 }
@@ -23,15 +36,6 @@ export function genObstacleMap (components: Component[]): number[] {
   })
 
   return obstacleMap
-}
-
-export function getAngle (to: Tile | Walk, from: Tile | Walk): number {
-  const deltaX = to.x - from.x // greater than zero, move right
-  const deltaY = to.y - from.y // greater than zero, move down
-  if (deltaX > 0) return 1
-  if (deltaY > 0) return 2
-  if (deltaX < 0) return 3
-  return 0
 }
 
 // frame range [0, 1000], after 1000 it is reset to 0

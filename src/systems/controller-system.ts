@@ -1,9 +1,9 @@
 import { Player } from '@/entities/player'
 import { System } from '@/utils/elements'
-import { Tile, Walk } from '../components'
+import { Grab, Haul, Tile, Walk } from '../components'
 import Controls from '@/state/controls'
 
-import { findInstance, isInstance } from '@/utils/helpers'
+import { findInstance } from '@/utils/helpers'
 import { nullthrows } from '@/utils/validate'
 
 // animate character movement
@@ -19,22 +19,21 @@ export class ControllerSystem extends System {
 
   update () {
     const player = nullthrows(this.entities)[0]
-
-    const isWalking = player.components.some(component =>
-      isInstance(component, Walk))
-    if (isWalking) return
+    const tile = nullthrows(
+      findInstance(player.components, Tile)
+    )
 
     const isMoving =
       Controls.isDown ||
       Controls.isLeft ||
       Controls.isRight ||
       Controls.isUp
+    const walk = findInstance(player.components, Walk)
 
-    if (isMoving) {
-      const tile = nullthrows(
-        findInstance(player.components, Tile)
-      )
-
+    if (
+      isMoving &&
+      walk == null
+    ) {
       const x = tile.x + (Controls.isLeft ? -1 : Controls.isRight ? 1 : 0)
       const y = tile.y + (Controls.isUp ? -1 : Controls.isDown ? 1 : 0)
 
@@ -42,6 +41,24 @@ export class ControllerSystem extends System {
       player.components.push(
         new Walk(x, y, tile)
       )
+    }
+
+    const grab = findInstance(player.components, Grab)
+    const haul = findInstance(player.components, Haul)
+
+    if (Controls.isAction) {
+      if (
+        grab == null &&
+        !isMoving
+      ) {
+        player.components.push(
+          new Grab()
+        )
+      }
+
+      if (haul != null) {
+        haul.drop = true
+      }
     }
   }
 }
