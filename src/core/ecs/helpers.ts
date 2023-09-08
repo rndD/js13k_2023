@@ -4,13 +4,13 @@ import {
   Collidable,
   Draggable,
   FloorPoint,
+  ItemsPhysics,
   Mov,
   Physical,
   Pos,
   Renderable,
   Resource,
   ResourceSource,
-  ResourcesPhysics,
   ResourcesPrices,
   Sell
 } from './component'
@@ -69,7 +69,7 @@ export const createFreight = (
 
   if (!physics) {
     // @ts-ignore
-    physics = ResourcesPhysics[resourceType]
+    physics = ItemsPhysics[resourceType]
   }
 
   // add price

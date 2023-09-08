@@ -50,6 +50,7 @@ export class MoveSystem extends System {
 export class DragSystem extends System {
   componentsRequired = new Set<Function>([Mov, Pos, Draggable, Clickable])
   dragging = -1
+  draggingForce = 1.6
 
   update (entities: Set<Entity>): void {
     const mousePos = controls.mousePosition
@@ -75,9 +76,18 @@ export class DragSystem extends System {
       }
 
       if (drag.dragging) {
+        const maxTension = 100
         const mov = comps.get(Mov)
-        mov.dx = (mousePos.x - pos.x) / 50 // FIXME: use mass and mouse force
-        mov.dy = (mousePos.y - pos.y) / 50
+        const ph = comps.get(Physical)
+        const m = ph.data.mass || 50
+
+        let dx = (mousePos.x - pos.x)
+        let dy = (mousePos.y - pos.y)
+        dx = dx > 0 ? Math.min(dx, maxTension) : Math.max(dx, -maxTension)
+        dy = dy > 0 ? Math.min(dy, maxTension) : Math.max(dy, -maxTension)
+
+        mov.dx = dx / m / this.draggingForce // FIXME: use mass and mouse force
+        mov.dy = dy / m / this.draggingForce
       }
     }
   }
