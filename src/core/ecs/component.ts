@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { Component } from '@/lib/ecs'
+import { Component, Entity } from '@/lib/ecs'
 import { Layers } from './systems/render'
 
 export type Resource = 'wood' | 'food' | 'box' | 'water' | 'barrel';
@@ -135,6 +135,15 @@ export class Clickable extends Component {
   }
 }
 
+export class AI extends Component {
+  state: 'idle' | 'walk' | 'buy' = 'idle'
+  targetPos: [number, number] | null = null
+  targetEntity: Entity = -1
+  constructor (public isFriendly: boolean = true) {
+    super()
+  }
+}
+
 export const ItemsPhysics: Record<Resource | Obstacles, Physics> = {
   wood: { mass: 50, friction: 0.94 },
   food: { mass: 20, friction: 0.98 },
@@ -147,9 +156,9 @@ export const ItemsPhysics: Record<Resource | Obstacles, Physics> = {
 }
 
 export const ResourcesPrices: Record<Resource, number> = {
-  wood: 1,
-  food: 5,
-  barrel: 5,
-  box: 3,
-  water: 10
+  wood: 2,
+  food: 2,
+  barrel: 10,
+  box: 5,
+  water: 1
 }

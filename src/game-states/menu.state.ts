@@ -3,48 +3,106 @@ import { controls } from '@/core/controls'
 import { gameStateMachine } from '@/game-state-machine'
 import { gameState } from './game.state'
 import { State } from '@/core/state-machine'
+import { I_ARROW_HAND, I_AXE, I_COIN, I_TAPKA, SACK, resourcesSprites } from '@/tiles'
+import { randomFromList } from '@/lib/utils'
 
 class MenuState implements State {
-  private isStartSelected = true
+  private selected = 0
+
+  coins = Array(200).fill({}).map(() => ({
+    x: Math.random() * drawEngine.w,
+    y: Math.random() * -200 - 10,
+    vx: Math.random() * 2 - 1,
+    vy: Math.random() * 5 - 1,
+    s: randomFromList([I_COIN, I_COIN, resourcesSprites.wood, SACK])
+  }))
+
+  updateCoins () {
+    this.coins.forEach((c) => {
+      c.x += c.vx
+      c.y += c.vy
+      c.vy += 0.1
+      if (c.x < 0 || c.x > drawEngine.w) {
+        c.vx *= -1
+      }
+      if (c.y > drawEngine.h) {
+        c.y = 0
+        c.vy = Math.min(c.vy, 8)
+      }
+    })
+  }
+
+  drawCoins () {
+    this.coins.forEach((c) => {
+      drawEngine.drawEntity({ x: c.x, y: c.y }, c.s)
+    })
+  }
 
   onUpdate () {
-    const xCenter = drawEngine.context.canvas.width / 2
-    drawEngine.drawText('Mini merchant  ', 80, xCenter, 90)
+    const xCenter = drawEngine.w / 2
+
+    if (!drawEngine.ready) {
+      drawEngine.drawText('Loading...', 80, xCenter, 90)
+      return
+    }
+    this.updateCoins()
+
+    drawEngine.drawBg()
+
+    this.drawCoins()
+
+    // draw box for text
+    drawEngine.drawBox(0, 0, drawEngine.w, drawEngine.h)
+
+    drawEngine.drawText('Mini merchant', 80, xCenter + 2, 90, 'blacks')
+    drawEngine.drawText('Mini merchant', 80, xCenter, 90, 'gold')
     drawEngine.drawText(
       'Start Game',
       60,
       xCenter,
       600,
-      this.isStartSelected ? 'white' : 'gray'
+      this.selected === 1 ? 'gold' : 'white'
     )
     drawEngine.drawText(
       'Toggle Fullscreen',
       60,
       xCenter,
       700,
-      this.isStartSelected ? 'gray' : 'white'
+      this.selected === 2 ? 'gold' : 'white'
     )
+
+    drawEngine.drawIcon(controls.mousePosition.x, controls.mousePosition.y, I_ARROW_HAND)
+
     this.updateControls()
   }
 
   updateControls () {
+    const { y } = controls.mousePosition
+    if (y < 610 && y > 550) {
+      this.selected = 1
+    } else if (y > 660) {
+      this.selected = 2
+    } else {
+      this.selected = 0
+    }
     // Autoskip for testing
     if (drawEngine.ready) {
-      gameStateMachine.setState(gameState)
+      // gameStateMachine.setState(gameState)
     }
 
-    if (
-      (controls.isUp && !controls.previousState.isUp) ||
-      (controls.isDown && !controls.previousState.isDown)
-    ) {
-      this.isStartSelected = !this.isStartSelected
-    }
+    // if (
+    //   (controls.isUp && !controls.previousState.isUp) ||
+    //   (controls.isDown && !controls.previousState.isDown)
+    // ) {
+    //   this.isStartSelected = !this.isStartSelected
+    // }
 
-    if (controls.isConfirm && !controls.previousState.isConfirm) {
-      if (this.isStartSelected) {
+    if (controls.isMouseDown) {
+      if (this.selected === 1) {
         gameStateMachine.setState(gameState)
-      } else {
+      } else if (this.selected === 2) {
         this.toggleFullscreen()
+        controls.isMouseDown = false
       }
     }
   }

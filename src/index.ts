@@ -14,7 +14,7 @@ const interval = 1000 / 60;
   if (delta >= interval) {
     previousTime = currentTime - (delta % interval)
 
-    controls.queryController()
+    // controls.queryController()
     drawEngine.context.clearRect(0, 0, drawEngine.w, drawEngine.h)
     // Although the game is currently set at 60fps, the state machine accepts a time passed to onUpdate
     // If you'd like to unlock the framerate, you can instead use an interval passed to onUpdate to

@@ -69,11 +69,6 @@ class DrawEngine {
   }
 
   drawBg () {
-    // FIXME BG COLOR
-    this.context.fillStyle = '#ff3f2631'
-    this.context.fillRect(0, 0, this.w, this.h)
-
-    // draw floor
     for (let x = 0; x < this.wInTiles; x++) {
       for (let y = 0; y < this.hInTiles; y++) {
         const point = getGridPointInPixels(x, y)
@@ -133,22 +128,16 @@ class DrawEngine {
       tileSize,
       Math.round(x),
       Math.round(y),
-      tileSizeUpscaled / (big ? 1 : 2),
-      tileSizeUpscaled / (big ? 1 : 2)
+      // FIXME pixelScale makes icons shacky
+      Math.round(tileSizeUpscaled / (big ? 1 : 1.4)),
+      Math.round(tileSizeUpscaled / (big ? 1 : 1.4))
     )
   }
 
   drawUIMoney (money: number) {
     const m = money.toString()
     // drop box
-
-    this.context.fillStyle = 'rgba(0,0,0,0.4)'
-    this.context.fillRect(
-      0,
-      0,
-      22 + m.length * 10 + 10,
-      23
-    )
+    this.drawBox(0, 0, 22 + m.length * 10 + 10, 23)
 
     this.drawText(
       m,
@@ -172,8 +161,7 @@ class DrawEngine {
     const pad = 3
     const ress = Object.entries(res)
       .filter(([_, count]) => count > 0)
-    this.context.fillStyle = 'rgba(0,0,0,0.4)'
-    this.context.fillRect(
+    this.drawBox(
       Math.round(x),
       Math.round(y),
       tileSizeUpscaled,
@@ -214,7 +202,43 @@ class DrawEngine {
     )
   }
 
-  // FIXME not used
+  drawRope ({ x, y }: {x: number; y: number}, { mx, my }: {mx: number; my: number}) {
+    mx = mx + tileSizeUpscaled / 3
+    my = my + tileSizeUpscaled / 3
+
+    this.context.strokeStyle = '#8b4513'
+    this.context.lineWidth = 2
+    this.context.setLineDash([])
+
+    this.context.beginPath()
+    this.context.moveTo(
+      Math.round(x) + tileSizeUpscaled / 2,
+      Math.round(y) + tileSizeUpscaled / 2
+    )
+    this.context.lineTo(
+      Math.round(mx),
+      Math.round(my)
+    )
+    this.context.stroke()
+    this.context.closePath()
+
+    this.context.strokeStyle = 'rgba(0,0,0,0.8)'
+    this.context.lineWidth = 2
+
+    this.context.beginPath()
+    this.context.setLineDash([3, 4])
+    this.context.moveTo(
+      Math.round(x) + tileSizeUpscaled / 2,
+      Math.round(y) + tileSizeUpscaled / 2
+    )
+    this.context.lineTo(
+      Math.round(mx),
+      Math.round(my)
+    )
+    this.context.stroke()
+    this.context.closePath()
+  }
+
   drawOverlay (pos: { x: number; y: number }, { w, h }: { w: number; h: number }) {
     // draw dashed box around the object
     this.context.strokeStyle = 'rgba(0,0,0,0.8)'
@@ -280,8 +304,7 @@ class DrawEngine {
   // draw 00:00 format
   drawTimer (timeLeftMs: number) {
     // draw back
-    this.context.fillStyle = 'rgba(0,0,0,0.4)'
-    this.context.fillRect(
+    this.drawBox(
       this.w - 220,
       0,
       225,
@@ -308,6 +331,16 @@ class DrawEngine {
     this.context.strokeRect(
       newPos.x,
       newPos.y,
+      w,
+      h
+    )
+  }
+
+  drawBox (x: number, y: number, w: number, h: number) {
+    this.context.fillStyle = 'rgba(0,0,0,0.4)'
+    this.context.fillRect(
+      x,
+      y,
       w,
       h
     )

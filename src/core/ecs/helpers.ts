@@ -16,7 +16,7 @@ import {
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
-import { CROP, I_AXE, I_TAPKA, P_SELL, TREE_BOTTOM, WELL_BOTTOM, WELL_TOP, convertResToSprite, resourcesSprites } from '@/tiles'
+import { CROP, I_AXE, I_PICKUP_HAND, I_TAPKA, P_SELL, TREE_BOTTOM, WELL_BOTTOM, WELL_TOP, convertResToSprite, resourcesSprites } from '@/tiles'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -78,7 +78,7 @@ export const createFreight = (
     new Renderable(convertResToSprite(resourceType), Layers.Objects),
     new Collidable({ w, h }),
     new Draggable(),
-    new Clickable(I_AXE),
+    new Clickable(I_PICKUP_HAND),
     new Mov(),
     new Physical({ mass: physics?.mass, friction: physics?.friction }),
     new Sell(resourceType, price)

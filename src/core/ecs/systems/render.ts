@@ -1,7 +1,7 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
 import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Renderable, ResourceSource } from '../component'
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
-import { I_ARROW, I_AXE, P_SPAWN, TREE_TOP, WELL_BOTTOM, WELL_TOP, convertResToSprite } from '@/tiles'
+import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
 export enum Layers {
   Background,
@@ -38,9 +38,10 @@ export class RenderSystem extends System {
 
   update (entities: Set<Entity>): void {
     this.tmpTopLayer = []
-    this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, I_ARROW]
+    this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, I_ARROW_HAND]
 
     drawEngine.drawBg()
+
     // draw entities
     for (const layer of Object.values(Layers)) {
       // mouse icon
@@ -76,7 +77,9 @@ export class RenderSystem extends System {
         const buyer = comps.get(Buyer)
         if (drag) {
           if (drag.dragging) {
+            drawEngine.drawRope(pos, { mx: this.mouseIcon![0], my: this.mouseIcon![1] })
             drawEngine.drawShadow(pos)
+            this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, I_FIST_HAND]
           }
           // hover for objects
           if (click?.hovered && !drag.dragging) {
@@ -96,11 +99,11 @@ export class RenderSystem extends System {
         }
 
         // hack for tree
-        const t = comps.get(ResourceSource)
-        if (t && t.type === 'wood') {
+        const resS = comps.get(ResourceSource)
+        if (resS && resS.type === 'wood') {
           this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: TREE_TOP })
         }
-        if (t && t.type === 'water') {
+        if (resS && resS.type === 'water') {
           this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: WELL_TOP })
         }
 
@@ -133,8 +136,7 @@ export class RenderSystem extends System {
           }
         }
 
-        // Progress Bards
-        const resS = comps.get(ResourceSource)
+        // Progress Bars
         if (resS?.nextIn > 0) {
           drawEngine.drawProgress(pos, resS.nextIn, resS.interval)
         }
