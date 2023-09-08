@@ -169,16 +169,18 @@ class DrawEngine {
   drawBuying (pos: { x: number; y: number }, res: {[sprite: number]: number}) {
     let { x, y } = pos
     y += tileSizeUpscaled - 2
-    const pad = 2
+    const pad = 3
+    const ress = Object.entries(res)
+      .filter(([_, count]) => count > 0)
     this.context.fillStyle = 'rgba(0,0,0,0.4)'
     this.context.fillRect(
       Math.round(x),
       Math.round(y),
       tileSizeUpscaled,
-      Object.keys(res).length * tileSize + pad * 2
+      ress.length * tileSize + pad * 2
     )
 
-    Object.entries(res).forEach(([sprite, count], i) => {
+    ress.forEach(([sprite, count], i) => {
       const s = getTileXY(Number(sprite))
       this.context.drawImage(
         getTile(this.tilemap, s[0], s[1])!,
@@ -273,6 +275,30 @@ class DrawEngine {
         size
       )
     }
+  }
+
+  // draw 00:00 format
+  drawTimer (timeLeftMs: number) {
+    // draw back
+    this.context.fillStyle = 'rgba(0,0,0,0.4)'
+    this.context.fillRect(
+      this.w - 220,
+      0,
+      225,
+      25
+    )
+    const timeLeft = Math.floor(timeLeftMs / 1000)
+    const minutes = Math.floor(timeLeft / 60)
+    const seconds = timeLeft % 60
+
+    this.drawText(
+      `Time left ${minutes.toString().padStart(1)}:${seconds.toString().padStart(2, '0')}`,
+      24,
+      this.w - 5,
+      19,
+      'white',
+      'right'
+    )
   }
 
   drawDebugRect (pos: { x: number; y: number }, w: number, h: number) {

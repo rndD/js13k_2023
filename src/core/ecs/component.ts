@@ -5,7 +5,7 @@ import { Layers } from './systems/render'
 export type Resource = 'wood' | 'food' | 'box' | 'water' | 'barrel';
 
 export class GameData extends Component {
-  time = 0
+  timeLeft = 5 * 60 * 1000
   level = 0
   constructor (public money: number) {
     super()

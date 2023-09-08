@@ -59,7 +59,7 @@ export class SellSystem extends System {
   createBuyer (): void {
     const buyer = this.ecs.addEntity()
     this.ecs.addComponent(buyer, new Buyer(
-      { wood: 3, food: 1 },
+      { wood: 3, food: 1, box: 1, barrel: 9 },
       10000, // time,
       this.qPosEnd
     ))
@@ -209,7 +209,7 @@ export class GameDataSystem extends System {
       const comps = this.ecs.getComponents(entity)
       const gameData = comps.get(GameData)
 
-      gameData.time += this.ecs.currentDelta
+      gameData.timeLeft -= this.ecs.currentDelta
     }
   }
 }

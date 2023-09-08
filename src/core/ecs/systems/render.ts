@@ -129,6 +129,7 @@ export class RenderSystem extends System {
           const gameData = comps.get(GameData)
           if (gameData) {
             drawEngine.drawUIMoney(gameData.money)
+            drawEngine.drawTimer(gameData.timeLeft)
           }
         }
 
