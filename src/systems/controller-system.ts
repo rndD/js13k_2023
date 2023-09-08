@@ -3,7 +3,7 @@ import { System } from '@/utils/elements'
 import { Tile, Walk } from '../components'
 import Controls from '@/state/controls'
 
-import { isInstance } from '@/utils/helpers'
+import { findInstance, isInstance } from '@/utils/helpers'
 import { nullthrows } from '@/utils/validate'
 
 // animate character movement
@@ -19,24 +19,21 @@ export class ControllerSystem extends System {
 
   update () {
     const player = nullthrows(this.entities)[0]
-    const walk = player.components.find(component =>
-      isInstance(component, Walk)) as Walk | null
+
+    const isWalking = player.components.some(component =>
+      isInstance(component, Walk))
+    if (isWalking) return
 
     const isMoving =
       Controls.isDown ||
       Controls.isLeft ||
       Controls.isRight ||
       Controls.isUp
-    const isWalking =
-      walk != null
-    const isFirstStep =
-      isMoving && !isWalking
 
-    if (isFirstStep) {
+    if (isMoving) {
       const tile = nullthrows(
-        player.components.find(component =>
-          isInstance(component, Tile))
-      ) as Tile
+        findInstance(player.components, Tile)
+      )
 
       const x = tile.x + (Controls.isLeft ? -1 : Controls.isRight ? 1 : 0)
       const y = tile.y + (Controls.isUp ? -1 : Controls.isDown ? 1 : 0)

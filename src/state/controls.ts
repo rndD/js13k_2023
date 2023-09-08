@@ -3,10 +3,17 @@ const keyMap = {
   ArrowLeft: 'isLeft',
   ArrowRight: 'isRight',
   ArrowUp: 'isUp',
+
+  ы: 'isDown',
+  ф: 'isLeft',
+  в: 'isRight',
+  ц: 'isUp',
+
   s: 'isDown',
   a: 'isLeft',
   d: 'isRight',
   w: 'isUp',
+
   Enter: 'isAction',
   ' ': 'isAction'
 }

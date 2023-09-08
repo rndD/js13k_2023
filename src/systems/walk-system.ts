@@ -6,7 +6,7 @@ import {
   genObstacleKey, genObstacleMap,
   getAngle, getElapsedFrames
 } from '@/utils/collision'
-import { isInstance } from '@/utils/helpers'
+import { findInstance, isInstance, removeInstance } from '@/utils/helpers'
 import { nullthrows } from '@/utils/validate'
 
 // animate character movement
@@ -80,24 +80,18 @@ export class WalkSystem extends System {
 
     // clean up walk elements
     this.entities!.forEach(entity => {
-      const walkIndex = entity.components.findIndex(component =>
-        isInstance(component, Walk))
-      const walk = walkIndex > -1
-        ? entity.components[walkIndex] as Walk
-        : null
+      const walk = findInstance(entity.components, Walk)
       if (walk == null) return
 
       const deltaX = walk.x - walk.tile.x
       const deltaY = walk.y - walk.tile.y
+      const deltaZ = Math.abs(deltaX + deltaY)
       const isDestinationReached =
-        walk.isBlocked
-          ? deltaX * deltaY === 0 &&
-            Math.abs(deltaX + deltaY) === 1
-          : deltaX === 0 &&
-            deltaY === 0
+        (deltaX === 0 && deltaY === 0) ||
+        (walk.isBlocked && (deltaZ === 0 || deltaZ === 1 || deltaZ === 2))
 
       if (isDestinationReached) {
-        entity.components.splice(walkIndex, 1)
+        removeInstance(entity.components, walk)
       }
     })
   }

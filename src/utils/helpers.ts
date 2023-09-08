@@ -1,6 +1,6 @@
 import { Component, Entity, System } from './elements'
 
-import { nullthrows } from './validate'
+import { invariant, nullthrows } from './validate'
 
 export function isInstance (
   instance: Component | Entity | System,
@@ -14,6 +14,23 @@ export function isInstanceOfAny (
   factories: Array<typeof Component> | Array<typeof Entity> | Array<typeof System>
 ): boolean {
   return factories.some(factory => isInstance(instance, factory))
+}
+
+export function findInstance<T extends typeof Component> (
+  collection: Component[],
+  factory: T
+): InstanceType<T> | null {
+  return collection.find(component =>
+    isInstance(component, factory)) as InstanceType<T> | null
+}
+
+export function removeInstance (
+  collection: Component[],
+  instance: Component
+) {
+  const elemIndex = collection.findIndex(elem => elem === instance)
+  invariant(elemIndex > -1, 'failed to remove instance')
+  collection.splice(elemIndex, 1)
 }
 
 export function iterate (
