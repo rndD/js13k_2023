@@ -24,6 +24,7 @@ export const I_COIN = 46
 
 export const I_AXE = 50
 export const I_TAPKA = 51
+export const SIGN = 40
 
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {

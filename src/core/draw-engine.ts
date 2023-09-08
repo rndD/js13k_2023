@@ -336,8 +336,8 @@ class DrawEngine {
     )
   }
 
-  drawBox (x: number, y: number, w: number, h: number) {
-    this.context.fillStyle = 'rgba(0,0,0,0.4)'
+  drawBox (x: number, y: number, w: number, h: number, isTransparent: boolean = true) {
+    this.context.fillStyle = isTransparent ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.8)'
     this.context.fillRect(
       x,
       y,

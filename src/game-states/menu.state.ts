@@ -3,9 +3,18 @@ import { controls } from '@/core/controls'
 import { gameStateMachine } from '@/game-state-machine'
 import { gameState } from './game.state'
 import { State } from '@/core/state-machine'
-import { I_ARROW_HAND, I_AXE, I_COIN, I_TAPKA, SACK, resourcesSprites } from '@/tiles'
+import { I_ARROW_HAND, I_COIN, SACK, SIGN, resourcesSprites } from '@/tiles'
 import { randomFromList } from '@/lib/utils'
 
+const helpText =
+`Welcome to Mini Merchant(js13k games 2023 entry)!
+You are a merchant who has to sell goods to the people of the village.
+Use your mouse to interact with the world. Drag&Drop items near the stole to sell them.
+Read more about possible interactions by clicking on 
+You have a short live, so you have to sell as much as possible in 5 min.
+TIP: Prepare more goods in your yard in advance. 
+
+`.split('\n').map((s) => s.trim())
 class MenuState implements State {
   private selected = 0
 
@@ -56,6 +65,11 @@ class MenuState implements State {
 
     drawEngine.drawText('Mini merchant', 80, xCenter + 2, 90, 'blacks')
     drawEngine.drawText('Mini merchant', 80, xCenter, 90, 'gold')
+
+    drawEngine.drawBox(0, 150, drawEngine.w, 210, false)
+    helpText.forEach((t, i) => drawEngine.drawText(t, 22, xCenter, 180 + (i * 32), 'white'))
+    drawEngine.drawEntity({ x: xCenter + 350, y: 250 }, SIGN)
+
     drawEngine.drawText(
       'Start Game',
       60,
