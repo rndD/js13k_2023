@@ -1,23 +1,23 @@
 import { drawEngine } from './draw-engine'
 
-const enum XboxControllerButton {
-  A,
-  B,
-  X,
-  Y,
-  LeftBumper,
-  RightBumper,
-  LeftTrigger,
-  RightTrigger,
-  Select,
-  Start,
-  L3,
-  R3,
-  DpadUp,
-  DpadDown,
-  DpadLeft,
-  DpadRight,
-}
+// const enum XboxControllerButton {
+//   A,
+//   B,
+//   X,
+//   Y,
+//   LeftBumper,
+//   RightBumper,
+//   LeftTrigger,
+//   RightTrigger,
+//   Select,
+//   Start,
+//   L3,
+//   R3,
+//   DpadUp,
+//   DpadDown,
+//   DpadLeft,
+//   DpadRight,
+// }
 
 class Controls {
   isUp = false

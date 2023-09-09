@@ -5,6 +5,7 @@ import { State } from '@/core/state-machine'
 import { I_ARROW_HAND, I_COIN, SACK, SIGN, resourcesSprites } from '@/tiles'
 import { randomFromList } from '@/lib/utils'
 import { getGameState } from './game.state'
+import { colorBlack, colorGold, colorWhite } from '@/lib/colors'
 
 const helpText =
 `Welcome to Mini Merchant(js13k games 2023 entry)!
@@ -63,8 +64,8 @@ class MenuState implements State {
     // draw box for text
     drawEngine.drawBox(0, 0, drawEngine.w, drawEngine.h)
 
-    drawEngine.drawText('Mini merchant', 80, xCenter + 2, 90, 'blacks')
-    drawEngine.drawText('Mini merchant', 80, xCenter, 90, 'gold')
+    drawEngine.drawText('Mini merchant', 80, xCenter + 2, 90, colorBlack)
+    drawEngine.drawText('Mini merchant', 80, xCenter, 90, colorGold)
 
     drawEngine.drawBox(0, 150, drawEngine.w, 210, false)
     helpText.forEach((t, i) => drawEngine.drawText(t, 22, xCenter, 180 + (i * 32), 'white'))
@@ -75,14 +76,14 @@ class MenuState implements State {
       60,
       xCenter,
       600,
-      this.selected === 1 ? 'gold' : 'white'
+      this.selected === 1 ? colorGold : colorWhite
     )
     drawEngine.drawText(
       'Toggle Fullscreen',
       60,
       xCenter,
       700,
-      this.selected === 2 ? 'gold' : 'white'
+      this.selected === 2 ? colorGold : colorWhite
     )
 
     drawEngine.drawIcon(controls.mousePosition.x, controls.mousePosition.y, I_ARROW_HAND)

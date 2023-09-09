@@ -1,5 +1,5 @@
 {
-  "name": "typescript-template",
+  "name": "mini-merchant-js13k-game",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
@@ -187,7 +187,7 @@
     "project": "./tsconfig.json"
   },
   "scripts": {
-    "serve": "npm-run-all --parallel tsc vite",
+    "dev": "npm-run-all --parallel tsc vite",
     "build": "cross-env LEVEL_2_BUILD=true vite build",
     "find-best-roadroller": "node find-best-roadroller.js",
     "build-with-best-roadroller": "cross-env USE_RR_CONFIG=true vite build",
@@ -196,5 +196,5 @@
     "vite": "vite serve",
     "tsc": "tsc --watch --noEmit"
   },
-  "author": "Rob Louie"
+  "author": "Alexey Kalmakov"
 }

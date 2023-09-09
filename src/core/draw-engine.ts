@@ -2,6 +2,7 @@ import { getGridPointInPixels } from '@/lib/utils'
 import { getColPos } from './ecs/systems/collide'
 import { GRASS, I_COIN } from '@/tiles'
 import { getTile } from '@/lib/graphics'
+import { colorBlack, colorWhite, transparentBlack } from '@/lib/colors'
 
 export const pixelScale = 2
 export const tileSize = 16
@@ -54,14 +55,14 @@ class DrawEngine {
     fontSize: number,
     x: number,
     y: number,
-    color = 'white',
+    color = colorWhite,
     textAlign: 'center' | 'left' | 'right' = 'center'
   ) {
     const context = this.context
 
-    context.font = `${fontSize}px monospace, sans-serif-black`
+    context.font = `${fontSize}px monospace`
     context.textAlign = textAlign
-    context.strokeStyle = 'black'
+    context.strokeStyle = colorBlack
     context.lineWidth = 1
     context.strokeText(text, x, y)
     context.fillStyle = color
@@ -193,7 +194,7 @@ class DrawEngine {
   }
 
   drawShadow (pos: { x: number; y: number }, sprite?: [number, number]) {
-    this.context.fillStyle = 'rgba(0,0,0,0.2)'
+    this.context.fillStyle = transparentBlack(0.2)
     this.context.fillRect(
       Math.round(pos.x),
       Math.round(pos.y + tileSizeUpscaled - 6),
@@ -206,6 +207,7 @@ class DrawEngine {
     mx = mx + tileSizeUpscaled / 3
     my = my + tileSizeUpscaled / 3
 
+    // brown
     this.context.strokeStyle = '#8b4513'
     this.context.lineWidth = 2
     this.context.setLineDash([])
@@ -222,7 +224,7 @@ class DrawEngine {
     this.context.stroke()
     this.context.closePath()
 
-    this.context.strokeStyle = 'rgba(0,0,0,0.8)'
+    this.context.strokeStyle = transparentBlack(0.8)
     this.context.lineWidth = 2
 
     this.context.beginPath()
@@ -260,14 +262,14 @@ class DrawEngine {
     const progress = 1 - (nextIn / interval)
     const x = Math.round(pos.x) + 2
     const y = Math.round(pos.y) + tileSizeUpscaled / 4 * 3
-    this.context.fillStyle = '#000'
+    this.context.fillStyle = colorBlack
     this.context.fillRect(
       x,
       y,
       tileSizeUpscaled - 4,
       4
     )
-    this.context.fillStyle = '#fff'
+    this.context.fillStyle = colorWhite
     this.context.fillRect(
       x, y,
       progress * (tileSizeUpscaled - 4),
@@ -337,7 +339,7 @@ class DrawEngine {
   }
 
   drawBox (x: number, y: number, w: number, h: number, isTransparent: boolean = true) {
-    this.context.fillStyle = isTransparent ? 'rgba(0,0,0,0.4)' : 'rgba(0,0,0,0.8)'
+    this.context.fillStyle = isTransparent ? transparentBlack(0.4) : transparentBlack(0.8)
     this.context.fillRect(
       x,
       y,
