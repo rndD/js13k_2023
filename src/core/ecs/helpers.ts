@@ -22,7 +22,7 @@ import { CROP, I_AXE, I_PICKUP_HAND, I_TAPKA, P_SELL, TREE_BOTTOM, WELL_BOTTOM, 
 export const createObstacle = (
   [x, y]: [number, number],
   sprite: number,
-  w = tileSizeUpscaled, h = tileSizeUpscaled,
+  w = tileSizeUpscaled - 2, h = tileSizeUpscaled - 2,
   // FIXME remove angle is not used
   angle?: number
 ): Component[] => {
@@ -37,7 +37,7 @@ export const createMovingObstacle = (
   [x, y]: [number, number],
   sprite: number,
   mass = 1, friction = 0.1,
-  w = tileSizeUpscaled, h = tileSizeUpscaled
+  w = tileSizeUpscaled - 2, h = tileSizeUpscaled - 2
 
 ): Component[] => {
   return [

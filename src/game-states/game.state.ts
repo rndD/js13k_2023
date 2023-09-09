@@ -108,16 +108,17 @@ class GameState implements State {
       // well
       createWell(getGridPointInPixels(28, 8)),
 
+      // crops
       createCrop(getGridPointInPixels(1, 5)),
       createCrop(getGridPointInPixels(2, 5)),
-
       createCrop(getGridPointInPixels(27, 16)),
       createCrop(getGridPointInPixels(28, 16)),
+      createCrop(getGridPointInPixels(11, 0)),
 
       // Obstacles
       createMovingObstacle(getGridPointInPixels(20, 10), WAGON, 1000, 0.5),
       createMovingObstacle(getGridPointInPixels(19, 8), WAGON, 1000, 0.5),
-      createMovingObstacle(getGridPointInPixels(18, 13), ANVIL, 2000, 0.4)
+      createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, 2000, 0.4)
 
     )
 
