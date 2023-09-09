@@ -50,7 +50,7 @@ export class MoveSystem extends System {
 export class DragSystem extends System {
   componentsRequired = new Set<Function>([Mov, Pos, Draggable, Clickable])
   dragging = -1
-  draggingForce = 1.6
+  draggingForce = 2
 
   update (entities: Set<Entity>): void {
     const mousePos = controls.mousePosition
@@ -76,7 +76,7 @@ export class DragSystem extends System {
       }
 
       if (drag.dragging) {
-        const maxTension = 100
+        const maxTension = 180
         const mov = comps.get(Mov)
         const ph = comps.get(Physical)
         const m = ph.data.mass || 50

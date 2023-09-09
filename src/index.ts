@@ -1,7 +1,6 @@
 import { drawEngine } from './core/draw-engine'
 import { menuState } from './game-states/menu.state'
 import { createGameStateMachine, gameStateMachine } from './game-state-machine'
-import { controls } from '@/core/controls'
 
 createGameStateMachine(menuState)
 

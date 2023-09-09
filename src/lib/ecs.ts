@@ -5,7 +5,7 @@
  * Components.
  */
 
-import { EventEmitter } from './utils';
+import { EventEmitter } from './utils'
 
 // eslint-disable-next-line max-classes-per-file
 export type Entity = number;

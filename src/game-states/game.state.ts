@@ -11,12 +11,13 @@ import {
   createSellPoint,
   createTree,
   createWell,
-  createCrop
+  createCrop,
+  createMovingObstacle
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
 import { State } from '@/core/state-machine'
-import { TileInfo, map } from '@/tiles'
+import { ANVIL, TileInfo, WAGON, map } from '@/tiles'
 import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
 import { SoundSystem } from '@/core/ecs/systems/sound'
@@ -26,7 +27,6 @@ import { DragSystem, MoveSystem, PhysicsSystem } from '@/core/ecs/systems/move'
 import { ClickSystem } from '@/core/ecs/systems/click'
 import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 
-// test only
 const createMap = () => {
   const ec: Component[][] = []
   const startX = 0
@@ -61,6 +61,7 @@ const createMap = () => {
 
 class GameState implements State {
   ecs: ECS
+  stop = false
 
   constructor () {
     this.ecs = new ECS()
@@ -75,6 +76,13 @@ class GameState implements State {
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
     this.ecs.addSystem(new GameDataSystem())
+
+    this.ecs.ee.on('gameOver', (score: Number) => {
+      this.stop = true
+      // eslint-disable-next-line
+      alert(`Game over! Your score is ${score}`)
+      gameStateMachine.setState(menuState)
+    })
   }
 
   addEntities (...entitiesComponents: Component[][]) {
@@ -84,10 +92,6 @@ class GameState implements State {
         this.ecs.addComponent(entity, c)
       }
     }
-    // this.entities.sort((a, b) => a.layer - b.layer);
-    // entity.forEach((e) => {
-    //   this.entitiesMap.set(e.id, e);
-    // });
   }
 
   // Make sure ball starts at the same spot when game is entered
@@ -108,7 +112,12 @@ class GameState implements State {
       createCrop(getGridPointInPixels(2, 5)),
 
       createCrop(getGridPointInPixels(27, 16)),
-      createCrop(getGridPointInPixels(28, 16))
+      createCrop(getGridPointInPixels(28, 16)),
+
+      // Obstacles
+      createMovingObstacle(getGridPointInPixels(20, 10), WAGON, 1000, 0.5),
+      createMovingObstacle(getGridPointInPixels(19, 8), WAGON, 1000, 0.5),
+      createMovingObstacle(getGridPointInPixels(18, 13), ANVIL, 2000, 0.4)
 
     )
 
@@ -122,6 +131,9 @@ class GameState implements State {
   }
 
   onUpdate (deltaTime: number) {
+    if (this.stop) {
+      return
+    }
     this.ecs.currentDelta = deltaTime
     this.ecs.update()
     // FIXME move to systems
@@ -211,4 +223,4 @@ class GameState implements State {
   }
 }
 
-export const gameState = new GameState()
+export const getGameState = () => new GameState()

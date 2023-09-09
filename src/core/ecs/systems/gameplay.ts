@@ -210,6 +210,10 @@ export class GameDataSystem extends System {
       const gameData = comps.get(GameData)
 
       gameData.timeLeft -= this.ecs.currentDelta
+
+      if (gameData.timeLeft <= 0) {
+        this.ecs.ee.emit('gameOver', gameData.money)
+      }
     }
   }
 }

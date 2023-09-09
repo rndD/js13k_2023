@@ -1,10 +1,10 @@
 import { drawEngine } from '@/core/draw-engine'
 import { controls } from '@/core/controls'
 import { gameStateMachine } from '@/game-state-machine'
-import { gameState } from './game.state'
 import { State } from '@/core/state-machine'
 import { I_ARROW_HAND, I_COIN, SACK, SIGN, resourcesSprites } from '@/tiles'
 import { randomFromList } from '@/lib/utils'
+import { getGameState } from './game.state'
 
 const helpText =
 `Welcome to Mini Merchant(js13k games 2023 entry)!
@@ -101,7 +101,7 @@ class MenuState implements State {
     }
     // Autoskip for testing
     if (drawEngine.ready) {
-      // gameStateMachine.setState(gameState)
+      gameStateMachine.setState(getGameState())
     }
 
     // if (
@@ -113,7 +113,7 @@ class MenuState implements State {
 
     if (controls.isMouseDown) {
       if (this.selected === 1) {
-        gameStateMachine.setState(gameState)
+        gameStateMachine.setState(getGameState())
       } else if (this.selected === 2) {
         this.toggleFullscreen()
         controls.isMouseDown = false

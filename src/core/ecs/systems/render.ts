@@ -3,6 +3,7 @@ import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Rende
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
 import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
+
 export enum Layers {
   Background,
   Floor,

@@ -3,6 +3,7 @@ import * as t from '../tiles/tilemap_13k_23.json'
 import { Resource } from './core/ecs/component'
 
 export const WAGON = 25
+export const ANVIL = 58
 export const SACK = 49
 export const GRASS = 0
 export const MEN = [60, 63]

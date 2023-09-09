@@ -23,12 +23,31 @@ export const createObstacle = (
   [x, y]: [number, number],
   sprite: number,
   w = tileSizeUpscaled, h = tileSizeUpscaled,
+  // FIXME remove angle is not used
   angle?: number
 ): Component[] => {
   return [
     new Pos(x, y),
     new Renderable(sprite, Layers.Objects, angle),
     new Collidable({ w, h })
+  ]
+}
+
+export const createMovingObstacle = (
+  [x, y]: [number, number],
+  sprite: number,
+  mass = 1, friction = 0.1,
+  w = tileSizeUpscaled, h = tileSizeUpscaled
+
+): Component[] => {
+  return [
+    new Pos(x, y),
+    new Renderable(sprite, Layers.Objects),
+    new Collidable({ w, h }),
+    new Mov(),
+    new Physical({ mass, friction }),
+    new Draggable(),
+    new Clickable(I_PICKUP_HAND)
   ]
 }
 

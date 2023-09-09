@@ -6,7 +6,7 @@ export type Resource = 'wood' | 'food' | 'box' | 'water' | 'barrel';
 export type Obstacles = 'anvil' | 'wagon'
 
 export class GameData extends Component {
-  timeLeft = 5 * 60 * 1000
+  timeLeft = 5 * 1000 * 60
   level = 0
   constructor (public money: number) {
     super()
