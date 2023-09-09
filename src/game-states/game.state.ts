@@ -26,6 +26,7 @@ import { PointSystem } from '@/core/ecs/systems/point'
 import { DragSystem, MoveSystem, PhysicsSystem } from '@/core/ecs/systems/move'
 import { ClickSystem } from '@/core/ecs/systems/click'
 import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
+import { Events } from '@/core/ecs/events'
 
 const createMap = () => {
   const ec: Component[][] = []
@@ -77,7 +78,7 @@ class GameState implements State {
     this.ecs.addSystem(new SoundSystem())
     this.ecs.addSystem(new GameDataSystem())
 
-    this.ecs.ee.on('gameOver', (score: Number) => {
+    this.ecs.ee.on(Events.gameOver, (score: Number) => {
       this.stop = true
       // eslint-disable-next-line
       alert(`Game over! Your score is ${score}`)

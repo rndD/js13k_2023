@@ -14,6 +14,7 @@ import {
   isPointerIn
 } from '@/lib/physics'
 import { createFreight } from '../helpers'
+import { Events } from '../events'
 
 export class ClickSystem extends System {
   componentsRequired = new Set<Function>([Clickable, Pos])
@@ -37,7 +38,7 @@ export class ClickSystem extends System {
       mov.dx = 0
       mov.dy = 1.5
 
-      this.ecs.ee.emit('gether', entity)
+      this.ecs.ee.emit(Events.gether, entity)
       resS.nextIn = resS.interval
     }
   }

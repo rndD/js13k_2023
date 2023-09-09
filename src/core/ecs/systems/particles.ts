@@ -3,6 +3,7 @@ import { Mov, Particle, Pos, Renderable, SellObjectType } from '../component'
 import { tileSizeUpscaled } from '../../draw-engine'
 import { Layers } from './render'
 import { I_COIN } from '@/tiles'
+import { Events } from '../events'
 
 export class ParticleSystem extends System {
   inited = false
@@ -12,7 +13,7 @@ export class ParticleSystem extends System {
   componentsRequired = new Set<Function>([Pos, Mov])
 
   init (): void {
-    this.ecs.ee.on('collide', (entity: Entity, other :Entity) => {
+    this.ecs.ee.on(Events.collide, (entity: Entity, other :Entity) => {
       const comps = this.ecs.getComponents(entity)
       const pos = comps.get(Pos)
 
@@ -32,7 +33,7 @@ export class ParticleSystem extends System {
       }
     })
 
-    this.ecs.ee.on('sold', (entity: Entity, type: SellObjectType, price: number) => {
+    this.ecs.ee.on(Events.sold, (entity: Entity, type: SellObjectType, price: number) => {
       // random N particles
       const count = price
       const comps = this.ecs.getComponents(entity)

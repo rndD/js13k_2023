@@ -4,6 +4,7 @@ import { tileSizeUpscaled } from '@/core/draw-engine'
 import { getGridPointInPixels, randomFromList } from '@/lib/utils'
 import { Layers } from './render'
 import { MEN, SACK } from '@/tiles'
+import { Events } from '../events'
 
 export class SellSystem extends System {
   inited = false
@@ -26,7 +27,7 @@ export class SellSystem extends System {
 
   init (): void {
     // sell event
-    this.ecs.ee.on('sell', (entity: Entity) => {
+    this.ecs.ee.on(Events.sell, (entity: Entity) => {
       const comps = this.ecs.getComponents(entity)
       const sell = comps.get(Sell)
 
@@ -43,14 +44,14 @@ export class SellSystem extends System {
         }
         // @ts-ignore
         if ((buyer.resToBuy[sell.type] || 0) > 0) {
-          this.ecs.ee.emit('sold', entity, sell.type, sell.price)
+          this.ecs.ee.emit(Events.sold, entity, sell.type, sell.price)
           // @ts-ignore
           buyer.resToBuy[sell.type] -= 1
           buyer.bought = true
           // console.log(buyer, sell.type, buyer.resToBuy[sell.type])
           this.ecs.removeEntity(entity)
         } else {
-          this.ecs.ee.emit('notSold', entity)
+          this.ecs.ee.emit(Events.notSold, entity)
         }
       }
     })
@@ -194,9 +195,10 @@ export class GameDataSystem extends System {
     this.ecs.addComponent(this.e, new GameData(0))
     this.ecs.addComponent(this.e, new Renderable(undefined, Layers.UI))
 
-    this.ecs.ee.on('sold', (entity: Entity, type: SellObjectType, price: number) => {
+    this.ecs.ee.on(Events.sold, (entity: Entity, type: SellObjectType, price: number) => {
       this.ecs.getComponents(this.e).get(GameData).money += price
     })
+
     this.inited = true
   }
 
@@ -212,7 +214,7 @@ export class GameDataSystem extends System {
       gameData.timeLeft -= this.ecs.currentDelta
 
       if (gameData.timeLeft <= 0) {
-        this.ecs.ee.emit('gameOver', gameData.money)
+        this.ecs.ee.emit(Events.gameOver, gameData.money)
       }
     }
   }

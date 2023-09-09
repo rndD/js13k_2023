@@ -1,6 +1,7 @@
 import { Entity, System } from '@/lib/ecs'
 import { zzfx } from '@/lib/zzFx'
 import { GameData } from '../component'
+import { Events } from '../events'
 
 export class SoundSystem extends System {
   inited = false
@@ -20,20 +21,20 @@ export class SoundSystem extends System {
 
   sounds = {
     // eslint-disable-next-line
-    gether: [2.24,,53,,,.07,3,.57,,,,,,1.2,,.3,,.46,,.01],
+    [Events.gether]: [2.24,,53,,,.07,3,.57,,,,,,1.2,,.3,,.46,,.01],
     // eslint-disable-next-line
-    collide: [[1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53], 500],
+    [Events.collide]: [[1.31, , 200, , 0.02, 0.01, 2, 2.1, , , , , , , -242, , , 0.53], 500],
 
     // eslint-disable-next-line
-    drop: [1.1,,332,,.06,.14,1,.31,,8,,,,,,.1,,.49,.01,.03],
+    [Events.drop]: [1.1,,332,,.06,.14,1,.31,,8,,,,,,.1,,.49,.01,.03],
 
     // eslint-disable-next-line
-    notSold: [[1.32,, 164,, 0.24, 0.08, 4, 1.14,,,,,, 0.1, 72,, 0.27,, 0.18, 0.43], 2000],
+    [Events.notSold]: [[1.32,, 164,, 0.24, 0.08, 4, 1.14,,,,,, 0.1, 72,, 0.27,, 0.18, 0.43], 2000],
 
     // eslint-disable-next-line
-    sold: [,,684,.05,.23,.2,1,1.09,3.9,-0.8,-9,.05,,,,,,.49,.18,.13],
+    [Events.sold]: [,,684,.05,.23,.2,1,1.09,3.9,-0.8,-9,.05,,,,,,.49,.18,.13],
     // eslint-disable-next-line
-    pickup: [
+    [Events.pickup]: [
       ,
       ,
       435,
@@ -57,7 +58,7 @@ export class SoundSystem extends System {
 
   init () {
     // @ts-ignore
-    this.ecs.ee.on('soundMute', () => {
+    this.ecs.ee.on(Events.soundMute, () => {
       this.state.muted = !this.state.muted
     })
 

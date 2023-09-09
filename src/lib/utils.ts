@@ -26,21 +26,21 @@ export const getGridPointInPixels = (x: number, y:number): [number, number] => {
 }
 
 export const EventEmitter = () => {
-  const events: { [key: string]: Function[] } = {}
+  const events: { [key: string|number]: Function[] } = {}
   return {
-    on: (event: string, fn: Function) => {
+    on: (event: string| number, fn: Function) => {
       if (!events[event]) {
         events[event] = []
       }
       events[event].push(fn)
     },
-    off: (event: string, fn: Function) => {
+    off: (event: string|number, fn: Function) => {
       if (!events[event]) {
         return
       }
       events[event] = events[event].filter(f => f !== fn)
     },
-    emit: (event: string, ...args: any[]) => {
+    emit: (event: string|number, ...args: any[]) => {
       if (!events[event]) {
         return
       }

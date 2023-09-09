@@ -8,6 +8,7 @@ import {
   Pos
 } from '../component'
 import { controls } from '@/core/controls'
+import { Events } from '../events'
 
 // can be part of move system?
 export class PhysicsSystem extends System {
@@ -50,7 +51,7 @@ export class MoveSystem extends System {
 export class DragSystem extends System {
   componentsRequired = new Set<Function>([Mov, Pos, Draggable, Clickable])
   dragging = -1
-  draggingForce = 2
+  draggingForce = 3 // less is better
 
   update (entities: Set<Entity>): void {
     const mousePos = controls.mousePosition
@@ -64,30 +65,30 @@ export class DragSystem extends System {
       if (cl.hovered && !drag.dragging && this.dragging === -1) {
         if (controls.isMouseDown) {
           drag.dragging = true
-          this.ecs.ee.emit('pickup', entity)
+          this.ecs.ee.emit(Events.pickup, entity)
           this.dragging = entity
         }
       }
 
       if (!controls.isMouseDown && drag.dragging) {
         drag.dragging = false
-        this.ecs.ee.emit('drop', entity)
+        this.ecs.ee.emit(Events.drop, entity)
         this.dragging = -1
       }
 
       if (drag.dragging) {
-        const maxTension = 180
+        const maxTension = 100
         const mov = comps.get(Mov)
         const ph = comps.get(Physical)
-        const m = ph.data.mass || 50
+        const m = (ph.data.mass || 50)
 
         let dx = (mousePos.x - pos.x)
         let dy = (mousePos.y - pos.y)
         dx = dx > 0 ? Math.min(dx, maxTension) : Math.max(dx, -maxTension)
         dy = dy > 0 ? Math.min(dy, maxTension) : Math.max(dy, -maxTension)
 
-        mov.dx = dx / m / this.draggingForce // FIXME: use mass and mouse force
-        mov.dy = dy / m / this.draggingForce
+        mov.dx += dx / m / this.draggingForce // FIXME: use mass and mouse force
+        mov.dy += dy / m / this.draggingForce
       }
     }
   }

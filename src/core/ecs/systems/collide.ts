@@ -2,6 +2,7 @@ import { Entity, System } from '@/lib/ecs'
 import { correctAABBCollision, testAABBCollision } from '@/lib/physics'
 import { Collidable, Mov, Pos } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
+import { Events } from '../events'
 
 // return x,y of the hitbox from center
 export const getColPos = (pos: Pos, col: Collidable): Pos => {
@@ -42,7 +43,7 @@ export class CollideSystem extends System {
 
         if (t.collide) {
           const otherMov = otherComps.get(Mov)
-          this.ecs.ee.emit('collide', entity, other)
+          this.ecs.ee.emit(Events.collide, entity, other)
 
           correctAABBCollision(
             { mov, pos, col },

@@ -2,6 +2,7 @@ import { Entity, System } from '@/lib/ecs'
 import { Draggable, FloorPoint, Pos, Sell } from '../component'
 import { isPointerIn } from '@/lib/physics'
 import { tileSizeUpscaled } from '@/core/draw-engine'
+import { Events } from '../events'
 
 export class PointSystem extends System {
   componentsRequired = new Set<Function>([Sell])
@@ -50,7 +51,7 @@ export class PointSystem extends System {
       if (floor.occupiedBy !== -1) {
       // sell
         if (floor.type === 'sellPoint') {
-          this.ecs.ee.emit('sell', floor.occupiedBy)
+          this.ecs.ee.emit(Events.sell, floor.occupiedBy)
         }
       }
 
