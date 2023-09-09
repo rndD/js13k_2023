@@ -1,7 +1,7 @@
 import { Component } from './elements'
 import { Tile, Walk } from '../components'
 
-import { gameMapWidth, gameMapHeight } from './tiles'
+import { gameMapWidth, gameMapLength } from './tiles'
 import { isInstance } from './helpers'
 
 // maps angle to coordinate offset
@@ -22,7 +22,7 @@ export function genObstacleKey (tile: Tile | Walk): number {
 }
 
 export function genObstacleMap (components: Component[]): number[] {
-  const obstacleMap = new Array(gameMapWidth * gameMapHeight).fill(0)
+  const obstacleMap = new Array(gameMapLength).fill(0)
 
   components.forEach(component => {
     if (

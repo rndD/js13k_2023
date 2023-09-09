@@ -3,21 +3,15 @@ import { Player } from '@/entities/player'
 import { Sack } from '@/entities/sack'
 import { System } from '@/utils/elements'
 
-import { Layers } from '@/utils/layers'
-
 import {
   isInstance,
   isInstanceOfAny,
   findInstance,
   removeInstance
 } from '@/utils/helpers'
-import {
-  offsetX,
-  offsetY,
-  genObstacleMap
-} from '@/utils/collision'
-import { gameMapWidth } from '@/utils/tiles'
-import { nullthrows } from '@/utils/validate'
+import { offsetX, offsetY } from '@/utils/collision'
+import { invariant } from '@/utils/validate'
+import { Layers } from '@/utils/layers'
 
 export class HaulSystem extends System {
   components?: Haul[]
@@ -31,48 +25,45 @@ export class HaulSystem extends System {
   }
 
   update (elapsedFrames: number, totalFrames: number) {
-    // составляем карту мешков
-    // валидируем grab компоненты
-    // матчим тайл игрока, тайл мешка, направление, добавляем haul игроку
+    const sacks = this.entities!.filter(sack =>
+      // todo filter sacks that are carried currently
+      isInstance(sack, Sack))
 
-    // синкаем тайлы
+    this.entities!.forEach(char => {
+      if (!isInstanceOfAny(char, [Player])) return
 
-    const sackTiles = this.entities!
-      .filter(entity => isInstance(entity, Sack))
-      .map(sack => findInstance(sack.components, Tile)) as Tile[]
-    const sackMap = genObstacleMap(sackTiles)
+      const grab = findInstance(char.components, Grab)
+      if (grab == null || grab.isValidated) return
 
-    this.entities!
-      .filter(entity => isInstanceOfAny(entity, [Player]))
-      .forEach(char => {
-        const grab = findInstance(char.components, Grab)
-        if (grab == null || grab.isValidated) return
+      // validate grab attempts
+      grab.isValidated = true
 
-        grab.isValidated = true
-        grab.startFrame = totalFrames
+      const direction = char.components[1] as Direction
+      invariant(isInstance(direction, Direction))
+      const tile = char.components[0] as Tile
+      invariant(isInstance(tile, Tile))
 
-        const direction = nullthrows(findInstance(char.components, Direction))
-        const tile = nullthrows(findInstance(char.components, Tile))
-        const x = tile.x + offsetX[direction.angle]
-        const y = tile.y + offsetY[direction.angle]
-        const key = x + y * gameMapWidth
-
-        if (sackMap[key] === 0) {
-          // no sack at the desired position
-          removeInstance(char.components, grab)
-          return
-        }
-
-        const sackTile = nullthrows(sackTiles.find(tile =>
-          tile.x === x && tile.y === y))
-
-        char.components.push(
-          new Haul(tile, sackTile, direction)
-        )
+      const sack = sacks.find(sack => {
+        const sackTile = sack.components[0] as Tile
+        invariant(isInstance(sackTile, Tile))
+        const dx = sackTile.x - (tile.x + offsetX[direction.angle])
+        const dy = sackTile.y - (tile.y + offsetY[direction.angle])
+        return dx * dx + dy * dy < 0.3
       })
 
+      if (sack == null) {
+        // remove grab component if no sack was found
+        removeInstance(char.components, grab)
+        return
+      }
+
+      char.components.push(
+        new Haul(tile, sack.components[0] as Tile, direction)
+      )
+    })
+
     this.components!.forEach(haul => {
-      // sync coordinates
+      // update sack position (if hauled)
       const angle = haul.direction.angle
       const lift = -0.1
       const offset = 0.4

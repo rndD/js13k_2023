@@ -3,6 +3,7 @@ import { nullthrows } from './validate'
 export const bgColor = '#472d3c'
 export const gameMapWidth = 18
 export const gameMapHeight = 14
+export const gameMapLength = gameMapWidth * gameMapHeight
 export const gameTileWidth = 16
 
 export const Tiles = {

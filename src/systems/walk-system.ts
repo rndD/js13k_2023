@@ -8,7 +8,6 @@ import {
   , offsetX, offsetY
 } from '@/utils/collision'
 import { findInstance, isInstance, removeInstance } from '@/utils/helpers'
-import { nullthrows } from '@/utils/validate'
 
 // animate character movement
 // detect collisions

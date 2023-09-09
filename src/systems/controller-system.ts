@@ -30,10 +30,7 @@ export class ControllerSystem extends System {
       Controls.isUp
     const walk = findInstance(player.components, Walk)
 
-    if (
-      isMoving &&
-      walk == null
-    ) {
+    if (isMoving && walk == null) {
       const x = tile.x + (Controls.isLeft ? -1 : Controls.isRight ? 1 : 0)
       const y = tile.y + (Controls.isUp ? -1 : Controls.isDown ? 1 : 0)
 
@@ -47,10 +44,7 @@ export class ControllerSystem extends System {
     const haul = findInstance(player.components, Haul)
 
     if (Controls.isAction) {
-      if (
-        grab == null &&
-        !isMoving
-      ) {
+      if (grab == null) {
         player.components.push(
           new Grab()
         )
