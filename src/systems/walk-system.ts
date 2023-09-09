@@ -4,8 +4,8 @@ import { System } from '@/utils/elements'
 
 import {
   genObstacleKey, genObstacleMap,
-  getAngle, getElapsedFrames
-  , offsetX, offsetY
+  getAngle, getElapsedFrames,
+  offsetX, offsetY
 } from '@/utils/collision'
 import { findInstance, isInstance, removeInstance } from '@/utils/helpers'
 

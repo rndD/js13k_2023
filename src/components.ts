@@ -34,6 +34,8 @@ export class Direction extends Component {
   }
 }
 
+export class Drop extends Component {}
+
 export class Grab extends Component {
   isValidated: boolean
   startFrame: number
@@ -50,7 +52,6 @@ export class Haul extends Component {
   origin: Tile
   target: Tile
   direction: Direction
-  drop: boolean
 
   constructor (
     origin: Tile,
@@ -62,7 +63,6 @@ export class Haul extends Component {
     this.origin = origin
     this.target = target
     this.direction = direction
-    this.drop = false
   }
 }
 

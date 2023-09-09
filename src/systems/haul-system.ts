@@ -1,4 +1,4 @@
-import { Direction, Grab, Haul, Tile } from '../components'
+import { Direction, Drop, Grab, Haul, Tile } from '../components'
 import { Player } from '@/entities/player'
 import { Sack } from '@/entities/sack'
 import { System } from '@/utils/elements'
@@ -32,34 +32,55 @@ export class HaulSystem extends System {
     this.entities!.forEach(char => {
       if (!isInstanceOfAny(char, [Player])) return
 
-      const grab = findInstance(char.components, Grab)
-      if (grab == null || grab.isValidated) return
-
-      // validate grab attempts
-      grab.isValidated = true
-
       const direction = char.components[1] as Direction
       invariant(isInstance(direction, Direction))
       const tile = char.components[0] as Tile
       invariant(isInstance(tile, Tile))
+      const targetX = tile.x + offsetX[direction.angle]
+      const targetY = tile.y + offsetY[direction.angle]
 
-      const sack = sacks.find(sack => {
-        const sackTile = sack.components[0] as Tile
-        invariant(isInstance(sackTile, Tile))
-        const dx = sackTile.x - (tile.x + offsetX[direction.angle])
-        const dy = sackTile.y - (tile.y + offsetY[direction.angle])
-        return dx * dx + dy * dy < 0.3
-      })
+      const grab = findInstance(char.components, Grab)
+      if (grab != null && !grab.isValidated) {
+        // validate grab attempts
+        grab.isValidated = true
+        grab.startFrame = totalFrames
 
-      if (sack == null) {
-        // remove grab component if no sack was found
-        removeInstance(char.components, grab)
-        return
+        const sack = sacks.find(sack => {
+          const sackTile = sack.components[0] as Tile
+          invariant(isInstance(sackTile, Tile))
+          const dx = sackTile.x - targetX
+          const dy = sackTile.y - targetY
+          return dx * dx + dy * dy < 0.3
+        })
+
+        if (sack == null) {
+          // remove grab component if no sack was found
+          removeInstance(char.components, grab)
+        } else {
+          char.components.push(
+            new Haul(tile, sack.components[0] as Tile, direction)
+          )
+        }
       }
 
-      char.components.push(
-        new Haul(tile, sack.components[0] as Tile, direction)
-      )
+      const drop = findInstance(char.components, Drop)
+      const haul = findInstance(char.components, Haul)
+      if (drop != null && haul != null) {
+        // drop sack
+        const dx = Math.round(targetX) - targetX
+        const dy = Math.round(targetY) - targetY
+        if (
+          dx * dx + dy * dy < 0.1 &&
+          totalFrames - grab?.startFrame > 20
+        ) {
+          haul.target.x = Math.round(targetX)
+          haul.target.y = Math.round(targetY)
+          console.log(haul.target)
+          removeInstance(char.components, grab)
+          removeInstance(char.components, haul)
+        }
+        removeInstance(char.components, drop)
+      }
     })
 
     this.components!.forEach(haul => {

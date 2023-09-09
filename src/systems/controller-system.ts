@@ -1,6 +1,6 @@
 import { Player } from '@/entities/player'
 import { System } from '@/utils/elements'
-import { Grab, Haul, Tile, Walk } from '../components'
+import { Drop, Grab, Haul, Tile, Walk } from '../components'
 import Controls from '@/state/controls'
 
 import { findInstance } from '@/utils/helpers'
@@ -19,9 +19,7 @@ export class ControllerSystem extends System {
 
   update () {
     const player = nullthrows(this.entities)[0]
-    const tile = nullthrows(
-      findInstance(player.components, Tile)
-    )
+    const tile = player.components[0] as Tile
 
     const isMoving =
       Controls.isDown ||
@@ -51,7 +49,9 @@ export class ControllerSystem extends System {
       }
 
       if (haul != null) {
-        haul.drop = true
+        player.components.push(
+          new Drop()
+        )
       }
     }
   }
