@@ -2,8 +2,18 @@
 import { Component, Entity } from '@/lib/ecs'
 import { Layers } from './systems/render'
 
-export type Resource = 'wood' | 'food' | 'box' | 'water' | 'barrel';
-export type Obstacles = 'anvil' | 'wagon'
+export const enum Resource {
+  wood,
+  food,
+  box,
+  water,
+  barrel
+}
+
+export const enum Obstacles {
+  anvil,
+  wagon
+}
 
 export class GameData extends Component {
   timeLeft = 5 * 1000 * 60
@@ -37,7 +47,7 @@ export class Renderable extends Component {
   }
 }
 
-interface Physics {
+export interface Physics {
   mass?: number;
   friction?: number;
 }
@@ -135,30 +145,17 @@ export class Clickable extends Component {
   }
 }
 
+export const enum AIState {
+  idle,
+  toTarget,
+  toBase
+}
+
 export class AI extends Component {
-  state: 'idle' | 'walk' | 'buy' = 'idle'
+  state: AIState = AIState.idle
   targetPos: [number, number] | null = null
   targetEntity: Entity = -1
   constructor (public isFriendly: boolean = true) {
     super()
   }
-}
-
-export const ItemsPhysics: Record<Resource | Obstacles, Physics> = {
-  wood: { mass: 50, friction: 0.94 },
-  food: { mass: 40, friction: 0.96 },
-  barrel: { mass: 100, friction: 0.9 },
-  box: { mass: 200, friction: 0.8 },
-  water: { mass: 35, friction: 0.96 },
-
-  anvil: { mass: 1000, friction: 0.6 },
-  wagon: { mass: 600, friction: 0.7 }
-}
-
-export const ResourcesPrices: Record<Resource, number> = {
-  wood: 2,
-  food: 2,
-  barrel: 10,
-  box: 5,
-  water: 1
 }

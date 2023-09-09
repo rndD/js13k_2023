@@ -4,25 +4,25 @@ import {
   Collidable,
   Draggable,
   FloorPoint,
-  ItemsPhysics,
   Mov,
+  Obstacles,
   Physical,
   Pos,
   Renderable,
   Resource,
   ResourceSource,
-  ResourcesPrices,
   Sell
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
 import { CROP, I_AXE, I_PICKUP_HAND, I_TAPKA, P_SELL, TREE_BOTTOM, WELL_BOTTOM, WELL_TOP, convertResToSprite, resourcesSprites } from '@/tiles'
+import { MovingObstaclesPhysics, ResourcePhysics, ResourcesPrices } from '@/stats'
 
 // helper functions to create entities
 export const createObstacle = (
   [x, y]: [number, number],
   sprite: number,
-  w = tileSizeUpscaled - 2, h = tileSizeUpscaled - 2,
+  w = tileSizeUpscaled - 4, h = tileSizeUpscaled - 4,
   // FIXME remove angle is not used
   angle?: number
 ): Component[] => {
@@ -36,16 +36,17 @@ export const createObstacle = (
 export const createMovingObstacle = (
   [x, y]: [number, number],
   sprite: number,
-  mass = 1, friction = 0.1,
+  type: Obstacles,
   w = tileSizeUpscaled - 2, h = tileSizeUpscaled - 2
-
 ): Component[] => {
+  const ph = MovingObstaclesPhysics[type]
+
   return [
     new Pos(x, y),
     new Renderable(sprite, Layers.Objects),
     new Collidable({ w, h }),
     new Mov(),
-    new Physical({ mass, friction }),
+    new Physical(ph),
     new Draggable(),
     new Clickable(I_PICKUP_HAND)
   ]
@@ -74,7 +75,7 @@ export const createAlwaysOnTop = (
 
 export const createFreight = (
   [x, y]: [number, number],
-  resourceType: Resource = 'wood',
+  resourceType: Resource,
   w = tileSizeUpscaled - 8, h = tileSizeUpscaled - 8,
   physics?: {
     mass: number;
@@ -88,7 +89,7 @@ export const createFreight = (
 
   if (!physics) {
     // @ts-ignore
-    physics = ItemsPhysics[resourceType]
+    physics = ResourcePhysics[resourceType]
   }
 
   // add price
@@ -111,7 +112,7 @@ export const createTree = (
     new Pos(x, y),
     new Renderable(TREE_BOTTOM, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
-    new ResourceSource('wood', {}, 5000),
+    new ResourceSource(Resource.wood, {}, 5000),
     new Clickable(I_AXE, true)
   ]
 }
@@ -123,8 +124,8 @@ export const createWell = (
     new Pos(x, y),
     new Renderable(WELL_BOTTOM, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
-    new ResourceSource('water', {}, 3000),
-    new Clickable(resourcesSprites.water, true)
+    new ResourceSource(Resource.water, {}, 3000),
+    new Clickable(resourcesSprites[Resource.water], true)
   ]
 }
 
@@ -135,7 +136,7 @@ export const createCrop = (
     new Pos(x, y),
     new Renderable(CROP, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
-    new ResourceSource('food', {}, 25000),
+    new ResourceSource(Resource.food, {}, 25000),
     new Clickable(I_TAPKA)
   ]
 }

@@ -27,6 +27,7 @@ import { DragSystem, MoveSystem, PhysicsSystem } from '@/core/ecs/systems/move'
 import { ClickSystem } from '@/core/ecs/systems/click'
 import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 import { Events } from '@/core/ecs/events'
+import { Obstacles, Resource } from '@/core/ecs/component'
 
 const createMap = () => {
   const ec: Component[][] = []
@@ -98,8 +99,8 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(25, 10), 'wood'),
-      createFreight(getGridPointInPixels(14, 6), 'box'),
+      createFreight(getGridPointInPixels(25, 10), Resource.wood),
+      createFreight(getGridPointInPixels(14, 6), Resource.box),
       // createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
       createSellPoint(getGridPointInPixels(20, 12)),
       createSellPoint(getGridPointInPixels(19, 12)),
@@ -117,9 +118,9 @@ class GameState implements State {
       createCrop(getGridPointInPixels(11, 0)),
 
       // Obstacles
-      createMovingObstacle(getGridPointInPixels(20, 10), WAGON, 1000, 0.5),
-      createMovingObstacle(getGridPointInPixels(19, 8), WAGON, 1000, 0.5),
-      createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, 2000, 0.4)
+      createMovingObstacle(getGridPointInPixels(20, 10), WAGON, Obstacles.wagon),
+      createMovingObstacle(getGridPointInPixels(19, 8), WAGON, Obstacles.wagon),
+      createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, Obstacles.anvil)
 
     )
 

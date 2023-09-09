@@ -29,11 +29,11 @@ export const SIGN = 40
 
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {
-  wood: 48,
-  box: 56,
-  food: SACK,
-  barrel: 59,
-  water: 66
+  [Resource.wood]: 48,
+  [Resource.box]: 56,
+  [Resource.food]: SACK,
+  [Resource.barrel]: 59,
+  [Resource.water]: 66
 }
 
 export const convertResToSprite = (res: Resource): number => {

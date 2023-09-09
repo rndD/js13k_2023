@@ -6,6 +6,7 @@ import { I_ARROW_HAND, I_COIN, SACK, SIGN, resourcesSprites } from '@/tiles'
 import { randomFromList } from '@/lib/utils'
 import { getGameState } from './game.state'
 import { colorBlack, colorGold, colorWhite } from '@/lib/colors'
+import { Resource } from '@/core/ecs/component'
 
 const helpText =
 `Welcome to Mini Merchant(js13k games 2023 entry)!
@@ -24,7 +25,7 @@ class MenuState implements State {
     y: Math.random() * -200 - 10,
     vx: Math.random() * 2 - 1,
     vy: Math.random() * 5 - 1,
-    s: randomFromList([I_COIN, I_COIN, resourcesSprites.wood, SACK])
+    s: randomFromList([I_COIN, I_COIN, resourcesSprites[Resource.wood], SACK])
   }))
 
   updateCoins () {

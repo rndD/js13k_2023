@@ -1,5 +1,5 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Renderable, ResourceSource } from '../component'
+import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Renderable, Resource, ResourceSource } from '../component'
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
 import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
@@ -12,6 +12,7 @@ export const enum Layers {
   AlwaysOnTop,
   UI,
 }
+
 export class RenderSystem extends System {
   debug = false
 
@@ -63,10 +64,11 @@ export class RenderSystem extends System {
       for (const entity of this.entitiesByLayers.get(layer)!) {
         const comps = this.ecs.getComponents(entity)
         // We need this check because entity can be removed from the
-        // ECS mid-update.
+        // ECS mid-update
         if (!comps) {
           continue
         }
+
         const render = comps.get(Renderable)
         if (!render.visible) {
           continue
@@ -97,13 +99,10 @@ export class RenderSystem extends System {
           this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, click.icon]
         }
 
-        // hack for tree
+        // hack for tree or well
         const resS = comps.get(ResourceSource)
-        if (resS && resS.type === 'wood') {
-          this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: TREE_TOP })
-        }
-        if (resS && resS.type === 'water') {
-          this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: WELL_TOP })
+        if (resS && (resS.type === Resource.wood || resS.type === Resource.water)) {
+          this.tmpTopLayer.push({ x: pos.x, y: pos.y - tileSizeUpscaled, sprite: resS.type === Resource.water ? WELL_TOP : TREE_TOP })
         }
 
         if (render.sprite !== undefined) {
@@ -123,7 +122,6 @@ export class RenderSystem extends System {
           }
         } else {
           // not sprites
-
           const particle = comps.get(Particle)
           if (particle) {
             drawEngine.drawParticle(pos, particle.color, particle.size, particle.sprite)

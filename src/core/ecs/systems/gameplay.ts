@@ -1,5 +1,5 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Collidable, GameData, Pos, Renderable, Sell, SellObjectType } from '../component'
+import { Buyer, Collidable, GameData, Pos, Renderable, Resource, Sell, SellObjectType } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { getGridPointInPixels, randomFromList } from '@/lib/utils'
 import { Layers } from './render'
@@ -60,7 +60,8 @@ export class SellSystem extends System {
   createBuyer (): void {
     const buyer = this.ecs.addEntity()
     this.ecs.addComponent(buyer, new Buyer(
-      { wood: 3, food: 1, box: 1, barrel: 9 },
+      { [Resource.wood]: 3, [Resource.food]: 1, [Resource.box]: 1, [Resource.barrel]: 9, [Resource.water]: 1 },
+
       10000, // time,
       this.qPosEnd
     ))
