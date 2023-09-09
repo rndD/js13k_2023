@@ -1,18 +1,19 @@
-import type { Layers } from './utils/layers'
+import type { LayerType } from './utils/layers'
+import type { TileType } from './utils/tiles'
 
 import { Component } from './utils/elements'
 
 export class Tile extends Component {
   x: number
   y: number
-  layer: Layers
-  tileID: number
+  layer: LayerType
+  tileID: TileType
 
   constructor (
     x: number,
     y: number,
-    layer: Layers,
-    tileID: number
+    layer: LayerType,
+    tileID: TileType
   ) {
     super()
 

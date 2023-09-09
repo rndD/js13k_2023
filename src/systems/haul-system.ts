@@ -2,7 +2,8 @@ import { Direction, Grab, Haul, Tile } from '../components'
 import { Player } from '@/entities/player'
 import { Sack } from '@/entities/sack'
 import { System } from '@/utils/elements'
-// import { Layers } from '@/utils/layers'
+
+import { Layers } from '@/utils/layers'
 
 import {
   isInstance,
@@ -40,7 +41,7 @@ export class HaulSystem extends System {
       .filter(entity => isInstance(entity, Sack))
       .map(sack => findInstance(sack.components, Tile)) as Tile[]
     const sackMap = genObstacleMap(sackTiles)
-    console.log(sackTiles)
+
     this.entities!
       .filter(entity => isInstanceOfAny(entity, [Player]))
       .forEach(char => {
@@ -80,7 +81,9 @@ export class HaulSystem extends System {
 
       haul.target.x = x
       haul.target.y = y
-      // haul.target.layer = angle === 0 ? Layers.Surface : Layers.Objects
+      haul.target.layer = angle === 0
+        ? Layers.ObjectsBelow
+        : Layers.ObjectsAbove
     })
   }
 }

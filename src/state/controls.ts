@@ -32,20 +32,23 @@ class Controls {
     this.isRight = false
     this.isAction = false
 
-    document.addEventListener('keydown', event => {
-      this._setKey(event.key, true)
+    document.addEventListener('keydown', (event: KeyboardEvent) => {
+      this._setKey(event, event.key, true)
     })
 
-    document.addEventListener('keyup', event => {
-      this._setKey(event.key, false)
+    document.addEventListener('keyup', (event: KeyboardEvent) => {
+      this._setKey(event, event.key, false)
     })
   }
 
-  _setKey (key: string, value: boolean) {
+  _setKey (event: KeyboardEvent, key: string, value: boolean) {
     // @ts-ignore
     const prop = keyMap[key]
-    // @ts-ignore
-    if (prop != null) this[prop] = value
+    if (prop != null) {
+      // @ts-ignore
+      this[prop] = value
+      event.preventDefault()
+    }
   }
 }
 

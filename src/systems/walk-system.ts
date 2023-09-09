@@ -32,11 +32,11 @@ export class WalkSystem extends System {
   }
 
   update (elapsedFrames: number, totalFrames: number) {
-    const walkComponents = nullthrows(this.components).filter(component =>
+    const walkComponents = this.components!.filter(component =>
       isInstance(component, Walk)) as Walk[]
     if (walkComponents.length === 0) return
 
-    const obstacleMap = genObstacleMap(nullthrows(this.components))
+    const obstacleMap = genObstacleMap(this.components!)
     walkComponents.forEach(walk => {
       // check collisions
       if (!walk.isValidated) {

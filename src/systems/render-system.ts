@@ -47,10 +47,13 @@ export class RenderSystem extends System {
     ctx.fillStyle = bgColor
     ctx.fillRect(0, 0, this._canvas.width, this._canvas.height)
 
-    ;[Layers.Surface, Layers.Objects, Layers.Tops]
-      .forEach(layer => this.components!.forEach(tile => {
-        if (tile.layer !== layer) return
+    // 191 elements
+    // 491 filtering
+    // 767 with sort
+    // 955 layers x elements
 
+    this.components!.sort((a, b) => a.layer - b.layer)
+      .forEach(tile => {
         const offsetX = tileWidth * tile.x
         const offsetY = tileWidth * tile.y
 
@@ -63,6 +66,6 @@ export class RenderSystem extends System {
           imageTile,
           offsetX, offsetY
         )
-      }))
+      })
   }
 }

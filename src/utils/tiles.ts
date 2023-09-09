@@ -4,6 +4,7 @@ export const bgColor = '#472d3c'
 export const gameMapWidth = 18
 export const gameMapHeight = 14
 export const gameTileWidth = 16
+
 export const Tiles = {
   S_WATER_SHORE: 0,
   S_WATER_SHORE_I: 2000,
@@ -37,7 +38,9 @@ export const Tiles = {
   T_WOODEN_ROOF_V: 27,
 
   E_TABLE_0: 28
-}
+} as const
+
+export type TileType = typeof Tiles[keyof typeof Tiles]
 
 export type TileData = {
   [key: number]: HTMLImageElement

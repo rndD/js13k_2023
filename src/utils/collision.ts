@@ -1,6 +1,5 @@
 import { Component } from './elements'
 import { Tile, Walk } from '../components'
-import { Layers } from './layers'
 
 import { gameMapWidth, gameMapHeight } from './tiles'
 import { isInstance } from './helpers'
@@ -28,7 +27,8 @@ export function genObstacleMap (components: Component[]): number[] {
   components.forEach(component => {
     if (
       isInstance(component, Tile) &&
-      (component as Tile).layer === Layers.Objects
+      // checks obstacle layers (2,4,6)
+      (component as Tile).layer % 2 === 0
     ) {
       const key = genObstacleKey(component as Tile)
       obstacleMap[key] = 1
