@@ -5,7 +5,6 @@ import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } fro
 import { controls } from '@/core/controls'
 
 export const enum Layers {
-  Background,
   Floor,
   Points,
   Effects,
@@ -44,7 +43,7 @@ export class RenderSystem extends System {
     drawEngine.drawBg()
 
     // draw entities
-    for (const layer of Object.values(Layers)) {
+    for (const layer of [Layers.Floor, Layers.Points, Layers.Effects, Layers.Objects, Layers.AlwaysOnTop, Layers.UI]) {
       // mouse icon
       if (layer === Layers.UI && this.mouseIcon) {
         drawEngine.drawIcon(...this.mouseIcon)
@@ -79,7 +78,6 @@ export class RenderSystem extends System {
         if (drag) {
           if (drag.dragging) {
             drawEngine.drawRope(pos, { mx: this.mouseIcon![0], my: this.mouseIcon![1] })
-            drawEngine.drawShadow(pos)
             this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, I_FIST_HAND]
           }
           // hover for objects

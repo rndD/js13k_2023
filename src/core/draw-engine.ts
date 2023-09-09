@@ -193,16 +193,6 @@ class DrawEngine {
     })
   }
 
-  drawShadow (pos: { x: number; y: number }, sprite?: [number, number]) {
-    this.context.fillStyle = transparentBlack(0.2)
-    this.context.fillRect(
-      Math.round(pos.x),
-      Math.round(pos.y + tileSizeUpscaled - 6),
-      tileSizeUpscaled,
-      6
-    )
-  }
-
   drawRope ({ x, y }: {x: number; y: number}, { mx, my }: {mx: number; my: number}) {
     mx = mx + tileSizeUpscaled / 3
     my = my + tileSizeUpscaled / 3

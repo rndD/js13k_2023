@@ -38,7 +38,7 @@ export class ParticleSystem extends System {
       const count = price
       const comps = this.ecs.getComponents(entity)
       const pos = comps.get(Pos)
-      console.log('sold', count, pos)
+      // console.log('sold', count, pos)
 
       for (let i = 0; i < count; i++) {
         this.createParticle(pos, { dx: 0, dy: -5 }, i, 'gold', I_COIN, 2500)

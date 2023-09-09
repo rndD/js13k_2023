@@ -146,10 +146,10 @@ export class AI extends Component {
 
 export const ItemsPhysics: Record<Resource | Obstacles, Physics> = {
   wood: { mass: 50, friction: 0.94 },
-  food: { mass: 20, friction: 0.98 },
+  food: { mass: 40, friction: 0.96 },
   barrel: { mass: 100, friction: 0.9 },
   box: { mass: 200, friction: 0.8 },
-  water: { mass: 30, friction: 0.96 },
+  water: { mass: 35, friction: 0.96 },
 
   anvil: { mass: 1000, friction: 0.6 },
   wagon: { mass: 600, friction: 0.7 }

@@ -24,10 +24,6 @@ export class PointSystem extends System {
         }
 
         const pos = comps.get(Pos)
-        const drag = this.ecs.getComponents(other).get(Draggable)
-        if (drag.dragging) {
-          continue
-        }
         const otherPos = this.ecs.getComponents(other).get(Pos)
 
         const isOn = isPointerIn(

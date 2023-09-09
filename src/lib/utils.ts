@@ -52,3 +52,11 @@ export const EventEmitter = () => {
 export const randomFromList = <T>(list: T[]): T => {
   return list[Math.floor(Math.random() * list.length)]
 }
+
+export const nthRoot = (x: number, n: number) => {
+  // if x is negative function returns NaN
+  if (x < 0) {
+    return -Math.exp((1 / n) * Math.log(x * -1))
+  }
+  return Math.exp((1 / n) * Math.log(x))
+}
