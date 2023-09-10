@@ -1,11 +1,12 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, GameData, Position, Renderable, Resource, Sellable, SellObjectType } from '../component'
+import { Buyer, Clickable, GameData, Position, Renderable, Sellable, SellObjectType } from '../component'
 import { Layers } from './render'
 import { SACK } from '@/tiles'
 import { Events } from '../events'
 import { createAI, createBuyer } from '../helpers'
-import { GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE } from '@/params/main'
+import { GAME_ROUND, GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE, levelsByTime, timeForCustomer } from '@/params/main'
 import { getGridPointInPixels } from '@/lib/grid'
+import { getLevelResources } from '@/params/resources'
 
 const posStart = [24, 22]
 const posEnd: [number, number] = [21, 22]
@@ -24,9 +25,15 @@ export class SellSystem extends System {
 
   next = 0
   nextMove = 0
+  level = 0
 
   componentsRequired = new Set<Function>([Buyer, Position])
   init (): void {
+    this.ecs.ee.on(Events.nextLevel, (level: number) => {
+      console.log('level', level)
+      this.level = level
+    })
+
     // sell event
     this.ecs.ee.on(Events.sell, (entity: Entity) => {
       const comps = this.ecs.getComponents(entity)
@@ -64,12 +71,11 @@ export class SellSystem extends System {
 
   createBuyer (): void {
     const buyer = this.ecs.addEntity()
+    const resList = getLevelResources(this.level as 0|1|2|3)
     createBuyer(getGridPointInPixels(posStart[0], posStart[1]),
-      { [Resource.wood]: 1 }, 10000, qPosEnd).forEach(c =>
+      resList, timeForCustomer[this.level], qPosEnd).forEach(c =>
       this.ecs.addComponent(buyer, c)
     )
-
-    // @ts-ignore
   }
 
   qCheck (entity: Entity): void {
@@ -258,6 +264,14 @@ export class GameDataSystem extends System {
 
       if (gameData.timeLeft <= 0) {
         this.ecs.ee.emit(Events.gameOver, gameData.money)
+      }
+      // check level
+      const maxLevel = levelsByTime.length - 1
+      if (gameData.level + 1 < maxLevel) {
+        if (levelsByTime[gameData.level + 1] < GAME_ROUND - gameData.timeLeft) {
+          gameData.level++
+          this.ecs.ee.emit(Events.nextLevel, gameData.level)
+        }
       }
     }
   }

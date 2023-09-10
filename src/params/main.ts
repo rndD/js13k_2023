@@ -1,13 +1,6 @@
 import { getGridPointInPixels } from '@/lib/grid'
 import { tileSizeUpscaled } from './pixels'
 
-export const GAME_ROUND = 6 * 60 * 1000
-export const levelsByTime = [
-  60 * 2, // 2 min
-  60 * 4, // 4 min
-  60 * 5 // 5 min
-].map(x => x * 1000)
-
 const xyYard = getGridPointInPixels(15, 4)
 export const YARD = {
   x: xyYard[0],
@@ -23,8 +16,23 @@ export const DROP_POINTS : { [key:string]: number} = {
   '20,3': -1, // RT
   '27,11': 2 // RB
 }
-export const INITIAL_MONEY = 30
-export const HIRE_PRICE = 3
-export const MAX_HIRE = 3
-export const GYM_PRICE = 5
+export const INITIAL_MONEY = 10
+export const HIRE_PRICE = 10
+export const MAX_HIRE = 4
+export const GYM_PRICE = 4
 export const MAX_GYM = 3
+
+export const GAME_ROUND = 7 * 60 * 1000
+export const levelsByTime = [
+  0, // 1 min
+  60 * 2, // 2
+  60 * 4, // 4
+  60 * 5 // 5
+].map(x => x * 1000)
+
+export const timeForCustomer = [
+  40, // 0 lvl
+  30, // 1 lvl
+  25, // 2 lvl
+  20 // 3 lvl
+].map(x => x * 1000)

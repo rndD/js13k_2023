@@ -145,3 +145,16 @@ export const aStar = (start: [number, number], end: [number, number], grid: numb
 export const manhattanDistance = (nodeAPos: [number, number], nodeBPos: [number, number]) => {
   return Math.abs(nodeAPos[0] - nodeBPos[0]) + Math.abs(nodeAPos[1] - nodeBPos[1])
 }
+
+export const weightedRandom = (weights: number[]): number => {
+  const totalWeight = weights.reduce((a, b) => a + b, 0)
+  const random = Math.random() * totalWeight
+  let weightSum = 0
+  for (let i = 0; i < weights.length; i++) {
+    weightSum += weights[i]
+    if (random < weightSum) {
+      return i
+    }
+  }
+  return 0
+}
