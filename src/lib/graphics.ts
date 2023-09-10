@@ -2,7 +2,7 @@ import { tileSize } from '@/core/draw-engine'
 import { memoize } from './utils'
 
 export const getTile = memoize(
-  (tilemap: HTMLImageElement, x: number, y: number, angle = 0) => {
+  (tilemap: HTMLImageElement, x: number, y: number) => {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
     // FIXME Remove when size limit hits
@@ -14,14 +14,14 @@ export const getTile = memoize(
     canvas.height = tileSize
 
     context.clearRect(0, 0, tileSize, tileSize)
-    if (angle !== 0) {
-      context.save()
-      // move to the center of the canvas
-      context.translate(canvas.width / 2, canvas.height / 2)
-      // rotate the canvas to the specified degrees
-      context.rotate(angle * Math.PI / 180)
-      context.translate(-canvas.width * 0.5, -canvas.height * 0.5)
-    }
+    // if (angle !== 0) {
+    //   context.save()
+    //   // move to the center of the canvas
+    //   context.translate(canvas.width / 2, canvas.height / 2)
+    //   // rotate the canvas to the specified degrees
+    //   context.rotate(angle * Math.PI / 180)
+    //   context.translate(-canvas.width * 0.5, -canvas.height * 0.5)
+    // }
     context.drawImage(
       tilemap,
       x * tileSize,
@@ -34,9 +34,9 @@ export const getTile = memoize(
       tileSize
     )
 
-    if (angle !== 0) {
-      context.restore()
-    }
+    // if (angle !== 0) {
+    //   context.restore()
+    // }
 
     return context.canvas
   }

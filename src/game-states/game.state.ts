@@ -21,7 +21,7 @@ import {
 
 import { Component, ECS } from '@/lib/ecs'
 import { State } from '@/core/state-machine'
-import { ANVIL, TileInfo, WAGON, map } from '@/tiles'
+import { ANVIL, WAGON, getMap } from '@/tiles'
 import { Layers, RenderSystem } from '@/core/ecs/systems/render'
 import { CollideSystem } from '@/core/ecs/systems/collide'
 import { SoundSystem } from '@/core/ecs/systems/sound'
@@ -39,30 +39,32 @@ const createMap = () => {
   const ec: Component[][] = []
   const startX = 0
   const startY = 0
-  const ls: [TileInfo[], Layers][] = [[map.floor, Layers.Floor], [map.walls, Layers.Objects], [map.top, Layers.AlwaysOnTop]]
-  ls.forEach(([ld, layer]) =>
-    ld.forEach(({ tile, x, y, rot, flipX }: TileInfo) => {
+  const map = getMap()
+  for (const layer in map) {
+    const tiles = map[layer]
+
+    tiles.forEach(([sprite, x, y]) => {
       const point = getGridPointInPixels(x + startX, y + startY)
       const components: Component[] = []
-      if (tile === -1) {
+      if (sprite === -1) {
         return
       }
 
-      switch (layer) {
+      switch (Number(layer)) {
         case Layers.Floor:
-          components.push(...createFloor(point, tile))
+          components.push(...createFloor(point, sprite))
           break
         case Layers.Objects:
-          components.push(...createObstacle(point, tile))
+          components.push(...createObstacle(point, sprite))
           break
         case Layers.AlwaysOnTop:
-          components.push(...createAlwaysOnTop(point, tile))
+          components.push(...createAlwaysOnTop(point, sprite))
           break
       }
 
       ec.push(components)
     })
-  )
+  }
 
   return ec
 }
@@ -147,11 +149,11 @@ class GameState implements State {
       createGymDoor(getGridPointInPixels(30, 1))
     )
 
-    // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));
+    // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))))
 
     // this.addEntity(
     //   createSpawnPoint(getGridPointInPixels(new DOMPoint(10, 14)))
-    // );
+    // )
 
     this.addEntities(...createMap())
   }

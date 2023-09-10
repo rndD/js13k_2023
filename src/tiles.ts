@@ -1,6 +1,7 @@
 // @ts-ignore
 import * as t from '../tiles/tilemap_13k_23.json'
 import { Resource } from './core/ecs/component'
+import { Layers } from './core/ecs/systems/render'
 
 export const WAGON = 24
 export const ANVIL = 51
@@ -41,49 +42,12 @@ export const convertResToSprite = (res: Resource): number => {
   return resourcesSprites[res]
 }
 
-type MapSchema = {
-  // FIXME remove  tileswide... etc
-  layers:
-    {tiles: [
-      number,
-      number,
-      number,
-      number?
-    ][]
-  }[]
+export type MapSchema = {[key: Layers]: [
+  number, // sprite
+  number, // y
+  number, // x
+][]}
 
-}
-const tilemap: MapSchema = t
-
-export type TileInfo = {
-  x: number;
-  y: number;
-  rot?: number;
-  flipX?: boolean;
-  tile: number;
-}
-type MapInfo = {
-  'floor': TileInfo[];
-  'walls': TileInfo[];
-  'top': TileInfo[];
-}
-
-const m = {
-  floor: [],
-  walls: [],
-  top: []
-}
-
-for (const layer of tilemap.layers) {
-  for (const t of layer.tiles) {
-    const [tile, x, y, rot] = t
-    // @ts-ignore
-    m[layer.name].push({ x, y, rot, tile })
-  }
-}
-
-export const map:MapInfo = {
-  floor: m.floor,
-  walls: m.walls,
-  top: m.top
+export const getMap = (): MapSchema => {
+  return { 0: t.default['0'], 3: t.default['3'], 4: t.default['4'] }
 }

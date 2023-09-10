@@ -78,12 +78,12 @@ export const create2DArray = <T>(rows: number, cols: number, defaultValue: T): T
   }
   return arr
 }
-class Node {
+class PathNode {
   // g cost
   g: number = 0
   // h gost
   h: number = 0
-  parent: Node | null = null
+  parent: PathNode | null = null
 
   // eslint-disable-next-line no-useless-constructor
   constructor (public x: number, public y: number) {
@@ -98,10 +98,10 @@ class Node {
 export const aStar = (start: [number, number], end: [number, number], grid: number[][]): [number, number][] | null => {
   const numRows = grid.length
   const numCols = grid[0].length
-  const openSet: Node[] = []
-  const closedSet: Node[] = []
-  const startNode = new Node(start[0], start[1])
-  const endNode = new Node(end[0], end[1])
+  const openSet: PathNode[] = []
+  const closedSet: PathNode[] = []
+  const startNode = new PathNode(start[0], start[1])
+  const endNode = new PathNode(end[0], end[1])
   openSet.push(startNode)
 
   while (openSet.length > 0) {
@@ -125,7 +125,7 @@ export const aStar = (start: [number, number], end: [number, number], grid: numb
       return path
     }
 
-    const neighbors: Node[] = []
+    const neighbors: PathNode[] = []
     const directions = [
       [0, -1], // Up
       [0, 1], // Down
@@ -138,7 +138,7 @@ export const aStar = (start: [number, number], end: [number, number], grid: numb
       const neighborY = currentNode.y + direction[1]
 
       if (neighborX >= 0 && neighborX < numRows && neighborY >= 0 && neighborY < numCols && grid[neighborX][neighborY] === 0) {
-        const neighbor = new Node(neighborX, neighborY)
+        const neighbor = new PathNode(neighborX, neighborY)
         neighbors.push(neighbor)
       }
     }

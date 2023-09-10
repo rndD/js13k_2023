@@ -39,7 +39,6 @@ export class Renderable extends Component {
   constructor (
     public sprite: number | undefined,
     public layer: Layers,
-    public spriteAngle: number = 0,
     public visible: boolean = true,
     public carry: number|null = null
   ) {

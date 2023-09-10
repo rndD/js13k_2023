@@ -29,13 +29,12 @@ import { randomFromList } from '@/lib/utils'
 export const createObstacle = (
   [x, y]: [number, number],
   sprite: number,
-  w = tileSizeUpscaled - 4, h = tileSizeUpscaled - 4,
+  w = tileSizeUpscaled - 4, h = tileSizeUpscaled - 4
   // FIXME remove angle is not used
-  angle?: number
 ): Component[] => {
   return [
     new Position(x, y),
-    new Renderable(sprite, Layers.Objects, angle),
+    new Renderable(sprite, Layers.Objects),
     new Collidable({ w, h }, true),
     new Aible()
   ]
@@ -68,7 +67,7 @@ export const createFloor = (
 ): Component[] => {
   return [
     new Position(x, y),
-    new Renderable(sprite, Layers.Floor, angle)
+    new Renderable(sprite, Layers.Floor)
   ]
 }
 

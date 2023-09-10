@@ -5,12 +5,12 @@ import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } fro
 import { controls } from '@/core/controls'
 
 export const enum Layers {
-  Floor,
-  Points,
-  Effects,
-  Objects,
-  AlwaysOnTop,
-  UI,
+  Floor = 0,
+  Points = 1,
+  Effects = 2,
+  Objects = 3,
+  AlwaysOnTop = 4,
+  UI = 5,
 }
 
 export class RenderSystem extends System {
@@ -117,7 +117,7 @@ export class RenderSystem extends System {
 
         if (render.sprite !== undefined) {
           // draw sprite
-          drawEngine.drawEntity(pos, render.sprite, render.spriteAngle)
+          drawEngine.drawEntity(pos, render.sprite)
 
           if (buyer?.state === 'buying') {
             const res = Object.keys(buyer.resToBuy).reduce((acc, curr) => {
