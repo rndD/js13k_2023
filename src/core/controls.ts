@@ -29,7 +29,7 @@ class Controls {
   // inputDirection: DOMPoint
 
   isMouseDown = false
-  mousePosition: DOMPoint = new DOMPoint()
+  mousePosition = { x: 0, y: 0 }
 
   keyMap: Map<string, boolean> = new Map()
   previousState = {
@@ -54,10 +54,10 @@ class Controls {
       const rect = canvas.getBoundingClientRect()
       const scaleX = canvas.width / rect.width // relationship bitmap vs. element for x
       const scaleY = canvas.height / rect.height
-      this.mousePosition = new DOMPoint(
-        (event.clientX - rect.left) * scaleX,
-        (event.clientY - rect.top) * scaleY
-      )
+      this.mousePosition = {
+        x: (event.clientX - rect.left) * scaleX,
+        y: (event.clientY - rect.top) * scaleY
+      }
     })
   }
 

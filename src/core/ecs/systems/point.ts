@@ -26,17 +26,16 @@ export class PointSystem extends System {
         const pos = comps.get(Position)
         const otherPos = this.ecs.getComponents(other).get(Position)
 
-        const isOn = isPointerIn(
-          new DOMPoint(
-            pos.x + tileSizeUpscaled / 2,
-            pos.y + tileSizeUpscaled / 2
-          ),
-          {
-            x: otherPos.x,
-            y: otherPos.y,
-            w: tileSizeUpscaled,
-            h: tileSizeUpscaled
-          }
+        const isOn = isPointerIn({
+          x: pos.x + tileSizeUpscaled / 2,
+          y: pos.y + tileSizeUpscaled / 2
+        },
+        {
+          x: otherPos.x,
+          y: otherPos.y,
+          w: tileSizeUpscaled,
+          h: tileSizeUpscaled
+        }
         )
 
         if (isOn) {
