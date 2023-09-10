@@ -31,7 +31,7 @@ import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 import { Events } from '@/core/ecs/events'
 import { Obstacles, Resource } from '@/core/ecs/component'
 import { AISystem } from '@/core/ecs/systems/ai'
-import { HELP_COUNTER, HELP_CYCLOPS, HELP_FACTORY_BARREL, HELP_FACTORY_BOX, HELP_GYM } from '@/params/text'
+import { HELP_COUNTER, HELP_CYCLOPS, HELP_FACTORY_BARREL, HELP_FACTORY_BOX, HELP_GYM, HELP_RESOURCES } from '@/params/text'
 import { ResourceFactorySystem } from '@/core/ecs/systems/factory'
 import { getGridPointInPixels } from '@/lib/grid'
 
@@ -94,7 +94,7 @@ class GameState implements State {
     this.ecs.ee.on(Events.gameOver, (score: Number) => {
       this.stop = true
       // eslint-disable-next-line
-      alert(`Game over! Your score is ${score}`)
+      alert(`Game over! Your score is ${score}. Share it on twitter with #js13k!`)
       gameStateMachine.setState(menuState)
     })
   }
@@ -111,8 +111,14 @@ class GameState implements State {
   // Make sure ball starts at the same spot when game is entered
   onEnter () {
     this.addEntities(
-      createFreight(getGridPointInPixels(25, 10), Resource.wood),
+      createFreight(getGridPointInPixels(25, 9), Resource.wood),
+      createFreight(getGridPointInPixels(25, 8), Resource.wood),
+      createFreight(getGridPointInPixels(21, 3), Resource.barrel),
       createFreight(getGridPointInPixels(14, 6), Resource.box),
+      createFreight(getGridPointInPixels(25, 5), Resource.food),
+      createFreight(getGridPointInPixels(25, 6), Resource.food),
+      createFreight(getGridPointInPixels(22, 5), Resource.water),
+      createFreight(getGridPointInPixels(22, 6), Resource.water),
       // createFreight(getGridPointInPixels(20, 10), WAGON, 'freight', tileSizeUpscaled - 2, tileSizeUpscaled - 2, 0, { mass: 100, friction: 0.1 }),
       createSellPoint(getGridPointInPixels(20, 12)),
       createSellPoint(getGridPointInPixels(19, 12)),
@@ -136,7 +142,7 @@ class GameState implements State {
       // factories
       createFactoryPoint(getGridPointInPixels(38, 12), Resource.barrel, {
         [Resource.wood]: 1,
-        [Resource.water]: 2,
+        [Resource.water]: 1,
         [Resource.food]: 1
       }),
 
@@ -164,6 +170,7 @@ class GameState implements State {
       createSign(getGridPointInPixels(31, 2), HELP_GYM),
       createSign(getGridPointInPixels(36, 12), HELP_FACTORY_BARREL),
       createSign(getGridPointInPixels(4, 15), HELP_FACTORY_BOX),
+      createSign(getGridPointInPixels(23, 16), HELP_RESOURCES),
 
       createCyclopDoor(getGridPointInPixels(15, 14)),
       createGymDoor(getGridPointInPixels(30, 1))

@@ -4,7 +4,7 @@ import { Layers } from './render'
 import { SACK } from '@/tiles'
 import { Events } from '../events'
 import { createAI, createBuyer } from '../helpers'
-import { GAME_ROUND, GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE, levelsByTime, timeForCustomer } from '@/params/main'
+import { GAME_ROUND, GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE, intervalForCustomer, levelsByTime, timeForCustomer } from '@/params/main'
 import { getGridPointInPixels } from '@/lib/grid'
 import { getLevelResources } from '@/params/resources'
 
@@ -13,7 +13,6 @@ const posEnd: [number, number] = [21, 22]
 const qPosEnd: [number, number] = [24, 14]
 const qPosStart: [number, number] = [21, 14]
 const maxBuyers = 4
-const interval = 3000
 const intervalMove = 30
 
 export class SellSystem extends System {
@@ -30,7 +29,6 @@ export class SellSystem extends System {
   componentsRequired = new Set<Function>([Buyer, Position])
   init (): void {
     this.ecs.ee.on(Events.nextLevel, (level: number) => {
-      console.log('level', level)
       this.level = level
     })
 
@@ -152,7 +150,7 @@ export class SellSystem extends System {
     // create
     this.next -= this.ecs.currentDelta
     if (this.next <= 0) {
-      this.next = interval
+      this.next = intervalForCustomer[this.level]
       if (entities.size < maxBuyers) {
         this.createBuyer()
       }

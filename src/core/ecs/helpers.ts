@@ -214,7 +214,7 @@ export const createCrop = (
     new Renderable(CROP, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
     new ResourceSource(Resource.food, {}, 25000),
-    new Clickable(resourcesSprites[Resource.food], true),
+    new Clickable(resourcesSprites[Resource.food]),
     new Aible()
   ]
 }

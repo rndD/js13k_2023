@@ -36,3 +36,10 @@ export const timeForCustomer = [
   30, // 2 lvl
   30 // 3 lvl
 ].map(x => x * 1000)
+
+export const intervalForCustomer = [
+  23, // 0 lvl
+  18, // 1 lvl
+  15, // 2 lvl
+  10 // 3 lvl
+].map(x => x * 1000)

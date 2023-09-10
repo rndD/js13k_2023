@@ -64,6 +64,5 @@ export const getLevelResources = (level: 1|2|3|0) => {
     // @ts-ignore
     resList[r] = (resList[r] || 0) + 1
   }
-  console.log('level resources', resList, level, 'level resources')
   return resList
 }

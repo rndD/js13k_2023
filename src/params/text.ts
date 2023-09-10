@@ -30,3 +30,6 @@ Read more about possible interactions by clicking on
 You have a short live, so you have to sell as much as possible in ${GAME_ROUND / 60 / 1000} min.
 TIP: Prepare more goods in your yard in advance. 
 `.split('\n').map((s) => s.trim())
+
+export const HELP_RESOURCES = `All resources around your yard are yours
+Chop wood, collect food and water, make boxes and beer`
