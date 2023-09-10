@@ -1,28 +1,30 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Collidable, GameData, Position, Renderable, Resource, Sell, SellObjectType } from '../component'
-import { tileSizeUpscaled } from '@/core/draw-engine'
-import { getGridPointInPixels, randomFromList } from '@/lib/utils'
+import { Buyer, Clickable, GameData, Position, Renderable, Resource, Sell, SellObjectType } from '../component'
+import { getGridPointInPixels } from '@/lib/utils'
 import { Layers } from './render'
-import { MEN, SACK } from '@/tiles'
+import { SACK } from '@/tiles'
 import { Events } from '../events'
+import { createAI, createBuyer } from '../helpers'
+import { GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE } from '@/meta'
+
+const posStart = [24, 22]
+const posEnd: [number, number] = [21, 22]
+const qPosEnd: [number, number] = [24, 14]
+const qPosStart: [number, number] = [21, 14]
+const maxBuyers = 4
+const interval = 3000
+const intervalMove = 30
 
 export class SellSystem extends System {
   inited = false
 
-  maxBuyers = 4
   bSpeed = 4 // only odd numbers
-  start = [24, 22]
-  end: [number, number] = [21, 22]
-  qPosEnd: [number, number] = [24, 14]
-  qPosStart: [number, number] = [21, 14]
 
   q:Entity[] = []
 
-  nextTick = 0
-  tick = 3000
+  next = 0
 
-  tickMove = 30
-  nextTickMove = 0
+  nextMove = 0
 
   componentsRequired = new Set<Function>([Buyer, Position])
   init (): void {
@@ -59,17 +61,11 @@ export class SellSystem extends System {
 
   createBuyer (): void {
     const buyer = this.ecs.addEntity()
-    this.ecs.addComponent(buyer, new Buyer(
-      { [Resource.wood]: 3, [Resource.food]: 1, [Resource.box]: 1, [Resource.barrel]: 9, [Resource.water]: 1 },
-
-      10000, // time,
-      this.qPosEnd
-    ))
+    createBuyer(getGridPointInPixels(posStart[0], posStart[1]), { [Resource.wood]: 3, [Resource.food]: 1, [Resource.box]: 1, [Resource.barrel]: 9, [Resource.water]: 1 }, 10000, qPosEnd).forEach(c =>
+      this.ecs.addComponent(buyer, c)
+    )
 
     // @ts-ignore
-    this.ecs.addComponent(buyer, new Position(...getGridPointInPixels(...this.start)))
-    this.ecs.addComponent(buyer, new Renderable(randomFromList(MEN), Layers.Objects))
-    this.ecs.addComponent(buyer, new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }))
   }
 
   qCheck (entity: Entity): void {
@@ -88,7 +84,7 @@ export class SellSystem extends System {
     if (buyer.queuePos !== position) {
       buyer.queuePos = position
       buyer.state = 'walking'
-      buyer.targetPos = [this.qPosStart[0] + position, this.qPosStart[1]]
+      buyer.targetPos = [qPosStart[0] + position, qPosStart[1]]
     }
 
     const pos = comp.get(Position)
@@ -140,18 +136,18 @@ export class SellSystem extends System {
     }
 
     // create
-    this.nextTick -= this.ecs.currentDelta
-    if (this.nextTick <= 0) {
-      this.nextTick = this.tick
-      if (entities.size < this.maxBuyers) {
+    this.next -= this.ecs.currentDelta
+    if (this.next <= 0) {
+      this.next = interval
+      if (entities.size < maxBuyers) {
         this.createBuyer()
       }
     }
 
     // move
-    this.nextTickMove -= this.ecs.currentDelta
-    if (this.nextTickMove <= 0) {
-      this.nextTickMove = this.tickMove
+    this.nextMove -= this.ecs.currentDelta
+    if (this.nextMove <= 0) {
+      this.nextMove = intervalMove
       for (const entity of entities) {
         const comps = this.ecs.getComponents(entity)
         const buyer = comps.get(Buyer)
@@ -172,7 +168,7 @@ export class SellSystem extends System {
         buyer.time -= this.ecs.currentDelta
         if (buyer.time <= 0) {
           buyer.state = 'walkingBack'
-          buyer.targetPos = this.end
+          buyer.targetPos = posEnd
           this.q.shift()
           // FIXME
           if (buyer.bought) {
@@ -190,14 +186,50 @@ export class GameDataSystem extends System {
 
   inited = false
   e: Entity = -1
+  hired = 0
+  gymed = 0
 
   init (): void {
     this.e = this.ecs.addEntity()
-    this.ecs.addComponent(this.e, new GameData(0))
+    this.ecs.addComponent(this.e, new GameData(INITIAL_MONEY))
     this.ecs.addComponent(this.e, new Renderable(undefined, Layers.UI))
 
     this.ecs.ee.on(Events.sold, (entity: Entity, type: SellObjectType, price: number) => {
       this.ecs.getComponents(this.e).get(GameData).money += price
+    })
+
+    this.ecs.ee.on(Events.hire, (entity: Entity) => {
+      const gd = this.ecs.getComponents(this.e).get(GameData)
+      if (this.hired < MAX_HIRE && gd.money >= HIRE_PRICE) {
+        const e = this.ecs.addEntity()
+        createAI(getGridPointInPixels(15, 15), true).forEach(c =>
+          this.ecs.addComponent(e, c)
+        )
+        gd.money -= HIRE_PRICE
+        this.hired += 1
+        this.ecs.ee.emit(Events.gether, entity)
+
+        if (this.hired === MAX_HIRE) {
+          this.ecs.getComponents(entity).get(Clickable).enabled = false
+        }
+      } else {
+        this.ecs.ee.emit(Events.notSold, entity) // FIXME hack
+      }
+    })
+
+    this.ecs.ee.on(Events.gym, (entity: Entity) => {
+      const gd = this.ecs.getComponents(this.e).get(GameData)
+      if (gd.money >= GYM_PRICE && this.gymed < MAX_GYM) {
+        gd.money -= GYM_PRICE
+        this.gymed += 1
+
+        if (this.gymed === MAX_GYM) {
+          this.ecs.getComponents(entity).get(Clickable).enabled = false
+        }
+        this.ecs.ee.emit(Events.gymDone, entity)
+      } else {
+        this.ecs.ee.emit(Events.notSold, entity) // FIXME hack
+      }
     })
 
     this.inited = true

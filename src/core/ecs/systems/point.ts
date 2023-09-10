@@ -1,5 +1,5 @@
 import { Entity, System } from '@/lib/ecs'
-import { Draggable, FloorPoint, Position, Sell } from '../component'
+import { Draggable, FloorPoint, PointType, Position, Sell } from '../component'
 import { isPointerIn } from '@/lib/physics'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { Events } from '../events'
@@ -46,7 +46,7 @@ export class PointSystem extends System {
 
       if (floor.occupiedBy !== -1) {
       // sell
-        if (floor.type === 'sellPoint') {
+        if (floor.type === PointType.sellPoint) {
           this.ecs.ee.emit(Events.sell, floor.occupiedBy)
         }
       }

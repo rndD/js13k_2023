@@ -193,6 +193,26 @@ class DrawEngine {
     })
   }
 
+  drawHelpText (text: string) {
+    // draw text on the bottom
+    this.drawBox(
+      this.w / 2 - 410,
+      this.h - 65,
+      820,
+      65
+    )
+    text.split('\n').forEach((t, i) => {
+      this.drawText(
+        t,
+        16,
+        this.w / 2,
+        this.h - 45 + i * 20,
+        'white',
+        'center'
+      )
+    })
+  }
+
   drawRope ({ x, y }: {x: number; y: number}, { mx, my }: {mx: number; my: number}) {
     mx = mx + tileSizeUpscaled / 3
     my = my + tileSizeUpscaled / 3

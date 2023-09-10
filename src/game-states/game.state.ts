@@ -13,7 +13,10 @@ import {
   createWell,
   createCrop,
   createMovingObstacle,
-  createAI
+  createAI,
+  createSign,
+  createCyclopDoor,
+  createGymDoor
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
@@ -30,6 +33,7 @@ import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 import { Events } from '@/core/ecs/events'
 import { Obstacles, Resource } from '@/core/ecs/component'
 import { AISystem } from '@/core/ecs/systems/ai'
+import { HELP_COUNTER, HELP_CYCLOPS, HELP_GYM } from '@/meta'
 
 const createMap = () => {
   const ec: Component[][] = []
@@ -126,12 +130,21 @@ class GameState implements State {
       createMovingObstacle(getGridPointInPixels(20, 9), WAGON, Obstacles.wagon),
       createMovingObstacle(getGridPointInPixels(19, 8), WAGON, Obstacles.wagon),
       createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, Obstacles.anvil),
+      createMovingObstacle(getGridPointInPixels(28, 3), ANVIL, Obstacles.anvil),
 
       // FIXME TEST
-      createAI(getGridPointInPixels(10, 10), true),
-      createAI(getGridPointInPixels(20, 10), true),
-      createAI(getGridPointInPixels(21, 10), true),
-      createAI(getGridPointInPixels(22, 10), true)
+      // createAI(getGridPointInPixels(10, 10), true),
+      // createAI(getGridPointInPixels(20, 10), true),
+      // createAI(getGridPointInPixels(21, 10), true),
+      // createAI(getGridPointInPixels(22, 10), true),
+
+      // signs
+      createSign(getGridPointInPixels(21, 13), HELP_COUNTER),
+      createSign(getGridPointInPixels(14, 15), HELP_CYCLOPS),
+      createSign(getGridPointInPixels(31, 2), HELP_GYM),
+
+      createCyclopDoor(getGridPointInPixels(15, 14)),
+      createGymDoor(getGridPointInPixels(30, 1))
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

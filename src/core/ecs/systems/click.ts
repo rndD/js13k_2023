@@ -2,6 +2,7 @@
 import { Entity, System } from '@/lib/ecs'
 import {
   Clickable,
+  ClickableType,
   Mov,
   Position,
   ResourceSource
@@ -27,6 +28,7 @@ export class ClickSystem extends System {
 
     const resS = comps.get(ResourceSource)
     const pos = comps.get(Position)
+    const clk = comps.get(Clickable)
 
     if (resS?.nextIn <= 0) {
       const e = this.ecs.addEntity()
@@ -40,6 +42,13 @@ export class ClickSystem extends System {
 
       this.ecs.ee.emit(Events.gether, entity)
       resS.nextIn = resS.interval
+    }
+
+    if (clk.type === ClickableType.Hire) {
+      this.ecs.ee.emit(Events.hire, entity)
+    }
+    if (clk.type === ClickableType.Gym) {
+      this.ecs.ee.emit(Events.gym, entity)
     }
   }
 
@@ -59,7 +68,7 @@ export class ClickSystem extends System {
       })
 
       if (cl.hovered && this.prevMouse !== controls.isMouseDown) {
-        if (this.nextClickIn <= 0) {
+        if (this.nextClickIn <= 0 && cl.enabled) {
           this.click(entity)
           this.nextClickIn = this.clickTime
         }

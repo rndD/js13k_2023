@@ -53,8 +53,21 @@ export class DragSystem extends System {
   componentsRequired = new Set<Function>([Mov, Position, Draggable, Clickable])
   dragging = -1
   draggingForce = 2 // less is better
+  inited = false
+
+  init (): void {
+    this.ecs.ee.on(Events.gymDone, (entity: Entity) => {
+      this.draggingForce -= 0.45
+      this.ecs.ee.emit(Events.gether)
+    })
+
+    this.inited = true
+  }
 
   update (entities: Set<Entity>): void {
+    if (!this.inited) {
+      this.init()
+    }
     const mousePos = controls.mousePosition
 
     if (this.dragging !== -1) {
@@ -88,7 +101,7 @@ export class DragSystem extends System {
         // const maxTension = 100
         const mov = comps.get(Mov)
         const ph = comps.get(Physical)
-        const m = (ph.data.mass || 50)
+        const m = (ph.data.mass || 50) * this.draggingForce
 
         const dx = nthRoot(mousePos.x - pos.x, 2)
         const dy = nthRoot(mousePos.y - pos.y, 2)
@@ -96,8 +109,8 @@ export class DragSystem extends System {
         // dx = dx > 0 ? Math.min(dx, maxTension) : Math.max(dx, -maxTension)
         // dy = dy > 0 ? Math.min(dy, maxTension) : Math.max(dy, -maxTension)
 
-        mov.dx += dx / m / this.draggingForce // FIXME: use mass and mouse force
-        mov.dy += dy / m / this.draggingForce
+        mov.dx += dx / m // FIXME: use mass and mouse force
+        mov.dy += dy / m
       }
     }
   }

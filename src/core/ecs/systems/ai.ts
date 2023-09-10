@@ -1,13 +1,16 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { AI, AIState, Collidable, Draggable, Mov, Position, Sell } from '../component'
-import { aStar, create2DArray, getGridPointFromPixels, getGridPointInPixels } from '@/lib/utils'
+import { AI, AIState, Aible, Collidable, Draggable, Mov, Position, Sell } from '../component'
+import { aStar, create2DArray, getGridPointFromPixels, getGridPointInPixels, manhattanDistance } from '@/lib/utils'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { isPointerIn } from '@/lib/physics'
-import { DROP_POINTS, YARD } from '@/stats'
+import { DROP_POINTS, YARD } from '@/meta'
+import { Events } from '../events'
 
 const aiSpeed = 2
+const interval = 500
+
 export class AISystem extends System {
-  componentsRequired = new Set<Function>([Collidable])
+  componentsRequired = new Set<Function>([Aible])
 
   inited = false
   // 40x23 it's current map size
@@ -19,8 +22,7 @@ export class AISystem extends System {
 
   ais: number[] = []
 
-  decisionInterval = 500
-  nextDecision = 0
+  next = 0
 
   public addEntity (entity: number, componentContainer: ComponentContainer): void {
     // Build map
@@ -82,6 +84,7 @@ export class AISystem extends System {
       ai.state = AIState.toBase
       ai.targetPos = path
       ai.pickedUp = true
+      this.ecs.ee.emit(Events.pickup, resource)
       return
     }
     if (ai.state === AIState.toBase) {
@@ -102,6 +105,8 @@ export class AISystem extends System {
         resMov.dy = 1.5
         resPos.y += tileSizeUpscaled
       }
+
+      this.ecs.ee.emit(Events.drop, resource)
     }
   }
 
@@ -163,17 +168,15 @@ export class AISystem extends System {
   }
 
   findNearestDropPoint (pos: Position): [number, number] {
-    const [x, y] = getGridPointFromPixels(pos.x, pos.y)
+    const _pos = getGridPointFromPixels(pos.x, pos.y)
     let near: [number, number] | null = null
     Object.keys(DROP_POINTS).forEach((k) => {
       const p = k.split(',').map((n) => parseInt(n, 10)) as [number, number]
       if (near === null) {
         near = p
       } else {
-        const [nx, ny] = near
-        const [px, py] = p
-        const nearDist = Math.sqrt((x - nx) ** 2 + (y - ny) ** 2)
-        const pDist = Math.sqrt((x - px) ** 2 + (y - py) ** 2)
+        const nearDist = manhattanDistance(_pos, near)
+        const pDist = manhattanDistance(_pos, p)
         if (pDist < nearDist) {
           near = p
         }
@@ -184,16 +187,16 @@ export class AISystem extends System {
   }
 
   findTargetPath (entity: Entity, target: Entity | [number, number]): undefined|[number, number]|true {
-    let end: [number, number]
+    let _end: [number, number]
     if (Array.isArray(target)) {
-      end = target
+      _end = target
     } else {
       const pos = this.ecs.getComponents(target).get(Position)
-      end = getGridPointFromPixels(pos.x, pos.y)
+      _end = getGridPointFromPixels(pos.x, pos.y)
     }
     const aiPos = this.ecs.getComponents(entity).get(Position)
-    const start = getGridPointFromPixels(aiPos.x, aiPos.y)
-    const path = aStar(start, end, this.obstacles)
+    const _start = getGridPointFromPixels(aiPos.x, aiPos.y)
+    const path = aStar(_start, _end, this.obstacles)
     if (!path) {
       // console.warn('cant find path')
       return
@@ -210,7 +213,7 @@ export class AISystem extends System {
     for (const res of resources) {
       if (!this.targetList[res]) {
         const resC = this.ecs.getComponents(res)
-        if (resC.get(Draggable).dragging) {
+        if (resC.get(Draggable)?.dragging) {
           continue
         }
         const pos = resC.get(Position)
@@ -249,7 +252,7 @@ export class AISystem extends System {
       return !!this.ecs.getComponents(e).get(AI)
     })
 
-    if (this.nextDecision <= 0) {
+    if (this.next <= 0) {
       const resources = ent.filter((e) => {
         return !!this.ecs.getComponents(e).get(Sell)
       })
@@ -269,10 +272,10 @@ export class AISystem extends System {
       }
     }
 
-    if (this.nextDecision <= 0) {
-      this.nextDecision = this.decisionInterval
+    if (this.next <= 0) {
+      this.next = interval
     }
 
-    this.nextDecision -= this.ecs.currentDelta
+    this.next -= this.ecs.currentDelta
   }
 }

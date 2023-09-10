@@ -1,6 +1,6 @@
 import { Entity, System } from '@/lib/ecs'
 import { correctAABBCollision, testAABBCollision } from '@/lib/physics'
-import { AI, Collidable, Mov, Position } from '../component'
+import { AI, Collidable, Draggable, Mov, Position } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { Events } from '../events'
 
@@ -31,10 +31,6 @@ export class CollideSystem extends System {
           continue
         }
 
-        // skip for AI
-        if (this.ecs.getComponents(other).has(AI)) {
-          continue
-        }
         const otherComps = this.ecs.getComponents(other)
         const otherCol = otherComps.get(Collidable)
         const otherPos = getColPos(otherComps.get(Position), otherCol.wh)
@@ -47,7 +43,9 @@ export class CollideSystem extends System {
 
         if (t.collide) {
           const otherMov = otherComps.get(Mov)
-          this.ecs.ee.emit(Events.collide, entity, other)
+          if (comps.get(Draggable)?.dragging) {
+            this.ecs.ee.emit(Events.collide, entity, other)
+          }
 
           correctAABBCollision(
             { mov, pos, col },

@@ -36,3 +36,20 @@ export const DROP_POINTS : { [key:string]: number} = {
   '19,3': -1, // LT
   '20,3': -1// RT
 }
+export const INITIAL_MONEY = 30
+export const HIRE_PRICE = 3
+export const MAX_HIRE = 3
+export const GYM_PRICE = 5
+export const MAX_GYM = 3
+
+export const HELP_COUNTER = `This is your counter, customers come here and show their shopping list
+Place products from the list on the white marked area
+If you provide everything on time, you will receive a tip`
+
+export const HELP_CYCLOPS = `As everyone knows the 13th century was full of cyclops
+You can hire them to carry things to your yard by clicking on the door of this house
+The maximum number to hire is 3`
+
+export const HELP_GYM = `This is a gym, here you can pump up your arm strength
+This will help you to move things faster and remove unnecessary things from the yard
+Max strength is 3`

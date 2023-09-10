@@ -64,6 +64,9 @@ export class Collidable extends Component {
   }
 }
 
+export class Aible extends Component {
+}
+
 export class Draggable extends Component {
   constructor (
     public draggable: boolean = true,
@@ -74,7 +77,10 @@ export class Draggable extends Component {
   }
 }
 
-type PointType = 'sellPoint' | 'spawnPoint';
+export const enum PointType {
+  sellPoint,
+}
+
 export class FloorPoint extends Component {
   constructor (public type: PointType, public occupiedBy: number = -1, public bindedTo: number = -1) {
     super()
@@ -125,7 +131,7 @@ export class Particle extends Component {
 }
 
 // @ts-ignore
-type ResourceNMap = { [key: Resource]: number };
+export type ResourceNMap = { [key: Resource]: number };
 type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
 export class Buyer extends Component {
   constructor (public resToBuy: ResourceNMap = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking', public bought: boolean = false) {
@@ -139,8 +145,16 @@ export class ResourceSource extends Component {
   }
 }
 
+export const enum ClickableType {
+  Hire,
+  Gym,
+  Help,
+  Resource,
+}
 export class Clickable extends Component {
-  constructor (public icon: number, public withTop: boolean = false, public enabled: boolean = true, public hovered: boolean = false) {
+  hovered: boolean = false
+  enabled: boolean = true
+  constructor (public icon: number, public withTop: boolean = false, public text?: string, public type?: ClickableType) {
     super()
   }
 }

@@ -79,22 +79,19 @@ export const create2DArray = <T>(rows: number, cols: number, defaultValue: T): T
   return arr
 }
 class Node {
-  x: number
-  y: number
-  gCost: number
-  hCost: number
-  parent: Node | null
+  // g cost
+  g: number = 0
+  // h gost
+  h: number = 0
+  parent: Node | null = null
 
-  constructor (x: number, y: number) {
-    this.x = x
-    this.y = y
-    this.gCost = 0
-    this.hCost = 0
-    this.parent = null
+  // eslint-disable-next-line no-useless-constructor
+  constructor (public x: number, public y: number) {
   }
 
-  get fCost (): number {
-    return this.gCost + this.hCost
+  // f cost
+  get f (): number {
+    return this.g + this.h
   }
 }
 
@@ -110,7 +107,7 @@ export const aStar = (start: [number, number], end: [number, number], grid: numb
   while (openSet.length > 0) {
     let currentNode = openSet[0]
     for (let i = 1; i < openSet.length; i++) {
-      if (openSet[i].fCost < currentNode.fCost || (openSet[i].fCost === currentNode.fCost && openSet[i].hCost < currentNode.hCost)) {
+      if (openSet[i].f < currentNode.f || (openSet[i].f === currentNode.f && openSet[i].h < currentNode.h)) {
         currentNode = openSet[i]
       }
     }
@@ -149,11 +146,11 @@ export const aStar = (start: [number, number], end: [number, number], grid: numb
     for (const neighbor of neighbors) {
       if (closedSet.some((node) => node.x === neighbor.x && node.y === neighbor.y)) continue
 
-      const tentativeGCost = currentNode.gCost + 1
+      const tentativeGCost = currentNode.g + 1
 
-      if (!openSet.some((node) => node.x === neighbor.x && node.y === neighbor.y) || tentativeGCost < neighbor.gCost) {
-        neighbor.gCost = tentativeGCost
-        neighbor.hCost = manhattanDistance(neighbor, endNode)
+      if (!openSet.some((node) => node.x === neighbor.x && node.y === neighbor.y) || tentativeGCost < neighbor.g) {
+        neighbor.g = tentativeGCost
+        neighbor.h = manhattanDistance([neighbor.x, neighbor.y], [endNode.x, endNode.y])
         neighbor.parent = currentNode
 
         if (!openSet.some((node) => node.x === neighbor.x && node.y === neighbor.y)) {
@@ -166,7 +163,6 @@ export const aStar = (start: [number, number], end: [number, number], grid: numb
   return null
 }
 
-// FIXME reuse
-const manhattanDistance = (nodeA: Node, nodeB: Node) => {
-  return Math.abs(nodeA.x - nodeB.x) + Math.abs(nodeA.y - nodeB.y)
+export const manhattanDistance = (nodeAPos: [number, number], nodeBPos: [number, number]) => {
+  return Math.abs(nodeAPos[0] - nodeBPos[0]) + Math.abs(nodeAPos[1] - nodeBPos[1])
 }

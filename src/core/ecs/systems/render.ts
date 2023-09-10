@@ -22,6 +22,7 @@ export class RenderSystem extends System {
   tmpTopLayer: {x:number, y:number, sprite: number}[] = []
 
   mouseIcon: [number, number, number] | null = null
+  helpText = ''
 
   public addEntity (entity: number, componentContainer: ComponentContainer): void {
     const render = componentContainer.get(Renderable)
@@ -48,6 +49,10 @@ export class RenderSystem extends System {
       // mouse icon
       if (layer === Layers.UI && this.mouseIcon) {
         drawEngine.drawIcon(...this.mouseIcon)
+        if (this.helpText) {
+          drawEngine.drawHelpText(this.helpText)
+          this.helpText = ''
+        }
       }
 
       // FIXME: remove then size limit hits
@@ -96,7 +101,12 @@ export class RenderSystem extends System {
         }
 
         if (click?.hovered) {
-          this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, click.icon]
+          if (click.text) {
+            this.helpText = click.text
+          }
+          if (click.enabled) {
+            this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, click.icon]
+          }
         }
 
         // hack for tree or well

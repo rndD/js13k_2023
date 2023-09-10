@@ -2,41 +2,39 @@
 import * as t from '../tiles/tilemap_13k_23.json'
 import { Resource } from './core/ecs/component'
 
-export const WAGON = 25
-export const ANVIL = 58
-export const SACK = 49
+export const WAGON = 24
+export const ANVIL = 51
+export const SACK = 46
 export const GRASS = 0
-export const MEN = [60, 63]
-export const P_SELL = 53
-export const P_SPAWN = 54
+export const CITIZENS = [53, 55, 57, 54]
+export const P_SELL = 47
+export const P_SPAWN = 48
 export const TREE_BOTTOM = 6
 export const TREE_TOP = 2
-export const TREE_SMALL = 11
-export const WELL_BOTTOM = 47
-export const WELL_TOP = 45
+export const WELL_BOTTOM = 44
+export const WELL_TOP = 42
 export const CROP = 7
-export const WATER_FLOOR = 73
 
-export const I_ARROW_HAND = 70
-export const I_FIST_HAND = 71
-export const I_PICKUP_HAND = 72
+export const I_ARROW_HAND = 62
+export const I_FIST_HAND = 63
+export const I_PICKUP_HAND = 64
 
-export const I_COIN = 46
+export const I_COIN = 43
 
-export const I_AXE = 50
-export const I_TAPKA = 51
-export const SIGN = 40
+export const SIGN = 39
 
-export const CYCLOP = 64
-export const CRAB = 65
+export const CYCLOP = 56
+export const CRAB = 57
+
+export const DOOR = 41
 
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {
-  [Resource.wood]: 48,
-  [Resource.box]: 56,
+  [Resource.wood]: 45,
+  [Resource.box]: 49,
   [Resource.food]: SACK,
-  [Resource.barrel]: 59,
-  [Resource.water]: 66
+  [Resource.barrel]: 52,
+  [Resource.water]: 58
 }
 
 export const convertResToSprite = (res: Resource): number => {
