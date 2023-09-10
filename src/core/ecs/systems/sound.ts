@@ -33,6 +33,7 @@ export class SoundSystem extends System {
 
     // eslint-disable-next-line
     [Events.sold]: [,,684,.05,.23,.2,1,1.09,3.9,-0.8,-9,.05,,,,,,.49,.18,.13],
+    [Events.newCustomer]: [1.02,, 319, 0.08, 0.12, 0.26, 1, 0.43, 3.5,,,, 0.19,,, 0.1,, 0.47, 0.16],
     // eslint-disable-next-line
     [Events.pickup]: [
       ,

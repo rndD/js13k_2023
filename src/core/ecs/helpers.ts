@@ -1,4 +1,4 @@
-import { Component } from '@/lib/ecs'
+import { Component, Entity } from '@/lib/ecs'
 import {
   AI,
   Aible,
@@ -15,15 +15,17 @@ import {
   Position,
   Renderable,
   Resource,
+  ResourceFactory,
   ResourceNMap,
   ResourceSource,
-  Sell
+  Sellable
 } from './component'
-import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
-import { CRAB, CROP, CYCLOP, DOOR, I_COIN, I_PICKUP_HAND, CITIZENS, P_SELL, SIGN, TREE_BOTTOM, WELL_BOTTOM, WELL_TOP, convertResToSprite, resourcesSprites } from '@/tiles'
-import { MovingObstaclesPhysics, ResourcePhysics, ResourcesPrices } from '@/meta'
+import { CRAB, CROP, CYCLOP, DOOR, I_COIN, I_PICKUP_HAND, CITIZENS, P_SELL, SIGN, TREE_BOTTOM, WELL_BOTTOM, convertResToSprite, resourcesSprites, P_SPAWN } from '@/tiles'
+import { MovingObstaclesPhysics, ResourcePhysics, ResourcesPrices } from '@/params/resources'
 import { randomFromList } from '@/lib/utils'
+import { HELP_CYCLOPS_DOOR, HELP_GYM_DOOR } from '@/params/text'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 // helper functions to create entities
 export const createObstacle = (
@@ -115,7 +117,7 @@ export const createCyclopDoor = (
     new Renderable(DOOR, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
     new Aible(),
-    new Clickable(I_COIN, false, 'Hire cyclop - 3 coins', ClickableType.Hire)
+    new Clickable(I_COIN, false, HELP_CYCLOPS_DOOR, ClickableType.Hire)
   ]
 }
 
@@ -127,7 +129,7 @@ export const createGymDoor = (
     new Renderable(DOOR, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
     new Aible(),
-    new Clickable(I_COIN, false, 'Train in gym - 5 coins', ClickableType.Gym)
+    new Clickable(I_COIN, false, HELP_GYM_DOOR, ClickableType.Gym)
   ]
 }
 
@@ -159,7 +161,7 @@ export const createFreight = (
     new Clickable(I_PICKUP_HAND),
     new Mov(),
     new Physical({ mass: physics?.mass, friction: physics?.friction }),
-    new Sell(resourceType, price),
+    new Sellable(resourceType, price),
     new Aible()
   ]
 }
@@ -239,7 +241,17 @@ export const createSellPoint = ([x, y]: [number, number]): Component[] => {
     new Position(x, y),
     new Renderable(P_SELL, Layers.Points),
     new FloorPoint(PointType.sellPoint),
-    new Sell('point')
+    new Sellable(PointType.sellPoint)
+  ]
+}
+
+export const createFactoryPoint = ([x, y]: [number, number], resource: Resource, resNeeded: ResourceNMap): Component[] => {
+  return [
+    new Position(x, y),
+    new Renderable(P_SPAWN, Layers.Points),
+    new FloorPoint(PointType.factoryPoint),
+    new ResourceFactory(resource, resNeeded),
+    new Sellable(PointType.factoryPoint)
   ]
 }
 

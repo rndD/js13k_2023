@@ -1,10 +1,11 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { AI, AIState, Aible, Collidable, Draggable, Mov, Position, Sell } from '../component'
-import { aStar, create2DArray, getGridPointFromPixels, getGridPointInPixels, manhattanDistance } from '@/lib/utils'
-import { tileSizeUpscaled } from '@/core/draw-engine'
+import { AI, AIState, Aible, Collidable, Draggable, Mov, Position, Sellable } from '../component'
+import { aStar, create2DArray, manhattanDistance } from '@/lib/utils'
 import { isPointerIn } from '@/lib/physics'
-import { DROP_POINTS, YARD } from '@/meta'
+import { DROP_POINTS, YARD } from '@/params/main'
 import { Events } from '../events'
+import { getGridPointFromPixels, getGridPointInPixels } from '@/lib/grid'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 const aiSpeed = 2
 const interval = 500
@@ -104,6 +105,10 @@ export class AISystem extends System {
       if (dropD === -1) {
         resMov.dy = 1.5
         resPos.y += tileSizeUpscaled
+      }
+      if (dropD === 2) {
+        resMov.dx -= 1.5
+        resPos.x -= tileSizeUpscaled
       }
 
       this.ecs.ee.emit(Events.drop, resource)
@@ -254,7 +259,7 @@ export class AISystem extends System {
 
     if (this.next <= 0) {
       const resources = ent.filter((e) => {
-        return !!this.ecs.getComponents(e).get(Sell)
+        return !!this.ecs.getComponents(e).get(Sellable)
       })
 
       for (const aiEntity of aiEntities) {

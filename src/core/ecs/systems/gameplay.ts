@@ -1,11 +1,11 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, GameData, Position, Renderable, Resource, Sell, SellObjectType } from '../component'
-import { getGridPointInPixels } from '@/lib/utils'
+import { Buyer, Clickable, GameData, Position, Renderable, Resource, Sellable, SellObjectType } from '../component'
 import { Layers } from './render'
 import { SACK } from '@/tiles'
 import { Events } from '../events'
 import { createAI, createBuyer } from '../helpers'
-import { GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE } from '@/meta'
+import { GYM_PRICE, HIRE_PRICE, INITIAL_MONEY, MAX_GYM, MAX_HIRE } from '@/params/main'
+import { getGridPointInPixels } from '@/lib/grid'
 
 const posStart = [24, 22]
 const posEnd: [number, number] = [21, 22]
@@ -18,12 +18,11 @@ const intervalMove = 30
 export class SellSystem extends System {
   inited = false
 
-  bSpeed = 4 // only odd numbers
+  bSpeed = 2 // only odd numbers
 
   q:Entity[] = []
 
   next = 0
-
   nextMove = 0
 
   componentsRequired = new Set<Function>([Buyer, Position])
@@ -31,7 +30,7 @@ export class SellSystem extends System {
     // sell event
     this.ecs.ee.on(Events.sell, (entity: Entity) => {
       const comps = this.ecs.getComponents(entity)
-      const sell = comps.get(Sell)
+      const sell = comps.get(Sellable)
 
       if (!sell) {
         return
@@ -50,6 +49,10 @@ export class SellSystem extends System {
           // @ts-ignore
           buyer.resToBuy[sell.type] -= 1
           buyer.bought = true
+          const isEverythingProvided = Object.values(buyer.resToBuy).every((v) => v === 0)
+          if (isEverythingProvided) {
+            this.leaveQ(b)
+          }
           // console.log(buyer, sell.type, buyer.resToBuy[sell.type])
           this.ecs.removeEntity(entity)
         } else {
@@ -61,7 +64,8 @@ export class SellSystem extends System {
 
   createBuyer (): void {
     const buyer = this.ecs.addEntity()
-    createBuyer(getGridPointInPixels(posStart[0], posStart[1]), { [Resource.wood]: 3, [Resource.food]: 1, [Resource.box]: 1, [Resource.barrel]: 9, [Resource.water]: 1 }, 10000, qPosEnd).forEach(c =>
+    createBuyer(getGridPointInPixels(posStart[0], posStart[1]),
+      { [Resource.wood]: 1 }, 10000, qPosEnd).forEach(c =>
       this.ecs.addComponent(buyer, c)
     )
 
@@ -93,6 +97,7 @@ export class SellSystem extends System {
     if (isOnTarget) {
       if (position === 0) {
         buyer.state = 'buying'
+        this.ecs.ee.emit(Events.newCustomer, entity)
       } else {
         buyer.state = 'inQ'
       }
@@ -167,16 +172,21 @@ export class SellSystem extends System {
       if (buyer.state === 'buying') {
         buyer.time -= this.ecs.currentDelta
         if (buyer.time <= 0) {
-          buyer.state = 'walkingBack'
-          buyer.targetPos = posEnd
-          this.q.shift()
-          // FIXME
-          if (buyer.bought) {
-            const r = comps.get(Renderable)
-            r.carry = SACK
-          }
+          this.leaveQ(entity)
         }
       }
+    }
+  }
+
+  leaveQ (entity: Entity): void {
+    const comp = this.ecs.getComponents(entity)
+    const buyer = comp.get(Buyer)
+    buyer.state = 'walkingBack'
+    buyer.targetPos = posEnd
+    this.q.shift()
+    if (buyer.bought) {
+      const r = comp.get(Renderable)
+      r.carry = SACK
     }
   }
 }

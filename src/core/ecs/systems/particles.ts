@@ -1,9 +1,9 @@
 import { Entity, System } from '@/lib/ecs'
 import { Mov, Particle, Position, Renderable, SellObjectType } from '../component'
-import { tileSizeUpscaled } from '../../draw-engine'
 import { Layers } from './render'
 import { I_COIN } from '@/tiles'
 import { Events } from '../events'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 export class ParticleSystem extends System {
   inited = false

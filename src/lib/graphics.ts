@@ -1,4 +1,4 @@
-import { tileSize } from '@/core/draw-engine'
+import { tileSize } from '@/params/pixels'
 import { memoize } from './utils'
 
 export const getTile = memoize(

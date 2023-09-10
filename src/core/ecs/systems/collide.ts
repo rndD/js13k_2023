@@ -1,8 +1,8 @@
 import { Entity, System } from '@/lib/ecs'
 import { correctAABBCollision, testAABBCollision } from '@/lib/physics'
-import { AI, Collidable, Draggable, Mov, Position } from '../component'
-import { tileSizeUpscaled } from '@/core/draw-engine'
+import { Collidable, Draggable, Mov, Position } from '../component'
 import { Events } from '../events'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 // return x,y of the hitbox from center
 export const getColPos = (pos: {x:number, y:number}, wh: {w:number, h:number}): Position => {

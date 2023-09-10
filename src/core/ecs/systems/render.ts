@@ -1,8 +1,9 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Position, Renderable, Resource, ResourceSource } from '../component'
-import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
+import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Position, Renderable, Resource, ResourceFactory, ResourceNMap, ResourceSource } from '../component'
+import { drawEngine } from '@/core/draw-engine'
 import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 export const enum Layers {
   Floor = 0,
@@ -13,6 +14,14 @@ export const enum Layers {
   UI = 5,
 }
 
+const getResList = (res: ResourceNMap) => {
+  return Object.keys(res).reduce((acc, curr) => {
+  // @ts-ignore
+    acc[convertResToSprite(curr)] = res[curr]
+    return acc
+  }, {})
+}
+
 export class RenderSystem extends System {
   debug = false
 
@@ -20,9 +29,9 @@ export class RenderSystem extends System {
 
   entitiesByLayers = new Map<Layers, Set<Entity>>()
   tmpTopLayer: {x:number, y:number, sprite: number}[] = []
+  uiPostponedFunctions: (()=>void)[] = []
 
   mouseIcon: [number, number, number] | null = null
-  helpText = ''
 
   public addEntity (entity: number, componentContainer: ComponentContainer): void {
     const render = componentContainer.get(Renderable)
@@ -47,12 +56,11 @@ export class RenderSystem extends System {
     // draw entities
     for (const layer of [Layers.Floor, Layers.Points, Layers.Effects, Layers.Objects, Layers.AlwaysOnTop, Layers.UI]) {
       // mouse icon
-      if (layer === Layers.UI && this.mouseIcon) {
-        drawEngine.drawIcon(...this.mouseIcon)
-        if (this.helpText) {
-          drawEngine.drawHelpText(this.helpText)
-          this.helpText = ''
+      if (layer === Layers.UI) {
+        while (this.uiPostponedFunctions.length) {
+          this.uiPostponedFunctions.pop()!()
         }
+        drawEngine.drawIcon(...this.mouseIcon)
       }
 
       // FIXME: remove then size limit hits
@@ -89,20 +97,22 @@ export class RenderSystem extends System {
           }
           // hover for objects
           if (click?.hovered && !drag.dragging) {
-            drawEngine.drawOverlay(pos, { w: tileSizeUpscaled, h: tileSizeUpscaled })
+            this.uiPostponedFunctions.push(() => drawEngine.drawOverlay(pos, { w: tileSizeUpscaled, h: tileSizeUpscaled }))
           }
         } else {
           // hoverl for clickable
           if (click?.hovered) {
             const h = click.withTop ? tileSizeUpscaled * 2 : tileSizeUpscaled
             const y = click.withTop ? pos.y - tileSizeUpscaled : pos.y
-            drawEngine.drawOverlay({ x: pos.x, y }, { w: tileSizeUpscaled, h })
+            this.uiPostponedFunctions.push(() => drawEngine.drawOverlay({ x: pos.x, y }, { w: tileSizeUpscaled, h }))
           }
         }
 
         if (click?.hovered) {
           if (click.text) {
-            this.helpText = click.text
+            this.uiPostponedFunctions.push(() => {
+              drawEngine.drawHelpText(click.text!)
+            })
           }
           if (click.enabled) {
             this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, click.icon]
@@ -120,13 +130,18 @@ export class RenderSystem extends System {
           drawEngine.drawEntity(pos, render.sprite)
 
           if (buyer?.state === 'buying') {
-            const res = Object.keys(buyer.resToBuy).reduce((acc, curr) => {
-              // @ts-ignore
-              acc[convertResToSprite(curr)] = buyer.resToBuy[curr]
-              return acc
-            }, {})
-            drawEngine.drawBuying(pos, res)
+            this.uiPostponedFunctions.push(() =>
+              drawEngine.drawResList(pos, getResList(buyer.resToBuy))
+            )
           }
+
+          const resFactory = comps.get(ResourceFactory)
+          if (resFactory?.resNeededCurState) {
+            this.uiPostponedFunctions.push(() =>
+              drawEngine.drawResList({ x: pos.x, y: pos.y - tileSizeUpscaled * 3 }, getResList(resFactory.resNeededCurState!))
+            )
+          }
+
           if (render.carry !== null) {
             drawEngine.drawCarry(pos, render.carry)
           }

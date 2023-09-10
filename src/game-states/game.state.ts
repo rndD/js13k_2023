@@ -1,7 +1,5 @@
-import { controls } from '@/core/controls'
 import { gameStateMachine } from '@/game-state-machine'
 import { menuState } from '@/game-states/menu.state'
-import { getGridPointInPixels } from '@/lib/utils'
 
 import {
   createFloor,
@@ -13,10 +11,10 @@ import {
   createWell,
   createCrop,
   createMovingObstacle,
-  createAI,
   createSign,
   createCyclopDoor,
-  createGymDoor
+  createGymDoor,
+  createFactoryPoint
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
@@ -33,7 +31,9 @@ import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 import { Events } from '@/core/ecs/events'
 import { Obstacles, Resource } from '@/core/ecs/component'
 import { AISystem } from '@/core/ecs/systems/ai'
-import { HELP_COUNTER, HELP_CYCLOPS, HELP_GYM } from '@/meta'
+import { HELP_COUNTER, HELP_CYCLOPS, HELP_FACTORY_BARREL, HELP_FACTORY_BOX, HELP_GYM } from '@/params/text'
+import { ResourceFactorySystem } from '@/core/ecs/systems/factory'
+import { getGridPointInPixels } from '@/lib/grid'
 
 const createMap = () => {
   const ec: Component[][] = []
@@ -41,8 +41,10 @@ const createMap = () => {
   const startY = 0
   const map = getMap()
   for (const layer in map) {
+    // @ts-ignore
     const tiles = map[layer]
 
+    // @ts-ignore
     tiles.forEach(([sprite, x, y]) => {
       const point = getGridPointInPixels(x + startX, y + startY)
       const components: Component[] = []
@@ -83,6 +85,7 @@ class GameState implements State {
     this.ecs.addSystem(new ParticleSystem())
     this.ecs.addSystem(new MoveSystem())
     this.ecs.addSystem(new PointSystem())
+    this.ecs.addSystem(new ResourceFactorySystem())
     this.ecs.addSystem(new SellSystem())
     this.ecs.addSystem(new RenderSystem())
     this.ecs.addSystem(new SoundSystem())
@@ -116,8 +119,10 @@ class GameState implements State {
 
       // trees
       createTree(getGridPointInPixels(8, 7)),
-      createTree(getGridPointInPixels(33, 3)),
-      createTree(getGridPointInPixels(35, 3)),
+      createTree(getGridPointInPixels(33, 5)),
+      createTree(getGridPointInPixels(35, 5)),
+      createTree(getGridPointInPixels(18, 1)),
+      createTree(getGridPointInPixels(21, 1)),
       // well
       createWell(getGridPointInPixels(28, 8)),
 
@@ -128,9 +133,22 @@ class GameState implements State {
       createCrop(getGridPointInPixels(28, 16)),
       createCrop(getGridPointInPixels(11, 0)),
 
+      // factories
+      createFactoryPoint(getGridPointInPixels(38, 12), Resource.barrel, {
+        [Resource.wood]: 1,
+        [Resource.water]: 2,
+        [Resource.food]: 1
+      }),
+
+      createFactoryPoint(getGridPointInPixels(2, 15), Resource.box, {
+        [Resource.wood]: 1,
+        [Resource.food]: 1
+      }),
+
       // Obstacles
       createMovingObstacle(getGridPointInPixels(20, 9), WAGON, Obstacles.wagon),
-      createMovingObstacle(getGridPointInPixels(19, 8), WAGON, Obstacles.wagon),
+      createMovingObstacle(getGridPointInPixels(17, 5), WAGON, Obstacles.wagon),
+      createMovingObstacle(getGridPointInPixels(24, 11), ANVIL, Obstacles.anvil),
       createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, Obstacles.anvil),
       createMovingObstacle(getGridPointInPixels(28, 3), ANVIL, Obstacles.anvil),
 
@@ -144,6 +162,8 @@ class GameState implements State {
       createSign(getGridPointInPixels(21, 13), HELP_COUNTER),
       createSign(getGridPointInPixels(14, 15), HELP_CYCLOPS),
       createSign(getGridPointInPixels(31, 2), HELP_GYM),
+      createSign(getGridPointInPixels(36, 12), HELP_FACTORY_BARREL),
+      createSign(getGridPointInPixels(4, 15), HELP_FACTORY_BOX),
 
       createCyclopDoor(getGridPointInPixels(15, 14)),
       createGymDoor(getGridPointInPixels(30, 1))
@@ -164,66 +184,6 @@ class GameState implements State {
     }
     this.ecs.currentDelta = deltaTime
     this.ecs.update()
-    // FIXME move to systems
-    // Entity
-    // for (const entity of this.entities) {
-    //   // points
-    //   if (entity.type === "sellPoint" || entity.type === "spawnPoint") {
-    //     // check if there is a crate on the point
-    //     const crates = this.entities.filter((e) => e.type === "crate");
-    //     const crateOnPoint = crates.find((c) =>
-    //       isPointerIn(
-    //         new DOMPoint(
-    //           entity.pos.x + tileSizeUpscaled / 2,
-    //           entity.pos.y + tileSizeUpscaled / 2
-    //         ),
-    //         {
-    //           x: c.pos.x,
-    //           y: c.pos.y,
-    //           w: tileSizeUpscaled,
-    //           h: tileSizeUpscaled,
-    //         }
-    //       )
-    //     );
-    //     if (crateOnPoint) {
-    //       entity.gameData!.occupiedBy = crateOnPoint.id;
-    //     } else {
-    //       entity.gameData!.occupiedBy = undefined;
-    //     }
-    //   }
-
-    //   if (entity.type === "sellPoint") {
-    //     const c = this.entitiesMap.get(entity.gameData?.occupiedBy ?? -1);
-    //     if (c && !c.dragged) {
-    //       // sell crate
-    //       this.gameData.silver += c.gameData?.price ?? 0;
-    //       this.entities = this.entities.filter((e) => e.id !== c.id);
-    //     }
-    //   }
-
-    //   if (entity.type === "spawnPoint") {
-    //     // spawn
-    //     if (entity.gameData?.timers?.nextSpawn) {
-    //       entity.gameData.timers.nextSpawn -= deltaTime;
-
-    //       if (
-    //         entity.gameData.timers.nextSpawn <= 0 &&
-    //         !entity.gameData.occupiedBy
-    //       ) {
-    //         entity.gameData.timers.nextSpawn =
-    //           entity.gameData.timers.spawnInterval;
-    //         this.addEntity(
-    //           createFreight(
-    //             new DOMPoint(entity.pos.x, entity.pos.y),
-    //             BARREL,
-    //             "crate",
-    //             1,
-    //             { mass: 100, friction: 0.96 }
-    //           )
-    //         );
-    //       }
-    //     }
-    //   }
 
     //   // check for collisions
     //   for (const other of this.entities) {
@@ -241,13 +201,9 @@ class GameState implements State {
     //   }
     // }
 
-    // draw entities
-
-    // drawEngine.drawText("Silver: " + this.gameData.silver, 24, 600, 40);
-
-    if (controls.isEscape) {
-      gameStateMachine.setState(menuState)
-    }
+    // if (controls.isEscape) {
+    //   gameStateMachine.setState(menuState)
+    // }
   }
 }
 

@@ -1,5 +1,3 @@
-import { tileSizeUpscaled } from '@/core/draw-engine'
-
 export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
   const cache = new Map<string, ReturnType<T>>()
   return (...args: Parameters<T>): ReturnType<T> => {
@@ -11,25 +9,6 @@ export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
     cache.set(key, result)
     return result
   }
-}
-
-// not used yet
-export const lerp = (start: number, end: number, amt: number) => {
-  return (1 - amt) * start + amt * end
-}
-
-export const getGridPointInPixels = (x: number, y:number): [number, number] => {
-  return [
-    x * tileSizeUpscaled,
-    y * tileSizeUpscaled
-  ]
-}
-
-export const getGridPointFromPixels = (x: number, y:number): [number, number] => {
-  return [
-    Math.floor(x / tileSizeUpscaled),
-    Math.floor(y / tileSizeUpscaled)
-  ]
 }
 
 export const EventEmitter = () => {

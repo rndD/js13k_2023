@@ -1,6 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import { Component, Entity } from '@/lib/ecs'
 import { Layers } from './systems/render'
+import { GAME_ROUND } from '@/params/main'
 
 export const enum Resource {
   wood,
@@ -16,7 +17,7 @@ export const enum Obstacles {
 }
 
 export class GameData extends Component {
-  timeLeft = 5 * 1000 * 60
+  timeLeft = GAME_ROUND
   level = 0
   constructor (public money: number) {
     super()
@@ -77,7 +78,8 @@ export class Draggable extends Component {
 }
 
 export const enum PointType {
-  sellPoint,
+  sellPoint = 90,
+  factoryPoint = 91,
 }
 
 export class FloorPoint extends Component {
@@ -86,8 +88,8 @@ export class FloorPoint extends Component {
   }
 }
 
-export type SellObjectType = Resource | 'point';
-export class Sell extends Component {
+export type SellObjectType = Resource | PointType;
+export class Sellable extends Component {
   constructor (public type: SellObjectType, public price: number = -1) {
     super()
   }
@@ -131,9 +133,17 @@ export class Particle extends Component {
 
 // @ts-ignore
 export type ResourceNMap = { [key: Resource]: number };
+
 type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
 export class Buyer extends Component {
   constructor (public resToBuy: ResourceNMap = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking', public bought: boolean = false) {
+    super()
+  }
+}
+
+export class ResourceFactory extends Component {
+  resNeededCurState: ResourceNMap | null = null
+  constructor (public type: Resource, public resNeeded: ResourceNMap) {
     super()
   }
 }

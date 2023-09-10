@@ -7,16 +7,8 @@ import { randomFromList } from '@/lib/utils'
 import { getGameState } from './game.state'
 import { colorBlack, colorGold, colorWhite } from '@/lib/colors'
 import { Resource } from '@/core/ecs/component'
+import { HELP_TEXT } from '@/params/text'
 
-const helpText =
-`Welcome to Mini Merchant(js13k games 2023 entry)!
-You are a merchant who has to sell goods to the people of the village.
-Use your mouse to interact with the world. Drag&Drop items near the stole to sell them.
-Read more about possible interactions by clicking on 
-You have a short live, so you have to sell as much as possible in 5 min.
-TIP: Prepare more goods in your yard in advance. 
-
-`.split('\n').map((s) => s.trim())
 class MenuState implements State {
   private selected = 0
 
@@ -69,7 +61,7 @@ class MenuState implements State {
     drawEngine.drawText('Mini merchant', 80, xCenter, 90, colorGold)
 
     drawEngine.drawBox(0, 150, drawEngine.w, 210, false)
-    helpText.forEach((t, i) => drawEngine.drawText(t, 22, xCenter, 180 + (i * 32), 'white'))
+    HELP_TEXT.forEach((t, i) => drawEngine.drawText(t, 22, xCenter, 180 + (i * 32), 'white'))
     drawEngine.drawEntity({ x: xCenter + 350, y: 250 }, SIGN)
 
     drawEngine.drawText(

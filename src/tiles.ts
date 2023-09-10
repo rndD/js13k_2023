@@ -42,6 +42,7 @@ export const convertResToSprite = (res: Resource): number => {
   return resourcesSprites[res]
 }
 
+// @ts-ignore
 export type MapSchema = {[key: Layers]: [
   number, // sprite
   number, // y

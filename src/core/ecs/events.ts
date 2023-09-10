@@ -11,5 +11,7 @@ export const enum Events {
   hire,
   gym,
   gymDone,
-
+  newCustomer,
+  factoryProvideRes,
+  nextLevel
 }

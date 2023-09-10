@@ -1,11 +1,9 @@
-import { getGridPointInPixels } from '@/lib/utils'
 import { getColPos } from './ecs/systems/collide'
 import { GRASS, I_COIN } from '@/tiles'
 import { getTile } from '@/lib/graphics'
 import { colorBlack, colorWhite, transparentBlack } from '@/lib/colors'
-
-export const pixelScale = 2
-export const tileSize = 16
+import { getGridPointInPixels } from '@/lib/grid'
+import { pixelScale, tileSize, tileSizeUpscaled } from '@/params/pixels'
 
 const tileMapW = 8
 // find x,y in tilemap by tile number
@@ -15,7 +13,6 @@ export const getTileXY = (tile: number) => {
   return [x, y]
 }
 
-export const tileSizeUpscaled = tileSize * pixelScale
 class DrawEngine {
   context: CanvasRenderingContext2D
   tilemap = new Image()
@@ -34,11 +31,11 @@ class DrawEngine {
   }
 
   get wInTiles () {
-    return this.w / tileSize / pixelScale
+    return this.w / tileSizeUpscaled
   }
 
   get hInTiles () {
-    return this.h / tileSize / pixelScale
+    return this.h / tileSizeUpscaled
   }
 
   get w () {
@@ -156,7 +153,7 @@ class DrawEngine {
     )
   }
 
-  drawBuying (pos: { x: number; y: number }, res: {[sprite: number]: number}) {
+  drawResList (pos: { x: number; y: number }, res: {[sprite: number]: number}) {
     let { x, y } = pos
     y += tileSizeUpscaled - 2
     const pad = 3

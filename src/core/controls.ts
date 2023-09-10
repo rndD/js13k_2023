@@ -20,24 +20,24 @@ import { drawEngine } from './draw-engine'
 // }
 
 class Controls {
-  isUp = false
-  isDown = false
-  isLeft = false
-  isRight = false
-  isConfirm = false
-  isEscape = false
+  // isUp = false
+  // isDown = false
+  // isLeft = false
+  // isRight = false
+  // isConfirm = false
+  // isEscape = false
   // inputDirection: DOMPoint
 
   isMouseDown = false
   mousePosition = { x: 0, y: 0 }
 
   keyMap: Map<string, boolean> = new Map()
-  previousState = {
-    isUp: this.isUp,
-    isDown: this.isDown,
-    isConfirm: this.isConfirm,
-    isEscape: this.isEscape
-  }
+  // previousState = {
+  //   isUp: this.isUp,
+  //   isDown: this.isDown,
+  //   isConfirm: this.isConfirm,
+  //   isEscape: this.isEscape
+  // }
 
   constructor () {
     // document.addEventListener('keydown', (event) =>

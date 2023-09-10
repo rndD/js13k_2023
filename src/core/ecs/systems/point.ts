@@ -1,25 +1,24 @@
 import { Entity, System } from '@/lib/ecs'
-import { Draggable, FloorPoint, PointType, Position, Sell } from '../component'
+import { Draggable, FloorPoint, PointType, Position, Sellable } from '../component'
 import { isPointerIn } from '@/lib/physics'
-import { tileSizeUpscaled } from '@/core/draw-engine'
 import { Events } from '../events'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 export class PointSystem extends System {
-  componentsRequired = new Set<Function>([Sell])
+  componentsRequired = new Set<Function>([Sellable])
 
   update (entities: Set<Entity>): void {
     for (const entity of entities) {
       const comps = this.ecs.getComponents(entity)
-      const sell = comps.get(Sell)
       const floor = comps.get(FloorPoint)
 
-      if (sell.type !== 'point' || !floor) {
+      if (!floor) {
         continue
       }
       floor.occupiedBy = -1
 
       for (const other of entities) {
-        if (other === entity || this.ecs.getComponents(other).get(Sell).type === 'point') {
+        if (other === entity || this.ecs.getComponents(other).get(Sellable).type === PointType.sellPoint) {
           continue
         }
 
@@ -47,6 +46,9 @@ export class PointSystem extends System {
       // sell
         if (floor.type === PointType.sellPoint) {
           this.ecs.ee.emit(Events.sell, floor.occupiedBy)
+        }
+        if (floor.type === PointType.factoryPoint) {
+          this.ecs.ee.emit(Events.factoryProvideRes, entity, floor.occupiedBy)
         }
       }
 

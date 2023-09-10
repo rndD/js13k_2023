@@ -9,13 +9,11 @@ import {
 } from '../component'
 import { controls } from '../../controls'
 import {
-  tileSizeUpscaled
-} from '../../draw-engine'
-import {
   isPointerIn
 } from '@/lib/physics'
 import { createFreight } from '../helpers'
 import { Events } from '../events'
+import { tileSizeUpscaled } from '@/params/pixels'
 
 export class ClickSystem extends System {
   componentsRequired = new Set<Function>([Clickable, Position])
