@@ -33,7 +33,7 @@ export class ParticleSystem extends System {
       }
     })
 
-    this.ecs.ee.on(Events.sold, (entity: Entity, type: SellObjectType, price: number) => {
+    this.ecs.ee.on(Events.sold, (entity: Entity, price: number, type?: SellObjectType) => {
       // random N particles
       const count = price
       const comps = this.ecs.getComponents(entity)

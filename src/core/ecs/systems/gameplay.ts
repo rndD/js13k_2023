@@ -52,12 +52,15 @@ export class SellSystem extends System {
         }
         // @ts-ignore
         if ((buyer.resToBuy[sell.type] || 0) > 0) {
-          this.ecs.ee.emit(Events.sold, entity, sell.type, sell.price)
+          this.ecs.ee.emit(Events.sold, entity, sell.price)
           // @ts-ignore
           buyer.resToBuy[sell.type] -= 1
           buyer.bought = true
           const isEverythingProvided = Object.values(buyer.resToBuy).every((v) => v === 0)
           if (isEverythingProvided) {
+            // tip
+            // random 1-2
+            this.ecs.ee.emit(Events.sold, entity, Math.floor(Math.random() * 2) + 1)
             this.leaveQ(b)
           }
           // console.log(buyer, sell.type, buyer.resToBuy[sell.type])
@@ -210,7 +213,7 @@ export class GameDataSystem extends System {
     this.ecs.addComponent(this.e, new GameData(INITIAL_MONEY))
     this.ecs.addComponent(this.e, new Renderable(undefined, Layers.UI))
 
-    this.ecs.ee.on(Events.sold, (entity: Entity, type: SellObjectType, price: number) => {
+    this.ecs.ee.on(Events.sold, (entity: Entity, price: number) => {
       this.ecs.getComponents(this.e).get(GameData).money += price
     })
 

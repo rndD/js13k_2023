@@ -13,5 +13,6 @@ export const enum Events {
   gymDone,
   newCustomer,
   factoryProvideRes,
-  nextLevel
+  nextLevel,
+  tip
 }
