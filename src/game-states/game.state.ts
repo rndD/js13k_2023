@@ -12,7 +12,8 @@ import {
   createTree,
   createWell,
   createCrop,
-  createMovingObstacle
+  createMovingObstacle,
+  createAI
 } from '@/core/ecs/helpers'
 
 import { Component, ECS } from '@/lib/ecs'
@@ -28,6 +29,7 @@ import { ClickSystem } from '@/core/ecs/systems/click'
 import { GameDataSystem, SellSystem } from '@/core/ecs/systems/gameplay'
 import { Events } from '@/core/ecs/events'
 import { Obstacles, Resource } from '@/core/ecs/component'
+import { AISystem } from '@/core/ecs/systems/ai'
 
 const createMap = () => {
   const ec: Component[][] = []
@@ -69,6 +71,7 @@ class GameState implements State {
     this.ecs = new ECS()
     this.ecs.addSystem(new ClickSystem())
     this.ecs.addSystem(new DragSystem())
+    this.ecs.addSystem(new AISystem())
     this.ecs.addSystem(new CollideSystem())
     this.ecs.addSystem(new PhysicsSystem())
     this.ecs.addSystem(new ParticleSystem())
@@ -107,6 +110,8 @@ class GameState implements State {
 
       // trees
       createTree(getGridPointInPixels(8, 7)),
+      createTree(getGridPointInPixels(33, 3)),
+      createTree(getGridPointInPixels(35, 3)),
       // well
       createWell(getGridPointInPixels(28, 8)),
 
@@ -118,10 +123,15 @@ class GameState implements State {
       createCrop(getGridPointInPixels(11, 0)),
 
       // Obstacles
-      createMovingObstacle(getGridPointInPixels(20, 10), WAGON, Obstacles.wagon),
+      createMovingObstacle(getGridPointInPixels(20, 9), WAGON, Obstacles.wagon),
       createMovingObstacle(getGridPointInPixels(19, 8), WAGON, Obstacles.wagon),
-      createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, Obstacles.anvil)
+      createMovingObstacle(getGridPointInPixels(19, 13), ANVIL, Obstacles.anvil),
 
+      // FIXME TEST
+      createAI(getGridPointInPixels(10, 10), true),
+      createAI(getGridPointInPixels(20, 10), true),
+      createAI(getGridPointInPixels(21, 10), true),
+      createAI(getGridPointInPixels(22, 10), true)
     )
 
     // this.addEntity(createSellPoint(getGridPointInPixels(new DOMPoint(10, 4))));

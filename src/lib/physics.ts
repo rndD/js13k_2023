@@ -142,6 +142,6 @@ export const correctAABBCollision = (
 }
 
 export const isPointerIn = (
-  pointer: DOMPoint,
+  pointer: {x: number, y: number},
   { x, y, w, h }: { x: number; y: number; w: number; h: number }
 ) => pointer.x > x && pointer.x < x + w && pointer.y > y && pointer.y < y + h

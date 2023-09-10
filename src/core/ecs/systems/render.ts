@@ -1,5 +1,5 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Pos, Renderable, Resource, ResourceSource } from '../component'
+import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Position, Renderable, Resource, ResourceSource } from '../component'
 import { drawEngine, tileSizeUpscaled } from '@/core/draw-engine'
 import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
@@ -73,7 +73,7 @@ export class RenderSystem extends System {
         if (!render.visible) {
           continue
         }
-        const pos = comps.get(Pos)
+        const pos = comps.get(Position)
         const drag = comps.get(Draggable)
         const click = comps.get(Clickable)
         const buyer = comps.get(Buyer)

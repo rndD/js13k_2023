@@ -317,7 +317,7 @@ class DrawEngine {
   }
 
   drawDebugRect (pos: { x: number; y: number }, w: number, h: number) {
-    const newPos = getColPos(pos, { wh: { w, h } })
+    const newPos = getColPos(pos, { w, h })
     this.context.strokeStyle = 'red'
     this.context.lineWidth = 1
     this.context.strokeRect(

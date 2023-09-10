@@ -1,5 +1,6 @@
 import { Component } from '@/lib/ecs'
 import {
+  AI,
   Clickable,
   Collidable,
   Draggable,
@@ -7,7 +8,7 @@ import {
   Mov,
   Obstacles,
   Physical,
-  Pos,
+  Position,
   Renderable,
   Resource,
   ResourceSource,
@@ -15,7 +16,7 @@ import {
 } from './component'
 import { tileSizeUpscaled } from '../draw-engine'
 import { Layers } from './systems/render'
-import { CROP, I_AXE, I_PICKUP_HAND, I_TAPKA, P_SELL, TREE_BOTTOM, WELL_BOTTOM, WELL_TOP, convertResToSprite, resourcesSprites } from '@/tiles'
+import { CRAB, CROP, CYCLOP, I_AXE, I_PICKUP_HAND, I_TAPKA, P_SELL, TREE_BOTTOM, WELL_BOTTOM, WELL_TOP, convertResToSprite, resourcesSprites } from '@/tiles'
 import { MovingObstaclesPhysics, ResourcePhysics, ResourcesPrices } from '@/stats'
 
 // helper functions to create entities
@@ -27,9 +28,9 @@ export const createObstacle = (
   angle?: number
 ): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(sprite, Layers.Objects, angle),
-    new Collidable({ w, h })
+    new Collidable({ w, h }, true)
   ]
 }
 
@@ -42,9 +43,9 @@ export const createMovingObstacle = (
   const ph = MovingObstaclesPhysics[type]
 
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(sprite, Layers.Objects),
-    new Collidable({ w, h }),
+    new Collidable({ w, h }, true),
     new Mov(),
     new Physical(ph),
     new Draggable(),
@@ -58,7 +59,7 @@ export const createFloor = (
   angle?: number
 ): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(sprite, Layers.Floor, angle)
   ]
 }
@@ -68,7 +69,7 @@ export const createAlwaysOnTop = (
   sprite: number
 ): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(sprite, Layers.AlwaysOnTop)
   ]
 }
@@ -94,7 +95,7 @@ export const createFreight = (
 
   // add price
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(convertResToSprite(resourceType), Layers.Objects),
     new Collidable({ w, h }),
     new Draggable(),
@@ -105,14 +106,27 @@ export const createFreight = (
   ]
 }
 
+export const createAI = (
+  [x, y]: [number, number],
+  isFriendly: boolean,
+  w = tileSizeUpscaled - 4, h = tileSizeUpscaled - 4
+): Component[] => {
+  return [
+    new Position(x, y),
+    new Renderable(isFriendly ? CYCLOP : CRAB, Layers.Objects),
+    new AI(isFriendly),
+    new Collidable({ w, h })
+  ]
+}
+
 export const createTree = (
   [x, y]: [number, number]
 ): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(TREE_BOTTOM, Layers.Objects),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
-    new ResourceSource(Resource.wood, {}, 5000),
+    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
+    new ResourceSource(Resource.wood, {}, 8000),
     new Clickable(I_AXE, true)
   ]
 }
@@ -121,9 +135,9 @@ export const createWell = (
   [x, y]: [number, number]
 ): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(WELL_BOTTOM, Layers.Objects),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
+    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
     new ResourceSource(Resource.water, {}, 3000),
     new Clickable(resourcesSprites[Resource.water], true)
   ]
@@ -133,9 +147,9 @@ export const createCrop = (
   [x, y]: [number, number]
 ): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(CROP, Layers.Objects),
-    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }),
+    new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
     new ResourceSource(Resource.food, {}, 25000),
     new Clickable(I_TAPKA)
   ]
@@ -160,7 +174,7 @@ export const createCrop = (
 
 export const createSellPoint = ([x, y]: [number, number]): Component[] => {
   return [
-    new Pos(x, y),
+    new Position(x, y),
     new Renderable(P_SELL, Layers.Points),
     new FloorPoint('sellPoint'),
     new Sell('point')

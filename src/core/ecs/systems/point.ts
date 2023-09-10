@@ -1,5 +1,5 @@
 import { Entity, System } from '@/lib/ecs'
-import { Draggable, FloorPoint, Pos, Sell } from '../component'
+import { Draggable, FloorPoint, Position, Sell } from '../component'
 import { isPointerIn } from '@/lib/physics'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { Events } from '../events'
@@ -23,8 +23,8 @@ export class PointSystem extends System {
           continue
         }
 
-        const pos = comps.get(Pos)
-        const otherPos = this.ecs.getComponents(other).get(Pos)
+        const pos = comps.get(Position)
+        const otherPos = this.ecs.getComponents(other).get(Position)
 
         const isOn = isPointerIn(
           new DOMPoint(

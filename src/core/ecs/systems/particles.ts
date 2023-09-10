@@ -1,5 +1,5 @@
 import { Entity, System } from '@/lib/ecs'
-import { Mov, Particle, Pos, Renderable, SellObjectType } from '../component'
+import { Mov, Particle, Position, Renderable, SellObjectType } from '../component'
 import { tileSizeUpscaled } from '../../draw-engine'
 import { Layers } from './render'
 import { I_COIN } from '@/tiles'
@@ -10,15 +10,15 @@ export class ParticleSystem extends System {
   nextTick = 0
   tick = 200
 
-  componentsRequired = new Set<Function>([Pos, Mov])
+  componentsRequired = new Set<Function>([Position, Mov])
 
   init (): void {
     this.ecs.ee.on(Events.collide, (entity: Entity, other :Entity) => {
       const comps = this.ecs.getComponents(entity)
-      const pos = comps.get(Pos)
+      const pos = comps.get(Position)
 
       const otherComps = this.ecs.getComponents(other)
-      const otherPos = otherComps.get(Pos)
+      const otherPos = otherComps.get(Position)
 
       // find center of the collision
       const impactPoint = {
@@ -37,7 +37,7 @@ export class ParticleSystem extends System {
       // random N particles
       const count = price
       const comps = this.ecs.getComponents(entity)
-      const pos = comps.get(Pos)
+      const pos = comps.get(Position)
       // console.log('sold', count, pos)
 
       for (let i = 0; i < count; i++) {
@@ -46,10 +46,10 @@ export class ParticleSystem extends System {
     })
   }
 
-  createParticle (pos: Pos, mov: Mov|undefined, i: number, color: string, sprite?: number, time = 500): void {
+  createParticle (pos: Position, mov: Mov|undefined, i: number, color: string, sprite?: number, time = 500): void {
     const e = this.ecs.addEntity()
     i = Math.min(i, 5)
-    this.ecs.addComponent(e, new Pos(pos.x + tileSizeUpscaled / 2 + i, pos.y + tileSizeUpscaled - 2))
+    this.ecs.addComponent(e, new Position(pos.x + tileSizeUpscaled / 2 + i, pos.y + tileSizeUpscaled - 2))
     // randomise dx, dy a bit to make it more interesting and limit the speed by 0.5
     const dx = (Math.random() - 0.5) / 2 + (mov?.dx || 0)
     const dy = (Math.random() - 0.5) / 2 + (mov?.dy || 0)
@@ -81,7 +81,7 @@ export class ParticleSystem extends System {
           // random 3-6 particles
           const count = Math.floor(Math.random() * 10) + 7
           for (let i = 0; i < count; i++) {
-            const pos = comps.get(Pos)
+            const pos = comps.get(Position)
             const DIRT_COLOR = 'rgba(145, 79, 25, 0.2)'
             // limit speed to 0.5 -0.5, make it reverse
             const dx = mov.dx > 0 ? -Math.min(mov.dx, 0.5) : -Math.max(mov.dx, -0.5)

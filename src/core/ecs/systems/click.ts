@@ -3,7 +3,7 @@ import { Entity, System } from '@/lib/ecs'
 import {
   Clickable,
   Mov,
-  Pos,
+  Position,
   ResourceSource
 } from '../component'
 import { controls } from '../../controls'
@@ -17,7 +17,7 @@ import { createFreight } from '../helpers'
 import { Events } from '../events'
 
 export class ClickSystem extends System {
-  componentsRequired = new Set<Function>([Clickable, Pos])
+  componentsRequired = new Set<Function>([Clickable, Position])
   prevMouse = false
   nextClickIn = 0
   clickTime = 500
@@ -26,7 +26,7 @@ export class ClickSystem extends System {
     const comps = this.ecs.getComponents(entity)
 
     const resS = comps.get(ResourceSource)
-    const pos = comps.get(Pos)
+    const pos = comps.get(Position)
 
     if (resS?.nextIn <= 0) {
       const e = this.ecs.addEntity()
@@ -48,7 +48,7 @@ export class ClickSystem extends System {
 
     for (const entity of entities) {
       const comps = this.ecs.getComponents(entity)
-      const pos = comps.get(Pos)
+      const pos = comps.get(Position)
       const cl = comps.get(Clickable)
 
       cl.hovered = isPointerIn(mousePos, {

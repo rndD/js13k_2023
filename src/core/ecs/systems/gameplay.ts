@@ -1,5 +1,5 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Collidable, GameData, Pos, Renderable, Resource, Sell, SellObjectType } from '../component'
+import { Buyer, Collidable, GameData, Position, Renderable, Resource, Sell, SellObjectType } from '../component'
 import { tileSizeUpscaled } from '@/core/draw-engine'
 import { getGridPointInPixels, randomFromList } from '@/lib/utils'
 import { Layers } from './render'
@@ -11,7 +11,6 @@ export class SellSystem extends System {
 
   maxBuyers = 4
   bSpeed = 4 // only odd numbers
-  componentsRequired = new Set<Function>([Buyer, Pos])
   start = [24, 22]
   end: [number, number] = [21, 22]
   qPosEnd: [number, number] = [24, 14]
@@ -25,6 +24,7 @@ export class SellSystem extends System {
   tickMove = 30
   nextTickMove = 0
 
+  componentsRequired = new Set<Function>([Buyer, Position])
   init (): void {
     // sell event
     this.ecs.ee.on(Events.sell, (entity: Entity) => {
@@ -67,7 +67,7 @@ export class SellSystem extends System {
     ))
 
     // @ts-ignore
-    this.ecs.addComponent(buyer, new Pos(...getGridPointInPixels(...this.start)))
+    this.ecs.addComponent(buyer, new Position(...getGridPointInPixels(...this.start)))
     this.ecs.addComponent(buyer, new Renderable(randomFromList(MEN), Layers.Objects))
     this.ecs.addComponent(buyer, new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }))
   }
@@ -91,7 +91,7 @@ export class SellSystem extends System {
       buyer.targetPos = [this.qPosStart[0] + position, this.qPosStart[1]]
     }
 
-    const pos = comp.get(Pos)
+    const pos = comp.get(Position)
     const tPos = getGridPointInPixels(...buyer.targetPos)
     const isOnTarget = pos.x === tPos[0] && pos.y === tPos[1]
     if (isOnTarget) {
@@ -106,7 +106,7 @@ export class SellSystem extends System {
   moveBuyer (entity: Entity): void {
     const comp = this.ecs.getComponents(entity)
     const buyer = comp.get(Buyer)
-    const pos = comp.get(Pos)
+    const pos = comp.get(Position)
 
     const [x, y] = buyer.targetPos
     const [bx, by] = getGridPointInPixels(x, y)

@@ -1,4 +1,6 @@
+import { tileSizeUpscaled } from './core/draw-engine'
 import { Obstacles, Resource, Physics } from './core/ecs/component'
+import { getGridPointInPixels } from './lib/utils'
 
 export const ResourcePhysics: Record<Resource, Physics> = {
   [Resource.wood]: { mass: 50, friction: 0.94 },
@@ -18,4 +20,19 @@ export const ResourcesPrices: Record<Resource, number> = {
   [Resource.barrel]: 10,
   [Resource.box]: 5,
   [Resource.water]: 1
+}
+
+const xyYard = getGridPointInPixels(15, 4)
+export const YARD = {
+  x: xyYard[0],
+  y: xyYard[1],
+  w: 12 * tileSizeUpscaled,
+  h: 9 * tileSizeUpscaled
+}
+
+export const DROP_POINTS : { [key:string]: number} = {
+  '14,5': 1, // TL
+  '14,10': 1, // TL
+  '19,3': -1, // LT
+  '20,3': -1// RT
 }

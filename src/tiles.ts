@@ -27,6 +27,9 @@ export const I_AXE = 50
 export const I_TAPKA = 51
 export const SIGN = 40
 
+export const CYCLOP = 64
+export const CRAB = 65
+
 // @ts-ignore
 export const resourcesSprites: Record<Resource, number> = {
   [Resource.wood]: 48,
@@ -61,7 +64,7 @@ export type TileInfo = {
   flipX?: boolean;
   tile: number;
 }
-type Map = {
+type MapInfo = {
   'floor': TileInfo[];
   'walls': TileInfo[];
   'top': TileInfo[];
@@ -81,7 +84,7 @@ for (const layer of tilemap.layers) {
   }
 }
 
-export const map: Map = {
+export const map:MapInfo = {
   floor: m.floor,
   walls: m.walls,
   top: m.top

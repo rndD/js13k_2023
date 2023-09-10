@@ -5,7 +5,7 @@ import {
   Draggable,
   Mov,
   Physical,
-  Pos
+  Position
 } from '../component'
 import { controls } from '@/core/controls'
 import { Events } from '../events'
@@ -28,12 +28,12 @@ export class PhysicsSystem extends System {
 }
 
 export class MoveSystem extends System {
-  componentsRequired = new Set<Function>([Mov, Pos])
+  componentsRequired = new Set<Function>([Mov, Position])
   update (entities: Set<Entity>): void {
     for (const entity of entities) {
       const comps = this.ecs.getComponents(entity)
       const mov = comps.get(Mov)
-      const pos = comps.get(Pos)
+      const pos = comps.get(Position)
 
       pos.x += mov.dx
       pos.y += mov.dy
@@ -50,7 +50,7 @@ export class MoveSystem extends System {
 }
 
 export class DragSystem extends System {
-  componentsRequired = new Set<Function>([Mov, Pos, Draggable, Clickable])
+  componentsRequired = new Set<Function>([Mov, Position, Draggable, Clickable])
   dragging = -1
   draggingForce = 2 // less is better
 
@@ -66,7 +66,7 @@ export class DragSystem extends System {
 
     for (const entity of entities) {
       const comps = this.ecs.getComponents(entity)
-      const pos = comps.get(Pos)
+      const pos = comps.get(Position)
       const drag = comps.get(Draggable)
       const cl = comps.get(Clickable)
 

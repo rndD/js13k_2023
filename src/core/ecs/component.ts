@@ -23,7 +23,7 @@ export class GameData extends Component {
   }
 }
 
-export class Pos extends Component {
+export class Position extends Component {
   constructor (public x: number, public y: number) {
     super()
   }
@@ -59,7 +59,7 @@ export class Physical extends Component {
 }
 
 export class Collidable extends Component {
-  constructor (public wh: { w:number, h: number }) {
+  constructor (public wh: { w:number, h: number }, public aiObstacle: boolean = false) {
     super()
   }
 }
@@ -154,7 +154,8 @@ export const enum AIState {
 export class AI extends Component {
   state: AIState = AIState.idle
   targetPos: [number, number] | null = null
-  targetEntity: Entity = -1
+  targetEntity: Entity|null = null
+  pickedUp: boolean = false
   constructor (public isFriendly: boolean = true) {
     super()
   }
