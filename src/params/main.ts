@@ -32,7 +32,7 @@ export const levelsByTime = [
 
 export const timeForCustomer = [
   40, // 0 lvl
-  30, // 1 lvl
-  25, // 2 lvl
-  20 // 3 lvl
+  35, // 1 lvl
+  30, // 2 lvl
+  30 // 3 lvl
 ].map(x => x * 1000)

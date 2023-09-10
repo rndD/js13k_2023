@@ -134,9 +134,14 @@ export class Particle extends Component {
 // @ts-ignore
 export type ResourceNMap = { [key: Resource]: number };
 
-type BuyerState = 'walking' | 'buying' | 'inQ' | 'walkingBack';
+export const enum BuyerState {
+  walking,
+  buying,
+  inQ,
+  walkingBack
+}
 export class Buyer extends Component {
-  constructor (public resToBuy: ResourceNMap = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = 'walking', public bought: boolean = false) {
+  constructor (public resToBuy: ResourceNMap = {}, public time: number, public targetPos: [number, number], public queuePos: number = -1, public state: BuyerState = BuyerState.walking, public bought: boolean = false) {
     super()
   }
 }

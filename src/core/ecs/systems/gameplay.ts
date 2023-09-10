@@ -1,5 +1,5 @@
 import { Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, GameData, Position, Renderable, Sellable, SellObjectType } from '../component'
+import { Buyer, BuyerState, Clickable, GameData, Position, Renderable, Sellable, SellObjectType } from '../component'
 import { Layers } from './render'
 import { SACK } from '@/tiles'
 import { Events } from '../events'
@@ -47,7 +47,7 @@ export class SellSystem extends System {
         const b = this.q[0]
         const buyerComp = this.ecs.getComponents(b)
         const buyer = buyerComp.get(Buyer)
-        if (buyer.state !== 'buying') {
+        if (buyer.state !== BuyerState.buying) {
           return
         }
         // @ts-ignore
@@ -96,7 +96,7 @@ export class SellSystem extends System {
     // position updated
     if (buyer.queuePos !== position) {
       buyer.queuePos = position
-      buyer.state = 'walking'
+      buyer.state = BuyerState.walking
       buyer.targetPos = [qPosStart[0] + position, qPosStart[1]]
     }
 
@@ -105,10 +105,10 @@ export class SellSystem extends System {
     const isOnTarget = pos.x === tPos[0] && pos.y === tPos[1]
     if (isOnTarget) {
       if (position === 0) {
-        buyer.state = 'buying'
+        buyer.state = BuyerState.buying
         this.ecs.ee.emit(Events.newCustomer, entity)
       } else {
-        buyer.state = 'inQ'
+        buyer.state = BuyerState.inQ
       }
     }
   }
@@ -121,10 +121,10 @@ export class SellSystem extends System {
     const [x, y] = buyer.targetPos
     const [bx, by] = getGridPointInPixels(x, y)
     if (pos.x === bx && pos.y === by) {
-      if (buyer.state === 'walking') {
+      if (buyer.state === BuyerState.walking) {
         this.qCheck(entity)
       }
-      if (buyer.state === 'walkingBack') {
+      if (buyer.state === BuyerState.walkingBack) {
         this.ecs.removeEntity(entity)
       }
     } else {
@@ -165,10 +165,10 @@ export class SellSystem extends System {
       for (const entity of entities) {
         const comps = this.ecs.getComponents(entity)
         const buyer = comps.get(Buyer)
-        if (buyer.state === 'walking' || buyer.state === 'walkingBack') {
+        if (buyer.state === BuyerState.walking || buyer.state === BuyerState.walkingBack) {
           this.moveBuyer(entity)
         }
-        if (buyer.state === 'inQ') {
+        if (buyer.state === BuyerState.inQ) {
           this.qCheck(entity)
         }
       }
@@ -178,7 +178,7 @@ export class SellSystem extends System {
     for (const entity of entities) {
       const comps = this.ecs.getComponents(entity)
       const buyer = comps.get(Buyer)
-      if (buyer.state === 'buying') {
+      if (buyer.state === BuyerState.buying) {
         buyer.time -= this.ecs.currentDelta
         if (buyer.time <= 0) {
           this.leaveQ(entity)
@@ -190,7 +190,7 @@ export class SellSystem extends System {
   leaveQ (entity: Entity): void {
     const comp = this.ecs.getComponents(entity)
     const buyer = comp.get(Buyer)
-    buyer.state = 'walkingBack'
+    buyer.state = BuyerState.walkingBack
     buyer.targetPos = posEnd
     this.q.shift()
     if (buyer.bought) {

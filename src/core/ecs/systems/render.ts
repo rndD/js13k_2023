@@ -1,5 +1,5 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, Clickable, Collidable, Draggable, GameData, Particle, Position, Renderable, Resource, ResourceFactory, ResourceNMap, ResourceSource } from '../component'
+import { Buyer, BuyerState, Clickable, Collidable, Draggable, GameData, Particle, Position, Renderable, Resource, ResourceFactory, ResourceNMap, ResourceSource } from '../component'
 import { drawEngine } from '@/core/draw-engine'
 import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
@@ -129,7 +129,7 @@ export class RenderSystem extends System {
           // draw sprite
           drawEngine.drawEntity(pos, render.sprite)
 
-          if (buyer?.state === 'buying') {
+          if (buyer?.state === BuyerState.buying) {
             this.uiPostponedFunctions.push(() =>
               drawEngine.drawResList(pos, getResList(buyer.resToBuy))
             )
