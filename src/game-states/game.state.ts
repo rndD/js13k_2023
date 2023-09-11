@@ -34,6 +34,7 @@ import { AISystem } from '@/core/ecs/systems/ai'
 import { HELP_COUNTER, HELP_CYCLOPS, HELP_FACTORY_BARREL, HELP_FACTORY_BOX, HELP_GYM, HELP_RESOURCES } from '@/params/text'
 import { ResourceFactorySystem } from '@/core/ecs/systems/factory'
 import { getGridPointInPixels } from '@/lib/grid'
+import { loadFromLocalStorage, saveToLocalStorage } from '@/lib/utils'
 
 const createMap = () => {
   const ec: Component[][] = []
@@ -94,7 +95,22 @@ class GameState implements State {
     this.ecs.ee.on(Events.gameOver, (score: Number) => {
       this.stop = true
       // eslint-disable-next-line
-      alert(`Game over! Your score is ${score}. Share it on twitter with #js13k!`)
+      let save = loadFromLocalStorage('gameData')
+      if (!save) {
+        save = { maxScore: 0, games: 0 }
+      }
+
+      let highText = ''
+      if (save?.maxScore !== undefined && save?.maxScore < score) {
+        highText = ' New high score!'
+        save.maxScore = score
+      }
+
+      alert(`Game over! Your score is ${score}.${highText} Share it on twitter with #js13k!`)
+
+      save.games += 1
+      saveToLocalStorage('gameData', save)
+
       gameStateMachine.setState(menuState)
     })
   }
@@ -124,8 +140,7 @@ class GameState implements State {
       createSellPoint(getGridPointInPixels(19, 12)),
 
       // trees
-      createTree(getGridPointInPixels(8, 7)),
-      createTree(getGridPointInPixels(33, 5)),
+      createTree(getGridPointInPixels(9, 15)),
       createTree(getGridPointInPixels(35, 5)),
       createTree(getGridPointInPixels(18, 1)),
       createTree(getGridPointInPixels(21, 1)),
@@ -133,8 +148,8 @@ class GameState implements State {
       createWell(getGridPointInPixels(28, 8)),
 
       // crops
-      createCrop(getGridPointInPixels(1, 5)),
-      createCrop(getGridPointInPixels(2, 5)),
+      createCrop(getGridPointInPixels(1, 7)),
+      createCrop(getGridPointInPixels(2, 7)),
       createCrop(getGridPointInPixels(27, 16)),
       createCrop(getGridPointInPixels(28, 16)),
       createCrop(getGridPointInPixels(11, 0)),

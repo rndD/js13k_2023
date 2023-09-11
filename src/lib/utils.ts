@@ -1,3 +1,5 @@
+import { GAME_PREFIX } from '@/params/main'
+
 export const memoize = <T extends (...args: any[]) => any>(fn: T) => {
   const cache = new Map<string, ReturnType<T>>()
   return (...args: Parameters<T>): ReturnType<T> => {
@@ -157,4 +159,13 @@ export const weightedRandom = (weights: number[]): number => {
     }
   }
   return 0
+}
+
+export const saveToLocalStorage = (key: string, value: any, prefix = GAME_PREFIX) => {
+  window.localStorage.setItem(`${prefix}_${key}`, JSON.stringify(value))
+}
+
+export const loadFromLocalStorage = (key: string, prefix = GAME_PREFIX) => {
+  const value = window.localStorage.getItem(`${prefix}_${key}`)
+  return value ? JSON.parse(value) : null
 }

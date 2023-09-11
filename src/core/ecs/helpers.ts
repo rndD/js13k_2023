@@ -187,7 +187,7 @@ export const createTree = (
     new Position(x, y),
     new Renderable(TREE_BOTTOM, Layers.Objects),
     new Collidable({ w: tileSizeUpscaled, h: tileSizeUpscaled }, true),
-    new ResourceSource(Resource.wood, {}, 8000),
+    new ResourceSource(Resource.wood, {}, 10000),
     new Clickable(resourcesSprites[Resource.wood], true),
     new Aible()
   ]

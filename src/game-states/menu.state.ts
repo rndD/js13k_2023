@@ -3,7 +3,7 @@ import { controls } from '@/core/controls'
 import { gameStateMachine } from '@/game-state-machine'
 import { State } from '@/core/state-machine'
 import { I_ARROW_HAND, I_COIN, SACK, SIGN, resourcesSprites } from '@/tiles'
-import { randomFromList } from '@/lib/utils'
+import { loadFromLocalStorage, randomFromList } from '@/lib/utils'
 import { getGameState } from './game.state'
 import { colorBlack, colorGold, colorWhite } from '@/lib/colors'
 import { Resource } from '@/core/ecs/component'
@@ -41,6 +41,13 @@ class MenuState implements State {
     })
   }
 
+  drawHighScore () {
+    const save = loadFromLocalStorage('gameData')
+    if (save?.maxScore !== undefined) {
+      drawEngine.drawText(`High score: ${save.maxScore}`, 40, drawEngine.w / 2, 450, colorGold)
+    }
+  }
+
   onUpdate () {
     const xCenter = drawEngine.w / 2
 
@@ -63,6 +70,8 @@ class MenuState implements State {
     drawEngine.drawBox(0, 150, drawEngine.w, 210, false)
     HELP_TEXT.forEach((t, i) => drawEngine.drawText(t, 22, xCenter, 180 + (i * 32), 'white'))
     drawEngine.drawEntity({ x: xCenter + 350, y: 250 }, SIGN)
+
+    this.drawHighScore()
 
     drawEngine.drawText(
       'Start Game',
@@ -95,7 +104,7 @@ class MenuState implements State {
     }
     // Autoskip for testing
     if (drawEngine.ready) {
-      gameStateMachine.setState(getGameState())
+      // gameStateMachine.setState(getGameState())
     }
 
     // if (

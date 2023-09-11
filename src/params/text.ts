@@ -27,7 +27,7 @@ export const HELP_TEXT =
 You are a merchant who has to sell goods to the people of the village.
 Use your mouse to interact with the world. Drag&Drop items near the stole to sell them.
 Read more about possible interactions by clicking on 
-You have a short live, so you have to sell as much as possible in ${GAME_ROUND / 60 / 1000} min.
+You have a short life, so you have to sell as much as possible in ${GAME_ROUND / 60 / 1000} min.
 TIP: Prepare more goods in your yard in advance. 
 `.split('\n').map((s) => s.trim())
 

@@ -43,3 +43,5 @@ export const intervalForCustomer = [
   15, // 2 lvl
   10 // 3 lvl
 ].map(x => x * 1000)
+
+export const GAME_PREFIX = 'rndd_mm'
