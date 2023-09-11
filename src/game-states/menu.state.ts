@@ -95,7 +95,7 @@ class MenuState implements State {
     }
     // Autoskip for testing
     if (drawEngine.ready) {
-      gameStateMachine.setState(getGameState())
+      // gameStateMachine.setState(getGameState())
     }
 
     // if (
