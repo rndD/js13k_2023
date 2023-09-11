@@ -136,9 +136,9 @@ export class RenderSystem extends System {
           }
 
           const resFactory = comps.get(ResourceFactory)
-          if (resFactory?.resNeededCurState) {
+          if (resFactory) {
             this.uiPostponedFunctions.push(() =>
-              drawEngine.drawResList({ x: pos.x, y: pos.y - tileSizeUpscaled * 3 }, getResList(resFactory.resNeededCurState!))
+              drawEngine.drawResList({ x: pos.x, y: pos.y - tileSizeUpscaled * 3 }, getResList(resFactory.resNeededCurState || resFactory.resNeeded))
             )
           }
 

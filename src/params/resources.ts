@@ -37,18 +37,17 @@ const resourcesByLevel: ResourceByLevel = {
   1: {
     resources: [Resource.food, Resource.water, Resource.wood, Resource.box],
     weights: [0.3, 0.3, 0.3, 0.1],
-    max: 4
+    max: 3
   },
   2: {
     resources: [Resource.food, Resource.water, Resource.wood, Resource.box, Resource.barrel],
-    weights: [0.1, 0.1, 0.2, 0.3, 0.3],
-    max: 5
+    weights: [0.2, 0.1, 0.2, 0.2, 0.3],
+    max: 4
   },
   3: {
     resources: [Resource.barrel, Resource.box],
     weights: [0.6, 0.4],
-
-    max: 3
+    max: 2
   }
 }
 

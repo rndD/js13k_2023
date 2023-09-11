@@ -1,4 +1,6 @@
 // music research
+// https://www.inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
+// format https://github.com/keithclark/ZzFXM/tree/master
 const JSONMidi = [
   { deltaTime: 0, type: "meta", subtype: "trackName", text: "" },
   {
