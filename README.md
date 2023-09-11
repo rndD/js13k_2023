@@ -1,6 +1,6 @@
 # Micro Merchant
 
-This is a game for the [js13k games 2023](https://js13kgames.com/).
+Entry for the [js13k games 2023](https://js13kgames.com/).
 
 
 ## Credits
