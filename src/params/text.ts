@@ -16,7 +16,7 @@ export const HELP_FACTORY_BOX = `This is a factory, here you can make food boxes
 Drop wood and food on the white marked area
 People from 13th century love food boxes, so price is high`
 
-export const HELP_FACTORY_BARREL = `This is a brewery, here you can make beer
+export const HELP_FACTORY_BARREL = `This is a brewery, here you can make beer barrels
 Drop wood, food and water on the white marked area`
 
 export const HELP_GYM_DOOR = `Train in gym - ${GYM_PRICE} coins`

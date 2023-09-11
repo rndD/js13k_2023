@@ -7,10 +7,19 @@ import { pixelScale, tileSize, tileSizeUpscaled } from '@/params/pixels'
 
 const tileMapW = 8
 // find x,y in tilemap by tile number
-export const getTileXY = (tile: number) => {
-  const x = tile % tileMapW
-  const y = Math.floor(tile / tileMapW)
-  return [x, y]
+export const getTileXY = (tile: number | [number, number]) => {
+  if (Array.isArray(tile)) {
+    return tile.reduce((acc, t) => {
+      const x = t % tileMapW
+      const y = Math.floor(t / tileMapW)
+      // @ts-ignore
+      return acc.concat([x, y])
+    }, [])
+  } else {
+    const x = tile % tileMapW
+    const y = Math.floor(tile / tileMapW)
+    return [x, y]
+  }
 }
 
 class DrawEngine {
@@ -86,10 +95,11 @@ class DrawEngine {
     }
   }
 
-  drawEntity (pos: { x: number; y: number }, sprite: number) {
+  drawEntity (pos: { x: number; y: number }, sprite: number | [number, number]) {
     const s = getTileXY(sprite)
     this.context.drawImage(
-      getTile(this.tilemap, s[0], s[1])!,
+      // @ts-ignore
+      getTile(this.tilemap, ...s)!,
       0,
       0,
       tileSize,
@@ -104,7 +114,8 @@ class DrawEngine {
   drawCarry (pos: { x: number; y: number }, sprite: number) {
     const s = getTileXY(sprite)
     this.context.drawImage(
-      getTile(this.tilemap, s[0], s[1])!,
+      // @ts-ignore
+      getTile(this.tilemap, ...s)!,
       0,
       0,
       tileSize,
@@ -116,10 +127,11 @@ class DrawEngine {
     )
   }
 
-  drawIcon (x: number, y: number, sprite: number, big?:boolean) {
+  drawIcon (x: number, y: number, sprite: number | [number, number], big?:boolean) {
     const s = getTileXY(sprite)
     this.context.drawImage(
-      getTile(this.tilemap, s[0], s[1])!,
+      // @ts-ignore
+      getTile(this.tilemap, ...s)!,
       0,
       0,
       tileSize,
@@ -153,12 +165,12 @@ class DrawEngine {
     )
   }
 
-  drawResList (pos: { x: number; y: number }, res: {[sprite: number]: number}) {
+  drawResList (pos: { x: number; y: number }, res: [number|[number, number], number][]) {
     let { x, y } = pos
     y += tileSizeUpscaled - 2
     const pad = 3
-    const ress = Object.entries(res)
-      .filter(([_, count]) => count > 0)
+    const ress = res.filter(([_, count]) => count > 0)
+
     this.drawBox(
       Math.round(x),
       Math.round(y),
@@ -167,9 +179,11 @@ class DrawEngine {
     )
 
     ress.forEach(([sprite, count], i) => {
-      const s = getTileXY(Number(sprite))
+      // @ts-ignore
+      const s = getTileXY(sprite)
       this.context.drawImage(
-        getTile(this.tilemap, s[0], s[1])!,
+        // @ts-ignore
+        getTile(this.tilemap, ...s)!,
         0,
         0,
         tileSize,
@@ -289,7 +303,8 @@ class DrawEngine {
       const s = getTileXY(sprite)
       // Ignore size for sprite
       this.context.drawImage(
-        getTile(this.tilemap, s[0], s[1])!,
+        // @ts-ignore
+        getTile(this.tilemap, ...s)!,
         0,
         0,
         tileSize,

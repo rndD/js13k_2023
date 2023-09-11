@@ -38,7 +38,7 @@ export class Mov extends Component {
 
 export class Renderable extends Component {
   constructor (
-    public sprite: number | undefined,
+    public sprite: number | undefined | [number, number],
     public layer: Layers,
     public visible: boolean = true,
     public carry: number|null = null
@@ -168,7 +168,7 @@ export const enum ClickableType {
 export class Clickable extends Component {
   hovered: boolean = false
   enabled: boolean = true
-  constructor (public icon: number, public withTop: boolean = false, public text?: string, public type?: ClickableType) {
+  constructor (public icon: number | [number, number], public withTop: boolean = false, public text?: string, public type?: ClickableType) {
     super()
   }
 }

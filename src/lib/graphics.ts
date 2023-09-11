@@ -2,7 +2,7 @@ import { tileSize } from '@/params/pixels'
 import { memoize } from './utils'
 
 export const getTile = memoize(
-  (tilemap: HTMLImageElement, x: number, y: number) => {
+  (tilemap: HTMLImageElement, x: number, y: number, x2?: number, y2?: number) => {
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
     // FIXME Remove when size limit hits
@@ -37,6 +37,20 @@ export const getTile = memoize(
     // if (angle !== 0) {
     //   context.restore()
     // }
+    // hack to draw 2 tiles in one (for food)
+    if (x2 !== undefined && y2 !== undefined) {
+      context.drawImage(
+        tilemap,
+        x2 * tileSize,
+        y2 * tileSize,
+        tileSize,
+        tileSize,
+        tileSize / 4,
+        0,
+        tileSize / 2,
+        tileSize / 2
+      )
+    }
 
     return context.canvas
   }

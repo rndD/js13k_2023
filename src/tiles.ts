@@ -6,6 +6,7 @@ import { Layers } from './core/ecs/systems/render'
 export const WAGON = 24
 export const ANVIL = 51
 export const SACK = 46
+export const FOOD = [SACK, 7] as [number, number]
 export const GRASS = 0
 export const CITIZENS = [53, 55, 57, 54]
 export const P_SELL = 47
@@ -30,15 +31,15 @@ export const CRAB = 57
 export const DOOR = 41
 
 // @ts-ignore
-export const resourcesSprites: Record<Resource, number> = {
+export const resourcesSprites: Record<Resource, number| [number, number]> = {
   [Resource.wood]: 45,
   [Resource.box]: 49,
-  [Resource.food]: SACK,
+  [Resource.food]: FOOD,
   [Resource.barrel]: 52,
   [Resource.water]: 58
 }
 
-export const convertResToSprite = (res: Resource): number => {
+export const convertResToSprite = (res: Resource): number| [number, number] => {
   return resourcesSprites[res]
 }
 

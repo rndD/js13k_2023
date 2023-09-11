@@ -14,12 +14,12 @@ export const enum Layers {
   UI = 5,
 }
 
-const getResList = (res: ResourceNMap) => {
+const getResList = (res: ResourceNMap) : [number| [number, number], number][] => {
   return Object.keys(res).reduce((acc, curr) => {
   // @ts-ignore
-    acc[convertResToSprite(curr)] = res[curr]
+    acc.push([convertResToSprite(curr), res[curr]])
     return acc
-  }, {})
+  }, [])
 }
 
 export class RenderSystem extends System {
@@ -31,7 +31,7 @@ export class RenderSystem extends System {
   tmpTopLayer: {x:number, y:number, sprite: number}[] = []
   uiPostponedFunctions: (()=>void)[] = []
 
-  mouseIcon: [number, number, number] | null = null
+  mouseIcon: [number, number, number | [number, number]] | null = null
 
   public addEntity (entity: number, componentContainer: ComponentContainer): void {
     const render = componentContainer.get(Renderable)
@@ -60,7 +60,7 @@ export class RenderSystem extends System {
         while (this.uiPostponedFunctions.length) {
           this.uiPostponedFunctions.pop()!()
         }
-        drawEngine.drawIcon(...this.mouseIcon)
+        drawEngine.drawIcon(...this.mouseIcon!)
       }
 
       // FIXME: remove then size limit hits

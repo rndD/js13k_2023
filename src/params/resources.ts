@@ -4,8 +4,8 @@ import { weightedRandom } from '@/lib/utils'
 export const ResourcePhysics: Record<Resource, Physics> = {
   [Resource.wood]: { mass: 50, friction: 0.94 },
   [Resource.food]: { mass: 40, friction: 0.96 },
-  [Resource.barrel]: { mass: 100, friction: 0.93 },
-  [Resource.box]: { mass: 100, friction: 0.9 },
+  [Resource.barrel]: { mass: 150, friction: 0.94 },
+  [Resource.box]: { mass: 200, friction: 0.94 },
   [Resource.water]: { mass: 35, friction: 0.96 }
 }
 export const MovingObstaclesPhysics: Record<Obstacles, Physics> = {
