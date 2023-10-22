@@ -1,17 +1,17 @@
 import { ComponentContainer, Entity, System } from '@/lib/ecs'
-import { Buyer, BuyerState, Clickable, Collidable, Draggable, GameData, Particle, Position, Renderable, Resource, ResourceFactory, ResourceNMap, ResourceSource } from '../component'
+import { Buyer, BuyerState, Clickable, Collidable, Draggable, GameData, Mov, Particle, Position, Renderable, Resource, ResourceFactory, ResourceNMap, ResourceSource } from '../component'
 import { drawEngine } from '@/core/draw-engine'
 import { I_ARROW_HAND, I_FIST_HAND, TREE_TOP, WELL_TOP, convertResToSprite } from '@/tiles'
 import { controls } from '@/core/controls'
 import { tileSizeUpscaled } from '@/params/pixels'
 
 export const enum Layers {
-  Floor = 0,
-  Points = 1,
-  Effects = 2,
-  Objects = 3,
-  AlwaysOnTop = 4,
-  UI = 5,
+  Floor,
+  Points,
+  Effects,
+  Objects,
+  AlwaysOnTop,
+  UI,
 }
 
 const getResList = (res: ResourceNMap) : [number| [number, number], number][] => {
@@ -24,6 +24,7 @@ const getResList = (res: ResourceNMap) : [number| [number, number], number][] =>
 
 export class RenderSystem extends System {
   debug = false
+  inited = false
 
   componentsRequired = new Set<Function>([Renderable])
 
@@ -32,6 +33,8 @@ export class RenderSystem extends System {
   uiPostponedFunctions: (()=>void)[] = []
 
   mouseIcon: [number, number, number | [number, number]] | null = null
+
+  floorSurfaceCanvas?: CanvasRenderingContext2D
 
   public addEntity (entity: number, componentContainer: ComponentContainer): void {
     const render = componentContainer.get(Renderable)
@@ -47,7 +50,34 @@ export class RenderSystem extends System {
     }
   }
 
+  init (): void {
+    // floorSurfaceCanvas
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')!
+    context.imageSmoothingEnabled = false
+    canvas.width = drawEngine.w
+    canvas.height = drawEngine.h
+    
+    this.floorSurfaceCanvas = context; 
+  }
+
+  drawTraceOnSurface(x:number, y:number, type = 1|2|3) {
+    if (!this.floorSurfaceCanvas) {
+      console.warn('no floor surface context found')
+      return
+    }
+    this.floorSurfaceCanvas.beginPath();
+    this.floorSurfaceCanvas.arc(x, y, type, 0, 2 * Math.PI, false);
+    this.floorSurfaceCanvas.fillStyle = 'rgba(0,0,0,0.05)';
+    this.floorSurfaceCanvas.fill();
+  }
+
   update (entities: Set<Entity>): void {
+    if (!this.inited) {
+      this.init()
+      this.inited = true
+    }
+
     this.tmpTopLayer = []
     this.mouseIcon = [controls.mousePosition.x, controls.mousePosition.y, I_ARROW_HAND]
 
@@ -90,6 +120,14 @@ export class RenderSystem extends System {
         const drag = comps.get(Draggable)
         const click = comps.get(Clickable)
         const buyer = comps.get(Buyer)
+        const mov = comps.get(Mov)
+        
+
+        if (mov && pos && drag && (Math.abs(mov.dx) > 0.2 || Math.abs(mov.dy)> 0.2)) {
+          const randomPlus = Math.random() * 2
+          this.drawTraceOnSurface(pos.x + randomPlus + tileSizeUpscaled/2, pos.y + randomPlus + tileSizeUpscaled/2, 1)
+        }
+
         if (drag) {
           if (drag.dragging) {
             drawEngine.drawRope(pos, { mx: this.mouseIcon![0], my: this.mouseIcon![1] })
@@ -169,6 +207,11 @@ export class RenderSystem extends System {
             drawEngine.drawDebugRect(pos, coll.wh.w, coll.wh.h)
           }
         }
+      }
+      
+      // draw floor surface
+      if (layer === Layers.Floor) {
+        drawEngine.drawCanvas(this.floorSurfaceCanvas!, 0, 0, drawEngine.w, drawEngine.h  )
       }
     }
   }

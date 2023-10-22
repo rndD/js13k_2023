@@ -360,6 +360,11 @@ class DrawEngine {
     )
   }
 
+  drawCanvas (canvasCtx: CanvasRenderingContext2D, x:number, y:number, w:number, h:number) {
+    this.context.drawImage(canvasCtx.canvas, x, y, w, h)
+    
+  }
+
   drawBox (x: number, y: number, w: number, h: number, isTransparent: boolean = true) {
     this.context.fillStyle = isTransparent ? transparentBlack(0.4) : transparentBlack(0.8)
     this.context.fillRect(

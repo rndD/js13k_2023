@@ -54,7 +54,8 @@ class MenuState implements State {
     if (!drawEngine.ready) {
       drawEngine.drawText('Loading...', 80, xCenter, 90)
       return
-    }
+    } 
+    
     this.updateCoins()
 
     drawEngine.drawBg()
@@ -104,7 +105,7 @@ class MenuState implements State {
     }
     // Autoskip for testing
     if (drawEngine.ready) {
-      // gameStateMachine.setState(getGameState())
+      gameStateMachine.setState(getGameState())
     }
 
     // if (
