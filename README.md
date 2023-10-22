@@ -2,7 +2,7 @@
 
 Entry for the [js13k games 2023](https://js13kgames.com/).
 
-[To play](https://dev.js13kgames.com/2023/games/mini-merchant)
+!! This is post-jam version. The original version is in `main`` branch !!
 
 ## Credits
 
